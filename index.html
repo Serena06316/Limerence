@@ -8,95 +8,44 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
   :root {
-    --bg-primary: #FAF8F5;
-    --bg-secondary: #F0ECF4;
-    --text-primary: #2D1B3D;
-    --text-secondary: #6B5B7B;
-    --accent: #5C3D7A;
-    --accent-light: #7B68AE;
-    --accent-gold: #BFA16A;
-    --border: #D8CDE0;
-    --card-bg: #FFFFFF;
-    --shadow: rgba(45, 27, 61, 0.08);
-    --danger: #A94442;
-    --chat-ai-bg: #F0ECF4;
-    --chat-user-bg: #5C3D7A;
-    --chat-user-text: #FFFFFF;
-    --tool-bg: #E6DFF0;
-    --tool-text: #5C3D7A;
-    --thinking-bg: #FBF8F1;
-    --thinking-border: #BFA16A;
+    --bg-primary: #FAF8F5; --bg-secondary: #F0ECF4; --text-primary: #2D1B3D; --text-secondary: #6B5B7B;
+    --accent: #5C3D7A; --accent-light: #7B68AE; --accent-gold: #BFA16A; --border: #D8CDE0;
+    --card-bg: #FFFFFF; --shadow: rgba(45,27,61,0.08); --danger: #A94442;
+    --chat-ai-bg: #F0ECF4; --chat-user-bg: #5C3D7A; --chat-user-text: #FFFFFF;
+    --tool-bg: #E6DFF0; --tool-text: #5C3D7A; --thinking-bg: #FBF8F1; --thinking-border: #BFA16A;
     --safe-bottom: env(safe-area-inset-bottom, 0px);
+    /* 热力图梯度色 */
+    --heat-0: #F0ECF4; --heat-1: #E0D4ED; --heat-2: #C4A9E0; --heat-3: #9B7DBF; --heat-4: #7B68AE; --heat-5: #5C3D7A;
   }
   [data-theme="dark"] {
-    --bg-primary: #13101A;
-    --bg-secondary: #1E1829;
-    --text-primary: #EFEAED;
-    --text-secondary: #9890A6;
-    --accent: #A688C6;
-    --accent-light: #C4A9E0;
-    --accent-gold: #D4AF37;
-    --border: #342A41;
-    --card-bg: #251E30;
-    --shadow: rgba(0, 0, 0, 0.3);
-    --danger: #E06C75;
-    --chat-ai-bg: #251E30;
-    --chat-user-bg: #A688C6;
-    --chat-user-text: #13101A;
-    --tool-bg: #2A2235;
-    --tool-text: #C4A9E0;
-    --thinking-bg: #1E1B24;
-    --thinking-border: #D4AF37;
+    --bg-primary: #13101A; --bg-secondary: #1E1829; --text-primary: #EFEAED; --text-secondary: #9890A6;
+    --accent: #A688C6; --accent-light: #C4A9E0; --accent-gold: #D4AF37; --border: #342A41;
+    --card-bg: #251E30; --shadow: rgba(0,0,0,0.3); --danger: #E06C75;
+    --chat-ai-bg: #251E30; --chat-user-bg: #A688C6; --chat-user-text: #13101A;
+    --tool-bg: #2A2235; --tool-text: #C4A9E0; --thinking-bg: #1E1B24; --thinking-border: #D4AF37;
+    --heat-0: #1E1829; --heat-1: #2A2235; --heat-2: #3D3550; --heat-3: #5C4D70; --heat-4: #7B68AE; --heat-5: #A688C6;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    height: 100%; width: 100%; overflow: hidden;
-    font-family: 'Noto Serif SC', 'Cormorant Garamond', serif;
-    background-color: var(--bg-primary); color: var(--text-primary);
-    transition: background-color 0.4s, color 0.4s;
-  }
-
-  /* 根容器：使用 dvh 适配移动端动态视口 */
-  #app-root {
-    height: 100vh; /* 旧浏览器回退 */
-    height: 100dvh;
-    display: flex; flex-direction: column;
-    overflow: hidden;
-  }
+  html, body { height: 100%; width: 100%; overflow: hidden; font-family: 'Noto Serif SC', 'Cormorant Garamond', serif; background-color: var(--bg-primary); color: var(--text-primary); transition: background-color 0.4s, color 0.4s; }
+  #app-root { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 
   /* 通用组件 */
-  .top-btn {
-    background: none; border: none; color: var(--text-secondary); font-size: 1.2rem;
-    cursor: pointer; padding: 8px; transition: color 0.2s;
-  }
+  .top-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.2rem; cursor: pointer; padding: 8px; transition: color 0.2s; }
   .top-btn:hover, .top-btn:active { color: var(--accent); }
-  .form-input {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
-    background: var(--card-bg); color: var(--text-primary); font-family: inherit; font-size: 0.95rem; outline: none;
-  }
+  .form-input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text-primary); font-family: inherit; font-size: 0.95rem; outline: none; }
   .form-input:focus { border-color: var(--accent); }
   textarea.form-input { min-height: 100px; resize: vertical; }
-  .btn-primary {
-    background: var(--accent); color: #fff; border: none; padding: 10px 20px;
-    border-radius: 6px; font-family: inherit; font-size: 0.9rem; cursor: pointer; box-shadow: 0 2px 6px var(--shadow);
-  }
+  .btn-primary { background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 6px; font-family: inherit; font-size: 0.9rem; cursor: pointer; box-shadow: 0 2px 6px var(--shadow); }
   .btn-primary:active { opacity: 0.8; }
+  .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+  .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .btn-outline:active { background: var(--accent); color: #fff; }
 
-  /* =================== 全局顶栏 (聊天页时隐藏) =================== */
-  #global-top-bar {
-    flex-shrink: 0;
-    height: 50px; display: flex; justify-content: space-between; align-items: center;
-    padding: 0 20px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); z-index: 100;
-    transition: transform 0.3s, opacity 0.3s;
-  }
+  /* 全局顶栏 */
+  #global-top-bar { flex-shrink: 0; height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); z-index: 100; transition: transform 0.3s, opacity 0.3s; }
   #global-top-bar.hidden { transform: translateY(-100%); opacity: 0; height: 0; overflow: hidden; padding: 0; border: none; }
 
-  /* 视图容器 */
-  .view {
-    display: none; flex: 1; flex-direction: column; overflow: hidden; position: relative;
-    min-height: 0; /* 关键：允许flex子元素缩小 */
-  }
+  .view { display: none; flex: 1; flex-direction: column; overflow: hidden; position: relative; min-height: 0; }
   .view.active { display: flex; }
 
   /* =================== 主页 =================== */
@@ -105,32 +54,21 @@
   .violet-screen { flex: 0 0 100vw; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .violet-ascii { font-family: 'Cormorant Garamond', monospace; color: var(--accent); text-align: center; line-height: 1.2; font-size: 1.2rem; margin-bottom: 20px; white-space: pre; user-select: none; }
   .characters-scroll-area { flex: 0 0 auto; display: flex; align-items: center; height: 100%; padding: 0 30px; gap: 25px; }
-  .char-card {
-    width: 200px; height: 260px; background: var(--card-bg); border: 1px solid var(--border);
-    border-radius: 12px; padding: 25px 20px; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; box-shadow: 0 4px 15px var(--shadow); cursor: pointer;
-  }
+  .char-card { width: 200px; height: 260px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 25px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 15px var(--shadow); cursor: pointer; }
   .char-card:active { transform: scale(0.97); }
   .avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--bg-secondary); border: 2px solid var(--accent-light); margin-bottom: 15px; object-fit: cover; }
   .char-name { font-weight: 600; color: var(--accent); margin-bottom: 5px; }
   .char-bio { font-size: 0.85rem; color: var(--text-secondary); text-align: center; line-height: 1.4; max-height: 50px; overflow: hidden; }
   .add-card { border: 2px dashed var(--border); background: transparent; box-shadow: none; color: var(--text-secondary); }
-  #home-footer {
-    flex-shrink: 0;
-    height: 60px; display: flex; align-items: center; justify-content: center;
-    background: var(--bg-secondary); border-top: 1px solid var(--border);
-    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; color: var(--text-secondary);
-    padding-bottom: var(--safe-bottom); /* 安全区 */
-  }
+  #home-footer { flex-shrink: 0; height: 60px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); border-top: 1px solid var(--border); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; color: var(--text-secondary); padding-bottom: var(--safe-bottom); }
   #signature-input { background: none; border: none; border-bottom: 1px solid var(--border); color: var(--text-primary); text-align: center; font-family: inherit; font-style: inherit; font-size: inherit; width: 80%; outline: none; }
 
   /* =================== 详情页 =================== */
   .detail-header { flex-shrink: 0; display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border); background: var(--bg-secondary); }
   .detail-header .avatar { width: 50px; height: 50px; margin-bottom: 0; margin-right: 15px; }
   .detail-name { font-size: 1.2rem; font-weight: 600; color: var(--accent); font-family: 'Cormorant Garamond', serif; }
-
   .detail-body { flex: 1; display: flex; overflow: hidden; position: relative; min-height: 0; }
-  .panel-left, .panel-right { transition: flex 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s; overflow-y: auto; scrollbar-width: none; min-height: 0; }
+  .panel-left, .panel-right { transition: flex 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s; overflow-y: auto; scrollbar-width: none; min-height: 0; }
   .panel-left::-webkit-scrollbar, .panel-right::-webkit-scrollbar { display: none; }
   .panel-left { flex: 1; border-right: 1px solid var(--border); background: var(--bg-primary); padding: 0; }
   .panel-right { flex: 1; background: var(--bg-secondary); padding: 15px; }
@@ -140,11 +78,7 @@
   .detail-body.focus-right .panel-left { flex: 0.5; opacity: 0.6; }
 
   .left-menu { display: flex; flex-direction: column; width: 100%; }
-  .left-menu-item {
-    display: flex; align-items: center; padding: 16px 20px;
-    border-bottom: 1px solid var(--border); cursor: pointer;
-    transition: background 0.2s, padding-left 0.2s;
-  }
+  .left-menu-item { display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s, padding-left 0.2s; }
   .left-menu-item:active { background: var(--bg-secondary); padding-left: 25px; }
   .menu-icon-box { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; margin-right: 15px; transition: background 0.2s; }
   .left-menu-item:active .menu-icon-box { background: var(--accent); }
@@ -154,6 +88,12 @@
   .menu-title { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 600; color: var(--text-primary); letter-spacing: 1px; }
   .menu-subtitle { font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px; }
   .menu-arrow { color: var(--border); font-size: 0.8rem; }
+
+  /* 陪伴密度入口特殊样式 */
+  .left-menu-item.density-entry { margin-top: auto; border-top: 2px solid var(--accent-light); border-bottom: none; background: var(--bg-secondary); }
+  .left-menu-item.density-entry .menu-icon-box { background: var(--accent); }
+  .left-menu-item.density-entry .menu-icon-box i { color: #fff; }
+  .left-menu-item.density-entry .menu-title { color: var(--accent); }
 
   .right-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
   .right-header h3 { color: var(--accent); font-size: 1rem; font-family: 'Cormorant Garamond', serif; letter-spacing: 1px; }
@@ -166,17 +106,11 @@
   .chat-item-actions .fa-trash:hover { color: var(--danger); }
 
   /* 子页面覆盖层 */
-  .subpage-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: var(--bg-primary); z-index: 50;
-    transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex; flex-direction: column;
-  }
+  .subpage-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-primary); z-index: 50; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; }
   .subpage-overlay.active { transform: translateX(0); }
   .subpage-header { flex-shrink: 0; display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border); background: var(--bg-secondary); }
   .subpage-header h3 { margin-left: 15px; color: var(--accent); font-weight: 600; font-family: 'Cormorant Garamond', serif; letter-spacing: 1px; }
   .subpage-body { flex: 1; overflow-y: auto; padding: 20px; min-height: 0; -webkit-overflow-scrolling: touch; }
-
   .item-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 15px; margin-bottom: 10px; position: relative; }
   .item-card-content { font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap; }
   .item-card-meta { font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px; }
@@ -187,22 +121,61 @@
   .item-card.done .item-card-content { text-decoration: line-through; color: var(--text-secondary); }
   .month-divider { font-size: 0.9rem; color: var(--accent); font-weight: 600; margin: 15px 0 8px 0; border-bottom: 1px solid var(--border); padding-bottom: 4px; font-family: 'Cormorant Garamond', serif; }
 
+  /* =================== 陪伴密度页面 =================== */
+  #view-density { background: var(--bg-primary); }
+  .density-header { flex-shrink: 0; display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border); background: var(--bg-secondary); }
+  .density-header h3 { margin-left: 15px; color: var(--accent); font-weight: 600; font-family: 'Cormorant Garamond', serif; letter-spacing: 1px; }
+  .density-body { flex: 1; overflow-y: auto; padding: 20px; min-height: 0; -webkit-overflow-scrolling: touch; padding-bottom: calc(120px + var(--safe-bottom)); }
+
+  /* 纪念日区域 */
+  .anni-section { margin-bottom: 25px; }
+  .anni-section-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .anni-card { display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; }
+  .anni-info { display: flex; flex-direction: column; }
+  .anni-name { font-weight: 600; color: var(--text-primary); font-size: 0.95rem; }
+  .anni-date { font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
+  .anni-count { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--accent); margin-right: 10px; white-space: nowrap; }
+  .anni-count span { font-size: 0.7rem; color: var(--text-secondary); font-weight: 400; }
+  .anni-actions { display: flex; align-items: center; gap: 8px; }
+  .anni-actions i { color: var(--text-secondary); cursor: pointer; font-size: 0.85rem; }
+  .anni-actions i:hover { color: var(--danger); }
+
+  /* 添加纪念日表单 */
+  .anni-add-form { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .anni-add-form input { flex: 1; min-width: 120px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text-primary); font-family: inherit; font-size: 0.85rem; outline: none; }
+  .anni-add-form input:focus { border-color: var(--accent); }
+
+  /* 日历热力图 */
+  .calendar-section { margin-bottom: 20px; }
+  .calendar-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .calendar-nav-btn { background: none; border: none; color: var(--accent); font-size: 1rem; cursor: pointer; padding: 8px; }
+  .calendar-nav-label { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; color: var(--text-primary); }
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .calendar-weekday { text-align: center; font-size: 0.7rem; color: var(--text-secondary); padding: 4px 0; font-weight: 600; }
+  .calendar-day { aspect-ratio: 1; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text-secondary); transition: transform 0.1s; position: relative; cursor: default; }
+  .calendar-day.empty { background: transparent; }
+  .calendar-day.has-data { color: #fff; font-weight: 600; }
+  .calendar-day.today { box-shadow: inset 0 0 0 2px var(--accent-gold); }
+  .calendar-day:active { transform: scale(0.9); }
+
+  /* 热力图图例 */
+  .heat-legend { display: flex; align-items: center; gap: 6px; margin-top: 12px; justify-content: center; }
+  .heat-legend-item { display: flex; align-items: center; gap: 3px; font-size: 0.65rem; color: var(--text-secondary); }
+  .heat-box { width: 14px; height: 14px; border-radius: 3px; }
+
+  /* 底部头像 */
+  .density-avatar-area {
+    position: absolute; bottom: 0; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center;
+    padding: 15px 0 calc(15px + var(--safe-bottom)); background: linear-gradient(transparent, var(--bg-primary) 30%);
+    pointer-events: none;
+  }
+  .density-avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--accent-light); object-fit: cover; box-shadow: 0 4px 15px var(--shadow); }
+
   /* =================== 聊天页面 =================== */
   #view-chat { background: var(--bg-primary); }
-  .chat-top-bar {
-    flex-shrink: 0;
-    display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;
-    background: var(--bg-secondary); border-bottom: 1px solid var(--border);
-  }
+  .chat-top-bar { flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); }
   .chat-top-bar .top-btn { font-size: 1.1rem; }
-
-  .chat-messages {
-    flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px;
-    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-    min-height: 0; -webkit-overflow-scrolling: touch;
-    padding-bottom: calc(10px + var(--safe-bottom));
-  }
-
+  .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; min-height: 0; -webkit-overflow-scrolling: touch; padding-bottom: calc(10px + var(--safe-bottom)); }
   .msg-row { display: flex; gap: 10px; max-width: 90%; animation: fadeIn 0.3s ease; }
   .msg-row.ai { align-self: flex-start; }
   .msg-row.user { align-self: flex-end; flex-direction: row-reverse; }
@@ -213,44 +186,26 @@
   .user .msg-bubble { background: var(--chat-user-bg); border-top-right-radius: 2px; color: var(--chat-user-text); }
   .msg-time { font-size: 0.65rem; color: var(--text-secondary); margin-top: 4px; padding: 0 4px; }
   .user .msg-time { text-align: right; }
-
   .typing-cursor::after { content: '▍'; animation: blink 1s infinite; color: var(--accent); }
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(5px);} to{opacity:1;transform:translateY(0);} }
   .tool-indicator { background: var(--tool-bg); color: var(--tool-text); padding: 8px 12px; border-radius: 8px; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; margin-bottom: 5px; border: 1px solid var(--accent-light); }
   .tool-indicator i { font-size: 0.9rem; }
-
   .thinking-block { background: var(--thinking-bg); border: 1px solid var(--thinking-border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
   .thinking-header { padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 0.8rem; color: var(--accent-gold); font-weight: 600; }
   .thinking-body { padding: 0 12px 10px 12px; font-size: 0.85rem; color: var(--text-secondary); display: none; max-height: 150px; overflow-y: auto; }
   .thinking-block.open .thinking-body { display: block; }
   .thinking-summary { font-size: 0.8rem; color: var(--text-secondary); padding: 0 12px 8px 12px; font-style: italic; }
-
-  /* 底部输入区 - 固定在底端，适配安全区 */
-  .chat-input-area {
-    flex-shrink: 0;
-    padding: 12px 15px; background: var(--bg-secondary); border-top: 1px solid var(--border);
-    display: flex; align-items: flex-end; gap: 10px;
-    padding-bottom: calc(12px + var(--safe-bottom));
-  }
+  .chat-input-area { flex-shrink: 0; padding: 12px 15px; background: var(--bg-secondary); border-top: 1px solid var(--border); display: flex; align-items: flex-end; gap: 10px; padding-bottom: calc(12px + var(--safe-bottom)); }
   .input-actions { position: relative; }
-  .expand-menu {
-    position: absolute; bottom: 45px; left: 0; background: var(--card-bg); border: 1px solid var(--border);
-    border-radius: 8px; box-shadow: 0 4px 12px var(--shadow); display: none; flex-direction: column; width: 150px; overflow: hidden; z-index: 60;
-  }
+  .expand-menu { position: absolute; bottom: 45px; left: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 12px var(--shadow); display: none; flex-direction: column; width: 150px; overflow: hidden; z-index: 60; }
   .expand-menu.active { display: flex; }
   .expand-menu-item { padding: 12px 15px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
   .expand-menu-item:last-child { border-bottom: none; }
   .expand-menu-item:active { background: var(--bg-secondary); }
   .expand-menu-item i { color: var(--accent); width: 18px; text-align: center; }
   .expand-menu-item.active-feature { color: var(--accent); font-weight: 600; }
-
-  .chat-textarea {
-    flex: 1; resize: none; border: 1px solid var(--border); border-radius: 20px;
-    padding: 10px 15px; background: var(--card-bg); color: var(--text-primary);
-    font-family: inherit; font-size: 0.9rem; outline: none; max-height: 100px; line-height: 1.4;
-  }
+  .chat-textarea { flex: 1; resize: none; border: 1px solid var(--border); border-radius: 20px; padding: 10px 15px; background: var(--card-bg); color: var(--text-primary); font-family: inherit; font-size: 0.9rem; outline: none; max-height: 100px; line-height: 1.4; }
   .chat-textarea:focus { border-color: var(--accent); }
   .send-btn { background: var(--accent); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
   .send-btn:active { background: var(--accent-light); }
@@ -261,302 +216,40 @@
   .settings-header h2 { margin-left: 15px; font-weight: 600; color: var(--accent); font-family: 'Cormorant Garamond', serif; }
   .settings-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
   .settings-section h3 { font-size: 1rem; margin-bottom: 10px; color: var(--accent); }
-
   input[type="file"] { display: none; }
 </style>
 </head>
 <body data-theme="light">
 
 <div id="app-root">
-  <!-- 全局顶栏 -->
   <div id="global-top-bar">
     <button class="top-btn" id="btn-settings"><i class="fas fa-cog"></i></button>
     <button class="top-btn" id="btn-theme"><i class="fas fa-moon"></i></button>
   </div>
 
-  <!-- =================== 主页 =================== -->
+  <!-- 主页 -->
   <div id="view-home" class="view active">
     <div id="home-slider">
       <div class="violet-screen">
         <div class="violet-ascii">
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                      
-                                                                                                                                         ==+                                                                                                                                          
-                                                                                                                                  ...:-+++===+                                                                                                                                        
-                                                                                                                                  ::=:.==++--=                                                                                                                                        
-                                                                                                                             :==-=++*==.--::--+===                                                                                                                                    
-                                                                                                                            ::=-=+=-==+:.=*==+=-==                                                                                                                                    
-                                                                                                                             :-=+*#=--==:-=+=--=--                                                                                                                                    
-                                                                                                                              ++=*##+--=:=:::===-====                                                                                                                                 
-                                                                                                                                +*##+=--==::==*+=====                                                                                                                                 
-                                                                                                                                    ===-+=-==++==**                                                                                                                                   
-                                                                                                                                     ==++--=++**                                                                                                                                      
-                                                                                                                             :=---    +=+==+                                                                                                                                          
-                                                                                                                           --::-::--   +===     =-   =                                                                                                                                
-                                                                                                                           ::-::::::-  *++   --:-=+==+**                                                                                                                              
-                                                                                                                           ..=:::-=::- ***  --::==::-+=***                                                                                                                            
-                                                                                                                           ...=-:+%+---++=  ---+-:::---+=+                                                                                                                            
-                                                                                                                            =--++=*#---==+ =--**+---::=*#                                                                                                                             
-                                                                                                                              ---*+*===+=+  -=+*#---+#*#                                                                                                                              
-                                                                                                                                --====-+++ +++##*#%##%%                                                                                                                               
-                                               +++                                                                                =+##+++* *+==#+=+#                                                                  --=                                                             
-                                              ###=---::                                                              :-..:--=        #*==+**=+*==                                                                   ==---=   --                                                       
-                                         -:.:-=+**-::.:-   +                                                        :. ..:::-=+      #*=-+==++                                                                  +==++==+==+=---=                                                      
-                                       -::::::-+++-::=.- ++=-+                                                      :.....:-::-=      +---==       --                                                          =----=+=+*+++#++---=                                                   
-                                       -::-+=-=.---++=-+*#+=--==                                                    -:...:::-:-=      :.-===    --::-+=                                                        =-=##+++++++*===--=##*                                                 
-                                        :::-***#=+-*++*++==----=                                                    =:..:::::=-=+     -.-=+   =-::::==-=                                                       *--*#*++ +++===*=+%%%#                                                 
-                                          +++*+-:=+=## *++------                                               +++   =-::::--==+%     -:=++  --::::::::--*+*                                                   *==+*+*  +==+++++*%%                                                   
-                                               ==:===:-++=---*+-                                                =====++==----=*%%#    ::+#  --::::::::::*+++                                                   *+%#+**+=++   %#                                                       
-                                        =-::--    +++:-==+--+#+                                                 ===----=*#%#++*#@%    ::++  ---=----:::-+===                                                    =-#*++++++++                                                          
-                                       =:::::-==*  +== *+++*#*                                                    ====---+###@*##**   .:++ =-+%%+---::=+=-==                                          *#*+*      --==++=++   +***+=+                                                  
-                                       ==:::::-=+* +++  ##=+*                                                          ++==*+=**+==   :-**  #%#%*#--+#===-=                                          :-#+-===-    -:=++   **+=====**+                                                 
-                                         +=-==---+#*++= ***#        ++==---                                                 ===----=  :-*  *%%#%%@@@#==---                                          :.--:::-+--    +++  *+*#====*##+                                                  
-                                           ===*##=-+**+= +*+       -:-=::---                                                  ---=--  --*  =**%+#@%=-=+=                                           ..:-:::::==-   *** **+*####**#**                                                   
-                                             :::=****+=+  =      ::..--::-:::                                                   ##**  --* :-+====++                                                :.:-:::::==-   ** ##++***%#%#                                                      
-                                                 ----+*++++      :..--:::-=::                                                     +++ --+ --==++                                                   :.:-:=+::=+=  *****%%#                                                             
-                                                -------+***     -::+-----=+==                                                      *++--+  ##+                                                      -=*-**++=+  #++**                                                                 
-                                                =--=====**+     =--=--==++**                                               ::--     **--+ **+....                                                    *##***=+# #*+**        :::                                                       
-                                                  --==+++*#     ++==#=***##                                               ..:.::     *=-+**:.......                                                  +=*##*++  #+*       ::::::--                                                     
-                                                     ====--=    -=###+%@@%                                               :.....::-:: +=-+*=...-::-:-                                                  +-*+=++ **##     ::::::::=-:                                                    
-                                                         +-+     =*#%%%@#                                               ::......:.-- *=-+*:.:-:::::-=                                                  +--=+  +++    -::::::::--:::                                                   
-                                         =---::...       ===+   +=+*+++*                                     -::::--=++-:.......::-- #*++-.:::::::::-=+*++++                                ++*#*===    #*+  *++    ==*=:::=-::::-                                                    
-                                         =-::::::--:+=-   =-=   *+=+++*                                     -:::::--=++==:......+--- **+*-.:::::::::=+=----===                             =-::-+:+=++  *** *+*    **=-=*#=------                                                     
-                                       =-----==--::-**--- -:-+   %%%%                                       -::::-+*======-....:-------:+::::::::::==-------=+                        -:  =--:::---=-== ++= ++*  =**==+*#*+==+++                                                      
-                                      -::::::...:**++*#+-- =:=+  **                                          ::::**==---==+...:*#*=:...:-===+=::::==--::-----==                       :::==-:::::--=--= *+=*++  ++--**++****++                                                        
-                                       =:::-======+###@%+=  =-=  ++                                          -:::-=======-*:.-*###==:...::::::-+=:==--::-----=                        ::..-:::-:---=--= +==++  +==-:-=***                                                             
-                                        ---+++++++=**+*#*=+ ==-+ ++                                            ::-=++++===+*+#### +=:::::::::::-== :=--------:::                       :::=--::::-:====  ==++ +++*+                                                                   
-                                          =*%##%#****#=-===  +-+ ++           --                             :---:-:-=++==%%%##   *+:...::::::::-+*#=------......:--                    --+=---=***+==+  =++ ++                                                                       
-                                              #%@@@@@#*+==+# *+=**     :.  -::..:--                      :::........---**+***%%    ++=::..::::::::*+:=..-:..........:-                   --+=--****+++  +==+++                                                                        
-                                                       %%%%#* +=+*   :....--::...::-                     -...........::=*##*+**#    =*#*+==+*=*#%*=-................::                    =+#=-**+*##   +++++   =--                                                                   
-                                                           #***+=+* :...:++==+:.....:-                   :.........:-==+*++++=-=*    %#**----:=%@#@%+:-+=:........::                     ===#+*+++*+   ++***  --::-  --::.::                                                          
-                                                             ++*+=+ ...=+======-:....:-                  :::.....:-+==+* ##+=--=+    @#**----.=%#%#%%@%#***=-:-++-                         +++-++++*  ****#::-:::: +-:......:-                                                        
-                                                              +=*++=...+======--:::...::                   -:::-:*+==+*    **#%%%    %##*=--::=*+%#+###*+++++++=+*                          =-:-==*+  ****-:::..:-+=::::.....:=                                                       
-                                                               ==+=--. =+++===++-::..::: ++=====                *+=-=          ###   %%%*=----+==-=*+++*++++===--=**                         -:--=*  #**# ::::..:-+::::.....:-==                                                      
-                                                          +===+=-:::::-:****++++-.:::===-:::::::--=             ==-==           ##%  @%%*=-===#==+==---+++=======---=                         +*==+  #*#  :--=+=-++=:::.....---                                                       
-                                                         ==---==-:::::::=*******-.--=--:::.::.::::=:            ==+              ### @%%#=-===*##     :-+**+++===---=                          #**  ####*=--**++*+++-::::::-:-=                                                       
-                                                        =-----==::::::::::*####*=--:=-::::::::::::--                      ===--:--=++%%%#=--::-===         **=----==+                          *** ####+===.=*+#%*++=:-====+++===++                                                   
-                                                        ==-----==-=#*-::::::***=--:=-::-==-:::-----                      ==-:::::::::-+#=-----::--=                               -=--....     *** %#%+====.-*+%#++==++***+++++**==                                                   
-                                                          ----===+==*+=++***+-.   . :*###%*=----                    *** =---:::::::::+=------::::---- **                         -::::-.... +=====*%##+++==..=#*=#%@%@###******#*                                                     
-                                                          +=====+++#%#**###*+++****##*=:::-=--::-                +=====++-::::::::::=----::::::.:::-=+===++                    ==-::::::--===------=#+++++=.+++**+#@@%%%%#####%                                                       
-                                                           ++===+++*##+----++**%##%%@@@**:...:::::::--          -----==+--::...::. --::..::.....:::-=*===-=+*+                 =-:::::::-==--:::-----=+++=-%##+++*+*++++**#                                                           
-                                                                    #*#=----**+#**%**%%*+**+=..::::::          ----=--==:::....... :=..........:::--.#*+==-----               =-::::::::-===--::------**-+-::-***+**++++++++++***#                                                    
-                                                                    %*+#=----++++%*****##  ++=-==--             =====-=::......... .=.............::.#***+===---       -:-::::==:::..:-#*=---::-----:-:++:::::+****+*#**+========+**                                                  
-                                                         +==+        #*++===+-:-***++**#                         ++===-:..........  ::.  ........:::*###*+++=---     -:.......:--::..:=%#-::::::--:::+*+:......+****++****+++====+*                                                   
-                                                        *--:-=  ==    #*+*   *#*+-=+++                            *+====:........ ....  ::.....::.#%%%#*++++=--=    --..........:-:...:**::::::::--::-*- ......:#**+++++ +****++**                                                    
-                                                ::    *+-:-::--+--==  ##***   ##                                   ++=:-**++*+:.:-... :-.  ..::.......:=#*++===     --:...........--:-.=-:.::-+*+:.    .=:::.::.   ****+                                                              
-                                              ::....: +--:::-:-=---==  #***  ##*                                  .....  ..=##*::-:    .+: . ..  ........=*==+      --:..........::.:*:::-:.++=:.      .----===+=                                                                     
-                                             ::......:=+=------=--==+   **** ##                                ...        ....=-  :-.. .+:. ...     ....::-=        ::==:...:........-..:::-=...     .:::=+=======+                                                                   
-                                             :........:-**=--==++++=++  #*+*###                              :..       ............:::...:.      .  ......:=         ====+++=+++=-:::**+::-.. ..    .:::=+++===---==                                                                  
-                                             :..........=+++===*++===+   %**##+    ::::                     ....       ........=-:--:@@@%=-:.............::=           ===-:::::...:.=*@#%#==.  ...:---++=======---=                                                                  
-                                             ::...........=--**++===+     %**=:::.......:--                 ::..  .   .....::-=:..=@*@@#=-..-:.........:::--          ::.........--::+#:==--=%@@%#++*#++===-=--=--=-                                                                  
-                                              :.......  ...-:.+*+==+      #+-::...........:-                ::::.  .  ...:.  ..    =::::-:. .--:.....---:::---=     ::.........:-::.*%=::----::::::=#*++==------:-=                                                                   
-                                               -..... .-. .:-..++++=+*   ---:::.............::    ++====     ..:.     .... =*=    :-:::.++.   .-----=:....:-----   ..:..........::+#*+-:::--:......-@#+++=--:=-::=-                                                                   
-                                           ##*++++==:...--::=...%#*+=+*  ==-::-.............:: ---=---::-     ..:. .   ...=###*---::.:-:-**=.      .......-=---=   ..............**+*+::::........:*%#++===-:::::::-:-                                                                
-                                         #**+++=====+-.:.--:...+##%#%++ ==---:-.    .........:----:::...::       :..:-::-**##*::::::....:-**#*+:.......====----==   :.......::====--=+=:::.....:+*#%*-#=:==--::::::..::--                                                             
-                                         *+==========..::::. .-***@@@@@%+=---:::-.  .........---:.........::        ++**++*%+:............=*+==+*##%**++==+=====       :::-:---=+--:--=*##******++#=:--:+===--:::::::..:::-                                                           
-                                         *++==-====++-::-:..+#*+++#***#@@+-:::::-- ... ..... .............::      *++==+++#%+.............-*+====-=======+++==+==+          +=++#--:-----=+*++====%#-==-::-:.=+=-:::--::::-                                                           
-                                           =====+=:..::.:+:-#%#++++%####%%=-------:.........:.............:-    +=========*##:............=+======----=+++++=====+*        ++++++=:::::::---====%#%+-----=++==-:::::::---:                                                            
-                                             =++-.....:-+=:+%#+++=+##%%%#%%=------:........ .............:-     ==-========##*...........=*+=--==--++***++++++++====+       +++++*+::::------==**=-*@*-=====:--:-::::::-                                                              
-                                                -::..:=*+=*#%#**++**#%%%%*+--==-----...:=-::===:.......::       ===-=====+++*#=:.......:#%+--==+===###*++**++++++====        #**+*****+=====+=-----=++#*+=-=-----:-::::-                                                              
-                                                ++==--**=*#%%++***###%%++.....:=.  ....=++:..:--............:     +---===-::=#=++=:..:#@@@+====++=+##****###***+===--:.  :..... :+++++**#@@#::::::----=*=--------::::::--                                                             
-                                               *===++*+++*%%**+==*    -:.........=*###+=*+.--=-::.:::::......::    :--......::-=--==+-==+---=++++@@%****##**=====---..:::........:+****+#@%::::::----:-**:-----=----:-::-                                                             
-                                              ++==**++++*##*++=+#    :.......:---+####+**%+.:+%*-::::::::::::::.  ..........::::--===::::::-----=*+***+++==-=----=:......    ......=*++*%@*::::::::::::=#+.------:::::-=-                                                             
-                                               *++*+++*+ *++==+*    ::....-----:::-+=+==..#.   -=--------:::::-=  .........:::::--==.=+::::-----==+=+====-=++++=--.               ...:+*%%+..:::::::::.:%@- ---::-:::--                                                               
-                                             *%*++**#    ++++**     -:..:-:-::...:::---:..*@-.  :--=-------==-==   .......:::::---=+=++---------=##===------=====.                .:::.%%%=:.....::....-##%%==-::::--                                                                 
-                                              *++*         *     *****-..::.......::......=@@%%%*=:.:===+#=::-:    ....--:.::.==-==*++=:-------=*==--==-----=    ..              .::::=%%**%=:........=%***####---+                                                                   
-                                                               #*====+*#+:...............:#%@%%%%%%%%%#+----::..    -:--==.:=========***=-----==*--------=+**  .. ..  :%+.       .-:::+%%#%%*-......=#@%#******#@@                                                                    
-                                                              *+++++==++#+:......:::::::=#%%%%%##*#**++=+=== . .::::-------:-----====++**=----=*+------==     ...   ..*+*%=..    --:::#%%%#*#%*+==*%@%%%######**#%                                                                    
-                                                             ***+*+++++++**::=++-.   :*%@%%%%%%%%##++++===         :::::--::------====+#+**+==##*=:::-=       :....   :+==#-::  :---:....:=%%##%######%%%%%%#***#%                                                                    
-                                                              *++++++=+*+++*****###%*@%@*@%%%%##%%%**+====      .     ==-::-----=+%++**@@@**+#@***=-:-=           ::::-+=-+-.  :-.        ..*%##*###**%%%%%#####%                                                                     
-                                                               **++==--=+*=-=****#*##@%%@#%%##*#*++++++==--= ...... ##*--------=+%%%#%#@@@**#%#%#**#++*%           --:::::.... ....    .....+%##**####***#*+*#%%                                                                      
-                                                                 ++===-=+-=+++===+*##*%%#@%**+++=====+=:::---......++===-------*%%%%##%@%@#*%%%##%##%%##%           :.....:.:.:-:..   .....:#%%#%%%%#*+***#*+**#%                                                                     
-                                                                  ++====-=+++==+++===*#@%%@  *****=------::--:....-+=+=====+%#+%%%#**##%%@#*###*####****####+=------=-=-..-+:....  ..........*@*+===*#++**+++++#@@                                                                    
-                                                                    **+=-==+++++++++==+%%%@#==-----=-.=---:-=-....-+++++++*+#@%%###**##%*######%%#******-:.. ...:----:-#@:*#.-+:........     **====--=+==++===+#%                                                                     
-                                                                 #*+=-.:===+++++++++++++@@#+==-----:====------......:=++===+++%@%##*###%*#@#####%%#*##=      .:.::. .:...      .......      =#++====--+*+====-+*                                                                      
-                                                               #*++***+=-===++**++++++++**======--.:-=++==-----:...::--=-==+++*@%#****#%**@**####%***-.    :-:::..:::.--.       :.....     :*++==++-::::++==++                                                                        
-                                                            =====--==-==---===+*#+%%%**#+-=====-...---=+*+=====:.:==-  =-==+++**@%##*##%**@*++*###*#-.    ....   ....-=-.      -+-       .-#*++++++-::::=--:-                                                                         
-                                                          +=-::::--:::::-======+*%##%%%*===-=-:.....---+*+##%%#+----=====+=++**+=%###*#%**%+===+++*#-..              .====.  .-+=**###=**++++++++*:::::::=-:                                                                          
-                                                         +-::::::::::::::--=++*+*#**%%**+=--:......:---+#%***++++==-----==+=+*+---**==*%**%=======+=:.....             :-::----:..---#*++++++=+=-::::::::::                                                                           
-                                                         +-::::.......:.::-*#***##*: =*+++-:....:::--::#@%*#***++==*+=====+------:=**+*%**%====++++-...:=              --::.....:....=%*++*-=:--::......::                                                                            
-                                                        --::::.::....::-----++:-%%%%=.-=-=:.....::::.=@@%%#*####+==++====+++----=--++=+%***-:-==+-=:...:.             -=:...:::.:::::-%+=+:=+==::::-=++=-==-                                                                          
-                                                        -::::.....:--::::--=*+::*@@#*-==:...:..==:.:=-::-+###*##*++**+++==** ++    *++*#***  :-=+  ::.:::         ..=#%-.........::::*@#=-:--==-::::::----====-                                                                       
-                                                          ---::..::::::-:.  ..--:-=:.::.:-%@: .......   . .*###***+#***+++*         ++=*++#   +++    :..:-:.    .=@@%%%+:.....:::::=@@@@=-::..::::.:::::::::-=-                                                                       
-                                                             -===::::--..      .:::::.---=%%=++:............####**+*****+**          +=*+=+  +++        ***=-+*+*%%#*##%@@#+-===-#@@@%%%+:=::::--++-:::::::::-==                                                                      
-                                                               :-:::--.           ..=--+%%--==-:............+%#%###+++****++===++    ++*+=+  +*+       +*========++*####+%%%@@@@@@@@%%##%###=======--:::::::::-==                                                                     
-                                                              -----:=..     ..... .... =#-..::...::..........+%%%%*++++==========+*#  =*=-++***       +==-=-----=++***##%%%##%%@@@%%%##%%#-**=---=---::::::::::-+                                                                     
-                                                              -------...  ..........----=:..................+@%%%%%#*++++++++=====+*   *=-=+*#        +=-======+++++++*#@%%####%###%%@%#*=-+=**+==--::::::::::-:.                                                                     
-                                                              ------:... ......:::.-+===*+:...............=%%%%@@@%#*++++++++++++++**  *=-=+##         +====+***#*#*+++*%%########%%@#--=::+==+*##+=---:------..                                                                      
-                                                              ----- ......:.:::-:.:**---+*+............. +%%%%%@@@#*++++++++++***++*#  *=-=#*           ++===+*###*****####**#%%%%@%%+-::::====-=*#  :.:..   .                                                                        
-                                                                     :..::::---.:++**----+*%+:.......   :%%%%###%###**+++++++****#%%   *==+**             ++*****++**##%#####%%%%%#*#=:::::*=-=----+=-                                                                                
-                                                                       .::::.:--===-::-----=%%##+=--*###%%%%%%%%%#***++*******#####    #===+             =--=+%%%%=:-::..:=#%%%%%###*-:-::+++==-----=..                                                                               
-                                                                       -::::::--===::::---===#**#@@%%*#@%%%@@%%%###*+++***%@%%%%%      *===+      --:::::::--== -:::.:::..=@@%@@##%*---:::++=====----:                                                                                
-                                                                       =:::::-- =::::::------****#@@@@*@@@%%%%#####*+++**##            *====     -:::::::::::-----:....::.#%##%@#*+----:::**+---:---:-:                                                                               
-                                                                       ==----    -:::-::---+#***#*-#%@%#@@@@%%%%#-#****###             +===+   =-::::::......:--=-:.....:.+%#%@ ****-----=**=-----::-=                                                                                
-                                                                                  :::---==*#**+=-::.....+@@@@@@%=++======+*##          +===+ =-:::::.:..........::.......:#%#@@   **=----= +=---::--=                                                                                 
-                                                                                    ::-=+*#*=::::::.......-%@@@#++========+**          +=-===--:................-........=%#%%==-++=*+===    -----=                                                                                   
-                                                                                          -::::::..........:-@%#**+======-=+*+         +--== --:.............--.:.......:@%%#------+-:                                                                                                
-                                                                                    +=--   -::...............-#*+++=========+==        =--== :::......::-...:===..::--.-*@%#-----::--=-                                                                                               
-                                                                                 %##*##*----:.................=***+++=======+*       .:.:......:::...==-:.. .+=+----:---#%#*=---------=-        *=--:                                                                                 
-                                                                               #%%#*++**##=--=-...............-#*++========+*       --.............:.==++*-  -##---%%=-*%%%=----------==- @%%####-..:::                                                                               
-                                                                              +###*+====++#=-----:............+#*=--::----=          :---::::.......::-=-+-.:=-*#%@%%#=%%%*=-----:---===*%###***#.......                                                                              
-                                                                              -=*++==-===+#+------=:. .....=*##+:.......::-===         ----------:. ...:--:::*@@@%###*#%#@-=------======*##%####+.......                                                                              
-                                                                              -+*+========+#=-------: ....***+:...........::::-=+      *+=+=-==-====+=--=@@++@@#****#*@%@===+----======*%%%%%%#=........                                                                              
-                                                                               +**+=======++=...:-::....=##+-:..:::::....::::::-=+     #*+**+= **+++*#%@@%%@@%#**###=-=++-=**++--++===*@@%%%#=..........                                                                              
-                                                                                +##+=======+=.:-=%%:.+-=#*===----:....::..:::::::=+    #*+++=-+****#*%####%#*****#=-:::::::---+*:++=**%%@#=...  ..... .                                                                               
-                                                                                   ##=:=+++++-::--:+:.:*+.:=======--------:::::::-=    ##**  :-==:.=%%%%%%#****#%*-:::::::::----##*=#+%%=-***+++++=. .                                                                                
-                                                                                ++*#*++++--::---::+=-..--::.:--====-----::::::::---    #***  ++==+++#+%%#**%#%#*+-::::::::::::--=*@#=::=++****++===-                                                                                  
-                                                                              ##+====--=++==::. :==+*@%.::::::...::=---::::::::::=     ##+***+++++++++++==+#+=++++-:::::::::::--*#%@=-==++++++++=====**                                                                               
-                                                                            **=====-----==+:....:===*+-------::..:.----:::::::::-      #*+**++*++++++**===*#+===++---:::::::::--*##*--=+*+++++===++=+++*#                                                                             
-                                                                            +=+===---=========-:+#--*:-:.:---::::::------:::-:::       *+=++++****+++++==+*#====+#%+--:::::::::-=#%--:-:-+++=======+++=+*                                                                             
-                                                                           *==*======+++*+++*-:....#%#=--=-=::::::::-=                 *+==#++*****++++===**===++##%*%*::::::::=%%*.===:-=+++=====+++++*#                                                                             
-                                                                           ==+==----=+++++=:::....-%%*------:::::::::-                 *+=+***********++++**====+##@%*#%%*++**##**-:::-##++++=++++****##                                                                              
-                                                                            +=--:::----:::........:#%=-----:::::::::-=                  +=+*%#****#******##+==++#%%@**###%*%%%###:.::-.+**++****###%##                                                                                
-                                                                            +=-:::::::::::.........:*-::::::::::::--==                 ++-++ %%##*+++*#% ##*   %%%@#***#%*%%##+=:..:::-:+=+**++*+                                                                                     
-                                                                             =--:::::-:::..........-:-:---------::-=+                   +=++    ##**##   ##*  @@%%%+*+***%**+=-::::::::--====--==+                                                                                    
-                                                                               =-=-- -::...........-:=---:-----:---%@                   +-+=             ###  @%%@+-++*+**====-::--::::=:=====--=++                                                                                   
-                                                                                     -:..........----==-=--------#@@@@                  +-==             *** @%##%=--:-=*====-::----:::-:===-=-=+*                                                                                    
-                                                                                      ::........-----=-  :::-+++ @@%%@                  =-=+             *** %**##=--:-**=====----=-::-=+===----+*                                                                                    
-                                                                                       ::......:------        ++* @%%%%                 =-==             #+*%#**% ==-+* *=========+-:--:+=+==-===                                                                                     
-                                                                                         ::...:=----=          *+* %#*%%                -:--              *+#*+#%  ++*  ++++===+++-----     ===                                                                                       
-                                                                                            .:--==+             *+*##*#%                -::=              ##%++%  ++*     ++++++--=-                                                                                                  
-                                                                                             -==                 *++**+#%               -::=               #*=*# ++*                                                                                                                  
-                                                                                                                   +**==*               :::=-              #+=* +++                                                                                                                   
-                                                                                                                    #*==++              :::==             *+=+*#++                                                                                                                    
-                                                                                                                     *+===              :::==             +=-+*=*                                                                                                                     
-                                                                                                                      *+===             :::==            *+==*+*                                                                                                                      
-                                                                                                                      *+===             :::==            +=-=**                                                                                                                       
-                                                                                                                       *====            :.:=             +--+*                                                                                                                        
-                                                                                                                       +==-=            :.:-            +=-=+                                                                                                                         
-                                                                                                                        =----           :.:-            =--+=                                                                                                                         
-                                                                                                                        +=--=           :::-           +=-=+                                                                                                                          
-                                                                                                                         ==--           :::-           =--=+                                                                                                                          
-                                                                                                                         ==-:-          :::=          =---+                                                                                                                           
-                                                                                                                          =--==         :::=          ---++                                                                                                                           
-                                                                                                                          ==--=         -::=          -:-*                                                                                                                            
-                                                                                                                           =::==        =-:=         =--*                                                                                                                             
-                                                                                                                           +-:-=        =--+         =-=+                                                                                                                             
-                                                                                                                           +=:--        =--+        +--+*                                                                                                                             
-                                                                                                                            +----       =--+       ==-=+                                                                                                                              
-                                                                                                                            ++--=       =-=+       +=-=+                                                                                                                              
-                                                                                                                             +=-==      =--+       ===++                                                                                                                              
-                                                                                                                              =--=      ==-+      +===++                                                                                                                              
-                                                                                                                              =--==     =+=+      *+=+*                                                                                                                               
-                                                                                                                              +=-==     =+++      +==**                                                                                                                               
-                                                                                                                               =--==    ****     +==+*                                                                                                                                
-                                                                                                                               +--==   %#*+**    +==+                                                                                                                                 
-                                                                                                                               ==-===  ##*+**   +==+*                                                                                                                                 
-                                                                                                                                +--+=  ##++##   ++=+*                                                                                                                                 
-                                                                                                                                ==-=== ##++##  +*+=++                                                                                                                                 
-                                                                                                                                 +--+= ##++**  **+=++                       ++                                                                                                        
-                                                                                                                                 ===++=##++*#  +*+=+                  ------==+***                                                                                                    
-                                                                                                                                 *=-=*+##**** **++*#               --::::::-=****##%                                                                                                  
-                                                                                                                                  +==+*##**** ##**%             +=:::::::::--=+**#%%%%                                                                                                
-                                                                                                                                  *+=+*##*+**%%#**%          ++=---:::-:-          @%%                                                                                                
-                                                                                                                                  **==+##*+**%%#*%         *+=-------             %%###                                                                                               
-                                                                                                                                   %+=+#%***#@###%       @@#+====+=              ###*+*                                                                                               
-                                                                                                                                   **==%#**#%%###%     @%#**++++                ****+++                                                                                               
-                                                                                                                                    #+=+%**#%##*#%   @%#####%#                 **====++                                                                                               
-                                                                                                                                    #+=+%**###**#   @%%%%%%%                +++==---=+                                                                                                
-                                                                                                                                  +++*+=%*+###*## @@%%%%@@               ++=-------=                                                                                                  
-                                                                                                                                  #+====++*####%%@@%%%@@ @%%##******+++*+=-:::::--                                                                                                    
-                                                                                                                                  %%*========++*@@@%#%%%%%%#%%#####***++=------                                                                                                       
-                                                                                                                :---               %%@%%#*+=+*%%%#%@@@@%%%%%#*########**+==                                                                                                           
-                                                                                                      -:::::::--::-------=======+ @#+===--=*#%%%@@@@@@@@%%%                                                                                                                           
-                                                                                                   =---:::::::::::------------====*@@%#*+====+%%*#@                                                                                                                                   
-                                                                                                 ++=---:---                  =-----==**@@@@@@%@@@%                                                                                                                                    
-                                                                                               *++=====-                         @@@@@@%**@@@@@@@@@@                                                                                                                                  
-                                                                                               *++===                          @@@@@@%*++*%%%@@@@@%%%%                                                                                                                                
-                                                                                              +++++                         %@%%%%%#*+**#@@%%%  %#%%#%@                                                                                                                               
-                                                                                              ++++                       %%%%%%%%#**+##@%%@%%%   %#%#*##                                                                                                                              
-                                                                                               %%%                    *%#*%%%% #*+++##@%%%@%%%    #%#***#                                                                                                                             
-                                                                                               %%%@               ***+===*    *+=++*#%%%%%@%###   %###***%                                                                                                                            
-                                                                                               ##%%@@%@%    ##***+=++--     **=+++## %%##%%%###    #####**#                                                                                                                           
-                                                                                                *#%@@%%%%%##****++*        *+=++*#  @%%#%##%++#     %#*#++*#                                                                                                                          
-                                                                                                   @%%%%%#####            ++==+*#   %###%##%==**     ##*+++**                                                                                                                         
-                                                                                                                        *++++#%     %**%%##%==*+      #**++=+*                                                                                                                        
-                                                                                                                       +++**#      %***#@##%+=+*       %**++=+                                                                                                                        
-                                                                                                                     ++++*#       %%**#%@##%*=+#        %#+++++                                                                                                                       
-                                                                                                                    +++*##        %#**#%%##%*=+*         %#+++++                                                                                                                      
-                                                                                                                  ===+**          #***%@%**%#++*#         %*++=+*                                                                                                                     
-                                                                                                                ::::-=           ##++##@#**##++*#          %*+==++                                                                                                                    
-                                                                                                               :.:--             **+** @#*+##+++*           #+=--=+                                                                                                                   
-                                                                                                             ::.::-              *+++* %#++#%*+**            *=---=                                                                                                                   
-                                                                                                           :::.::               #*++*  @#++#%*++*#           #+-----                                                                                                                  
-                                                                                                          :..:::                #==++  %*+*##*++**            ++-:::-                                                                                                                 
-                                                                                                        ::..::                 +*=++   #++*# #++**             ==:::--                                                                                                                
-                                                                                                      --:::::                  *+===   %++** #+=+*              +-:::-                                                                                                                
-                                                                                                     -::::--                  **====   #++** **==#               =::::=                                                                                                               
-                                                                                                   --::::-                    +=-=+=   #+=+* ++==+               =-:::--                                                                                                              
-                                                                                                  --::::-                     =--++    *==+*  +--++               --::::-                                                                                                             
-                                                                                                 -::::--                      -.:+-   **==++  +=-=*                =-:::-                                                                                                             
-                                                                                               ==-:::-=                      -:.:==   **==++  +=-=*                =-::::-                                                                                                            
-                                                                                              ==-:-:-=                       :..--    ++==++  ++--++                =-::::=                                                                                                           
-                                                                                             +=-----=                       ...:--    ++===+   +--=+                 =::::-=                                                                                                          
-                                                                                            +=-:----=                       :..-=     +====+   +---=                  -::::-                                                                                                          
-                                                                                           ++------=                       ::..-=     +=-=++   +=--=                  --::::-                                                                                                         
-                                                                                          +=------=                        :..:=      ==--++   ==---=                  -::::-                                                                                                         
-                                                                                         ==--::--=                         :..-=      ----=+   ==-:-=                  -::::::                                                                                                        
-                                                                                           --::--=                        :...--      :=:-==    =----                   :....::                                                                                                       
-                                                                                           --::-=                         ...:-       :=:-=     +----                   -:...:-                                                                                                       
-                                                                                            ----                          :..--       --:-==    +=--=                    :::.::-                                                                                                      
-                                                                                            --=                          ::.:-        :-::--     +---=                   ::..:-=                                                                                                      
-                                                                                            =--                          ::.:-        :-::--     +---+                   -:::::-                                                                                                      
-                                                                                            ++                          :-.:-        ::-::--     +=--=                    :::::                                                                                                       
-                                                                                                                        -::--        ..-:::-      =----                   :::-                                                                                                        
-                                                                                                                        -::--        ..:.:-       =-:-=                   -:::                                                                                                        
-                                                                                                                       =-::=-        ..:.::       =-:-=                   =--                                                                                                         
-                                                                                                                       --:-=         ..:.::       +=::-                   ===                                                                                                         
-                                                                                                                       =--==         .....:       +=::-=                  ===                                                                                                         
-                                                                                                                      ++===          .....:       +=-:-=                                                                                                                              
-                                                                                                                     **+=+=          .:..::        =-::-                                                                                                                              
-                                                                                                                     *++++           ::...:        --::-                                                                                                                              
-                                                                                                                    *++=++           ::...:        =-::-                                                                                                                              
-                                                                                                                    ++==+*           -:...:        =-::-:                                                                                                                             
-                                                                                                                    *+=+*            -:..::        ==::--                                                                                                                             
-                                                                                                                   ++==*#            -:..::         =--:-                                                                                                                             
-                                                                                                                   +==+#             -:..:          =-::-                                                                                                                             
-                                                                                                                  *===##             -...:          ==-::-                                                                                                                            
-                                                                                                                 ++==*#              :..::           =-::-                                                                                                                            
-                                                                                                                 +==+#*              :..::           =--:--                                                                                                                           
-                                                                                                                +===**              :...::           =-::-=                                                                                                                           
-                                                                                                                +=-+++              :...::            --:--                                                                                                                           
-                                                                                                                =--==+              :...::            =--:--                                                                                                                          
-                                                                                                               =----+               -:..::            =-::-=                                                                                                                          
-                                                                                                               =--=+                -:..::            +-:---                                                                                                                          
-                                                                                                                +=-=                -...::             =--:-=                                                                                                                         
-                                                                                                                                    :...:-             +----+                                                                                                                         
-                                                                                                                                    :..:::             ==---=+                                                                                                                        
-                                                                                                                                    -:::::              +==-=                                                                                                                         
-                                                                                                                                    -::::                ++=                                                                                                                          
-                                                                                                                                    -::::                                                                                                                                             
-                                                                                                                                     :::                                                                                                                                              
-                                                                                                                                                                                                                                                                                      
+     _..._
+   .:::::::.
+  :::::::::::  ♡
+ :::::::::::::
+  \:::::::::/
+   \:::::::/
+    ':::'''
         </div>
-        <div style="font-family:'Cormorant Garamond'; font-size:1.5rem; color:var(--accent); letter-spacing: 2px;">Limerence</div>
+        <div style="font-family:'Cormorant Garamond';font-size:1.5rem;color:var(--accent);letter-spacing:2px;">Limerence</div>
       </div>
       <div class="characters-scroll-area" id="char-container">
-        <div class="char-card add-card" id="btn-add-char">
-          <i class="fas fa-plus" style="color:var(--accent-light)"></i>
-          <div style="font-size:0.9rem; margin-top:10px; color:var(--text-secondary)">新建角色</div>
-        </div>
+        <div class="char-card add-card" id="btn-add-char"><i class="fas fa-plus" style="color:var(--accent-light)"></i><div style="font-size:0.9rem;margin-top:10px;color:var(--text-secondary)">新建角色</div></div>
       </div>
     </div>
-    <div id="home-footer">
-      <input type="text" id="signature-input" value="I am because you are." />
-    </div>
+    <div id="home-footer"><input type="text" id="signature-input" value="I am because you are." /></div>
   </div>
 
-  <!-- =================== 详情页 =================== -->
+  <!-- 详情页 -->
   <div id="view-detail" class="view">
     <div class="detail-header">
       <button class="top-btn" id="btn-back-detail"><i class="fas fa-arrow-left"></i></button>
@@ -572,6 +265,8 @@
           <div class="left-menu-item" data-sub="memory"><div class="menu-icon-box"><i class="fas fa-brain"></i></div><div class="menu-text-box"><span class="menu-title">Memories</span><span class="menu-subtitle">AI的记忆管理区</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
           <div class="left-menu-item" data-sub="letters"><div class="menu-icon-box"><i class="fas fa-envelope-open-text"></i></div><div class="menu-text-box"><span class="menu-title">Letters</span><span class="menu-subtitle">书信往来</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
           <div class="left-menu-item" data-sub="notes"><div class="menu-icon-box"><i class="fas fa-sticky-note"></i></div><div class="menu-text-box"><span class="menu-title">Notes</span><span class="menu-subtitle">便签与待办提醒</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
+          <!-- 陪伴密度入口 -->
+          <div class="left-menu-item density-entry" id="btn-open-density"><div class="menu-icon-box"><i class="fas fa-heart"></i></div><div class="menu-text-box"><span class="menu-title">Companion Density</span><span class="menu-subtitle">陪伴密度与纪念日</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
         </div>
       </div>
       <div class="panel-right" id="panel-right">
@@ -579,16 +274,58 @@
         <div id="chat-list"></div>
       </div>
     </div>
-
-    <div class="subpage-overlay" id="sub-bio"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Biography</h3></div><div class="subpage-body"><div class="form-group" style="margin-bottom:15px;"><label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:5px;">角色简介</label><textarea class="form-input" id="input-bio" placeholder="为你的角色写一段简介..."></textarea></div><button class="btn-primary" id="btn-save-bio">保存简介</button></div></div>
-    <div class="subpage-overlay" id="sub-about"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>About</h3></div><div class="subpage-body"><div class="form-group" style="margin-bottom:15px;"><label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:5px;">头像链接</label><input class="form-input" id="input-avatar-url" placeholder="输入图片URL"></div><div class="form-group" style="margin-bottom:15px;"><label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:5px;">名字</label><input class="form-input" id="input-char-name" placeholder="角色名字"></div><div class="form-group" style="margin-bottom:15px;"><label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:5px;">系统指令</label><textarea class="form-input" id="input-sys-prompt" placeholder="注入给AI的系统指令..." style="min-height:150px;"></textarea></div><div class="form-group" style="margin-bottom:15px;"><label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:5px;">API预设</label><select class="form-input" id="select-api-preset"><option value="default">默认预设</option></select></div><button class="btn-primary" id="btn-save-about">保存设置</button></div></div>
+    <!-- 子页面 -->
+    <div class="subpage-overlay" id="sub-bio"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Biography</h3></div><div class="subpage-body"><div style="margin-bottom:15px;"><label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:5px;">角色简介</label><textarea class="form-input" id="input-bio" placeholder="为你的角色写一段简介..."></textarea></div><button class="btn-primary" id="btn-save-bio">保存简介</button></div></div>
+    <div class="subpage-overlay" id="sub-about"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>About</h3></div><div class="subpage-body"><div style="margin-bottom:15px;"><label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:5px;">头像链接</label><input class="form-input" id="input-avatar-url" placeholder="输入图片URL"></div><div style="margin-bottom:15px;"><label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:5px;">名字</label><input class="form-input" id="input-char-name" placeholder="角色名字"></div><div style="margin-bottom:15px;"><label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:5px;">系统指令</label><textarea class="form-input" id="input-sys-prompt" placeholder="注入给AI的系统指令..." style="min-height:150px;"></textarea></div><div style="margin-bottom:15px;"><label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:5px;">API预设</label><select class="form-input" id="select-api-preset"><option value="default">默认预设</option></select></div><button class="btn-primary" id="btn-save-about">保存设置</button></div></div>
     <div class="subpage-overlay" id="sub-items"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Entries</h3></div><div class="subpage-body"><div style="display:flex;gap:10px;margin-bottom:20px;"><input class="form-input" id="input-new-item" placeholder="添加新条目..." style="flex:1;"><button class="btn-primary" id="btn-add-item">添加</button></div><div id="items-list"></div></div></div>
     <div class="subpage-overlay" id="sub-memory"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Memories</h3></div><div class="subpage-body"><p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:15px;">AI在聊天中自动记录的记忆，按月份分类</p><div style="display:flex;gap:10px;margin-bottom:20px;"><input class="form-input" id="input-new-memory" placeholder="手动添加记忆..." style="flex:1;"><button class="btn-primary" id="btn-add-memory">添加</button></div><div id="memory-list"></div></div></div>
     <div class="subpage-overlay" id="sub-letters"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Letters</h3></div><div class="subpage-body"><button class="btn-primary" id="btn-write-letter" style="margin-bottom:15px;">写一封信</button><div id="letter-compose" style="display:none;margin-bottom:20px;background:var(--card-bg);padding:15px;border-radius:8px;border:1px solid var(--border);"><input class="form-input" id="input-letter-title" placeholder="信件标题" style="margin-bottom:10px;"><textarea class="form-input" id="input-letter-content" placeholder="写下你的心里话..." style="min-height:120px;"></textarea><div style="margin-top:10px;text-align:right;"><button class="btn-primary" id="btn-send-letter">寄出</button></div></div><div id="letters-list"></div></div></div>
     <div class="subpage-overlay" id="sub-notes"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Notes</h3></div><div class="subpage-body"><div style="display:flex;gap:10px;margin-bottom:20px;"><input class="form-input" id="input-new-note" placeholder="添加新便签..." style="flex:1;"><button class="btn-primary" id="btn-add-note">添加</button></div><div id="notes-list"></div></div></div>
   </div>
 
-  <!-- =================== 聊天页面 =================== -->
+  <!-- 陪伴密度页面 -->
+  <div id="view-density" class="view">
+    <div class="density-header">
+      <button class="top-btn" id="btn-back-density"><i class="fas fa-arrow-left"></i></button>
+      <h3>Companion Density</h3>
+    </div>
+    <div class="density-body" id="density-body">
+      <!-- 纪念日区域 -->
+      <div class="anni-section">
+        <div class="anni-section-title"><i class="fas fa-star"></i> Anniversaries</div>
+        <div id="anni-list"></div>
+        <div class="anni-add-form">
+          <input type="text" id="input-anni-name" placeholder="纪念日名称">
+          <input type="date" id="input-anni-date">
+          <button class="btn-primary btn-sm" id="btn-add-anni">添加</button>
+        </div>
+      </div>
+      <!-- 日历热力图 -->
+      <div class="calendar-section">
+        <div class="calendar-nav">
+          <button class="calendar-nav-btn" id="btn-cal-prev"><i class="fas fa-chevron-left"></i></button>
+          <div class="calendar-nav-label" id="cal-label"></div>
+          <button class="calendar-nav-btn" id="btn-cal-next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="calendar-grid" id="cal-grid"></div>
+        <!-- 图例 -->
+        <div class="heat-legend">
+          <div class="heat-legend-item"><div class="heat-box" style="background:var(--heat-0);"></div>0</div>
+          <div class="heat-legend-item"><div class="heat-box" style="background:var(--heat-1);"></div>1-20</div>
+          <div class="heat-legend-item"><div class="heat-box" style="background:var(--heat-2);"></div>21-50</div>
+          <div class="heat-legend-item"><div class="heat-box" style="background:var(--heat-3);"></div>51-100</div>
+          <div class="heat-legend-item"><div class="heat-box" style="background:var(--heat-4);"></div>101-200</div>
+          <div class="heat-legend-item"><div class="heat-box" style="background:var(--heat-5);"></div>200+</div>
+        </div>
+      </div>
+    </div>
+    <!-- 底部头像 -->
+    <div class="density-avatar-area">
+      <div class="density-avatar" id="density-avatar"></div>
+    </div>
+  </div>
+
+  <!-- 聊天页面 -->
   <div id="view-chat" class="view">
     <div class="chat-top-bar">
       <button class="top-btn" id="btn-chat-back"><i class="fas fa-arrow-left"></i></button>
@@ -617,16 +354,10 @@
     <input type="file" id="file-upload-file" accept=".txt,.md,.json,.csv,.pdf">
   </div>
 
-  <!-- =================== 设置页 =================== -->
+  <!-- 设置页 -->
   <div id="view-settings" class="view">
-    <div class="settings-header">
-      <button class="top-btn" id="btn-back-home"><i class="fas fa-arrow-left"></i></button>
-      <h2>Settings</h2>
-    </div>
-    <div class="settings-section">
-      <h3><i class="fas fa-server"></i> API 设置</h3>
-      <p style="font-size:0.85rem;color:var(--text-secondary);">主、搜索、识图、语音预设配置（下个版本开放）</p>
-    </div>
+    <div class="settings-header"><button class="top-btn" id="btn-back-home"><i class="fas fa-arrow-left"></i></button><h2>Settings</h2></div>
+    <div class="settings-section"><h3><i class="fas fa-server"></i> API 设置</h3><p style="font-size:0.85rem;color:var(--text-secondary);">主、搜索、识图、语音预设配置（下个版本开放）</p></div>
   </div>
 </div>
 
@@ -634,152 +365,94 @@
   // ==========================================
   // 1. 数据库层
   // ==========================================
-  const DB_NAME = 'LimerenceDB'; const DB_VERSION = 1; let db = null;
-  function openDB() {
-    return new Promise((resolve, reject) => {
-      const r = indexedDB.open(DB_NAME, DB_VERSION);
-      r.onupgradeneeded = (e) => { const d = e.target.result; ['characters','chats','memories','letters','notes','items','anniversaries','apiPresets'].forEach(n => { if(!d.objectStoreNames.contains(n)) d.createObjectStore(n,{keyPath:'id'}); }); };
-      r.onsuccess = (e) => { db = e.target.result; resolve(db); };
-      r.onerror = (e) => reject(e);
-    });
-  }
-  function dbPut(s,d) { return new Promise((res,rej) => { const tx=db.transaction(s,'readwrite'); tx.objectStore(s).put(d); tx.oncomplete=()=>res(); tx.onerror=(e)=>rej(e); }); }
-  function dbGetAll(s) { return new Promise((res,rej) => { const tx=db.transaction(s,'readonly'); const r=tx.objectStore(s).getAll(); r.onsuccess=()=>res(r.result); r.onerror=(e)=>rej(e); }); }
-  function dbDelete(s,id) { return new Promise((res,rej) => { const tx=db.transaction(s,'readwrite'); tx.objectStore(s).delete(id); tx.oncomplete=()=>res(); tx.onerror=(e)=>rej(e); }); }
+  const DB_NAME='LimerenceDB'; const DB_VERSION=1; let db=null;
+  function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,DB_VERSION);r.onupgradeneeded=(e)=>{const d=e.target.result;['characters','chats','memories','letters','notes','items','anniversaries','apiPresets'].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:'id'});});};r.onsuccess=(e)=>{db=e.target.result;res(db);};r.onerror=(e)=>rej(e);});}
+  function dbPut(s,d){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');tx.objectStore(s).put(d);tx.oncomplete=()=>res();tx.onerror=(e)=>rej(e);});}
+  function dbGetAll(s){return new Promise((res,rej)=>{const tx=db.transaction(s,'readonly');const r=tx.objectStore(s).getAll();r.onsuccess=()=>res(r.result);r.onerror=(e)=>rej(e);});}
+  function dbDelete(s,id){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');tx.objectStore(s).delete(id);tx.oncomplete=()=>res();tx.onerror=(e)=>rej(e);});}
 
   // ==========================================
   // 2. 导航栈与状态
   // ==========================================
-  let viewHistory = []; // 记录视图历史
-  let currentCharId = null;
-  let currentChatId = null;
-  let chatSearchMode = false;
-  let chatThinkMode = false;
-  // 记录从聊天页跳详情子页面时，需要打开的子页面
-  let pendingSubpage = null;
+  let viewHistory=[];
+  let currentCharId=null, currentChatId=null, chatSearchMode=false, chatThinkMode=false, pendingSubpage=null;
+  const globalTopBar=document.getElementById('global-top-bar');
+  const allViews=['view-home','view-settings','view-detail','view-chat','view-density'];
 
-  const globalTopBar = document.getElementById('global-top-bar');
-  const allViews = ['view-home', 'view-settings', 'view-detail', 'view-chat'];
-
-  function switchView(viewId, skipHistory = false) {
-    if (!skipHistory) {
-      // 找到当前活跃视图并压栈
-      const current = allViews.find(id => document.getElementById(id).classList.contains('active'));
-      if (current && current !== viewId) viewHistory.push(current);
-    }
-    allViews.forEach(id => document.getElementById(id).classList.remove('active'));
+  function switchView(viewId,skipHistory=false){
+    if(!skipHistory){const cur=allViews.find(id=>document.getElementById(id).classList.contains('active'));if(cur&&cur!==viewId)viewHistory.push(cur);}
+    allViews.forEach(id=>document.getElementById(id).classList.remove('active'));
     document.getElementById(viewId).classList.add('active');
-
-    // 聊天页隐藏全局顶栏
-    if (viewId === 'view-chat') { globalTopBar.classList.add('hidden'); }
-    else { globalTopBar.classList.remove('hidden'); }
+    globalTopBar.classList.toggle('hidden',viewId==='view-chat');
   }
-
-  function goBack() {
-    if (viewHistory.length > 0) {
-      const prev = viewHistory.pop();
-      // 返回时不再次压栈
-      allViews.forEach(id => document.getElementById(id).classList.remove('active'));
-      document.getElementById(prev).classList.add('active');
-      // 恢复全局顶栏状态
-      if (prev === 'view-chat') { globalTopBar.classList.add('hidden'); }
-      else { globalTopBar.classList.remove('hidden'); }
-    }
-  }
+  function goBack(){if(viewHistory.length>0){const prev=viewHistory.pop();allViews.forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById(prev).classList.add('active');globalTopBar.classList.toggle('hidden',prev==='view-chat');}}
 
   // ==========================================
   // 3. 主题与基础交互
   // ==========================================
-  const themeBtn = document.getElementById('btn-theme');
-  function applyTheme(t) {
-    document.body.setAttribute('data-theme', t);
-    localStorage.setItem('limerence-theme', t);
-    themeBtn.innerHTML = t === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-  }
-  themeBtn.addEventListener('click', () => applyTheme(document.body.getAttribute('data-theme')==='dark'?'light':'dark'));
-  document.getElementById('btn-chat-theme').addEventListener('click', () => applyTheme(document.body.getAttribute('data-theme')==='dark'?'light':'dark'));
-  document.getElementById('btn-settings').addEventListener('click', () => switchView('view-settings'));
-  document.getElementById('btn-back-home').addEventListener('click', goBack);
-
-  const signatureInput = document.getElementById('signature-input');
-  signatureInput.addEventListener('blur', () => localStorage.setItem('limerence-signature', signatureInput.value));
+  const themeBtn=document.getElementById('btn-theme');
+  function applyTheme(t){document.body.setAttribute('data-theme',t);localStorage.setItem('limerence-theme',t);themeBtn.innerHTML=t==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';}
+  themeBtn.addEventListener('click',()=>applyTheme(document.body.getAttribute('data-theme')==='dark'?'light':'dark'));
+  document.getElementById('btn-chat-theme').addEventListener('click',()=>applyTheme(document.body.getAttribute('data-theme')==='dark'?'light':'dark'));
+  document.getElementById('btn-settings').addEventListener('click',()=>switchView('view-settings'));
+  document.getElementById('btn-back-home').addEventListener('click',goBack);
+  const signatureInput=document.getElementById('signature-input');
+  signatureInput.addEventListener('blur',()=>localStorage.setItem('limerence-signature',signatureInput.value));
 
   // ==========================================
   // 4. 主页逻辑
   // ==========================================
-  document.getElementById('btn-add-char').addEventListener('click', async () => {
-    await dbPut('characters', { id:'char_'+Date.now(), name:'New Character', avatar:'', bio:'Edit biography...', systemPrompt:'', apiPresetId:'default' });
-    loadCharacters();
-  });
-  async function loadCharacters() {
-    const c = document.getElementById('char-container'), a = document.getElementById('btn-add-char');
-    c.querySelectorAll('.char-card:not(.add-card)').forEach(e=>e.remove());
-    (await dbGetAll('characters')).forEach(ch => {
-      const card = document.createElement('div'); card.className='char-card'; card.setAttribute('data-id',ch.id);
-      card.innerHTML=`<div class="avatar" style="background-image:url(${ch.avatar||''});background-size:cover;background-position:center;"></div><div class="char-name">${ch.name}</div><div class="char-bio">${ch.bio}</div>`;
-      card.addEventListener('click', () => openDetail(ch.id));
-      c.insertBefore(card, a);
-    });
-  }
+  document.getElementById('btn-add-char').addEventListener('click',async()=>{await dbPut('characters',{id:'char_'+Date.now(),name:'New Character',avatar:'',bio:'Edit biography...',systemPrompt:'',apiPresetId:'default'});loadCharacters();});
+  async function loadCharacters(){const c=document.getElementById('char-container'),a=document.getElementById('btn-add-char');c.querySelectorAll('.char-card:not(.add-card)').forEach(e=>e.remove());(await dbGetAll('characters')).forEach(ch=>{const card=document.createElement('div');card.className='char-card';card.setAttribute('data-id',ch.id);card.innerHTML=`<div class="avatar" style="background-image:url(${ch.avatar||''});background-size:cover;background-position:center;"></div><div class="char-name">${ch.name}</div><div class="char-bio">${ch.bio}</div>`;card.addEventListener('click',()=>openDetail(ch.id));c.insertBefore(card,a);});}
 
   // ==========================================
   // 5. 详情页逻辑
   // ==========================================
-  const detailBody = document.getElementById('detail-body');
-  const panelLeft = document.getElementById('panel-left');
-  const panelRight = document.getElementById('panel-right');
+  const detailBody=document.getElementById('detail-body');
+  const panelLeft=document.getElementById('panel-left');
+  const panelRight=document.getElementById('panel-right');
 
-  async function openDetail(charId) {
-    currentCharId = charId;
-    const char = (await dbGetAll('characters')).find(c=>c.id===charId);
-    if(!char) return;
+  async function openDetail(charId){
+    currentCharId=charId;
+    const char=(await dbGetAll('characters')).find(c=>c.id===charId);
+    if(!char)return;
     document.getElementById('detail-avatar').style.cssText=`background-image:url(${char.avatar||''});background-size:cover;background-position:center;`;
     document.getElementById('detail-name').textContent=char.name;
     detailBody.className='detail-body';
-    loadAboutData(char); loadChats();
+    loadAboutData(char);loadChats();
     switchView('view-detail');
-
-    // 如果是从聊天页快捷键跳来的，打开对应子页面
-    if (pendingSubpage) {
-      setTimeout(() => { openSubpage(pendingSubpage); pendingSubpage = null; }, 150);
-    }
+    if(pendingSubpage){setTimeout(()=>{openSubpage(pendingSubpage);pendingSubpage=null;},150);}
   }
-
-  // 详情页的返回按钮（根据历史栈决定去哪）
-  document.getElementById('btn-back-detail').addEventListener('click', goBack);
-
-  panelLeft.addEventListener('click', (e) => { if(!e.target.closest('.left-menu-item')) detailBody.className='detail-body focus-left'; });
-  panelRight.addEventListener('click', (e) => { if(!e.target.closest('.chat-item')&&!e.target.closest('.chat-add-btn')) detailBody.className='detail-body focus-right'; });
+  document.getElementById('btn-back-detail').addEventListener('click',goBack);
+  panelLeft.addEventListener('click',(e)=>{if(!e.target.closest('.left-menu-item'))detailBody.className='detail-body focus-left';});
+  panelRight.addEventListener('click',(e)=>{if(!e.target.closest('.chat-item')&&!e.target.closest('.chat-add-btn'))detailBody.className='detail-body focus-right';});
 
   // ==========================================
   // 6. 子页面
   // ==========================================
-  const subpages = document.querySelectorAll('.subpage-overlay');
-  document.querySelectorAll('.left-menu-item').forEach(item => item.addEventListener('click', () => openSubpage(item.getAttribute('data-sub'))));
-  function openSubpage(subId) { const t=document.getElementById('sub-'+subId); if(t){t.classList.add('active'); if(subId==='items')loadItems(); if(subId==='memory')loadMemories(); if(subId==='letters')loadLetters(); if(subId==='notes')loadNotes();} }
-  document.querySelectorAll('.btn-close-sub').forEach(btn => btn.addEventListener('click', () => subpages.forEach(s=>s.classList.remove('active'))));
+  const subpages=document.querySelectorAll('.subpage-overlay');
+  document.querySelectorAll('.left-menu-item[data-sub]').forEach(item=>item.addEventListener('click',()=>openSubpage(item.getAttribute('data-sub'))));
+  function openSubpage(subId){const t=document.getElementById('sub-'+subId);if(t){t.classList.add('active');if(subId==='items')loadItems();if(subId==='memory')loadMemories();if(subId==='letters')loadLetters();if(subId==='notes')loadNotes();}}
+  document.querySelectorAll('.btn-close-sub').forEach(btn=>btn.addEventListener('click',()=>subpages.forEach(s=>s.classList.remove('active'))));
 
   // ==========================================
   // 7. 关于 & 简介
   // ==========================================
-  function loadAboutData(ch) { document.getElementById('input-bio').value=ch.bio||''; document.getElementById('input-avatar-url').value=ch.avatar||''; document.getElementById('input-char-name').value=ch.name||''; document.getElementById('input-sys-prompt').value=ch.systemPrompt||''; }
-  document.getElementById('btn-save-bio').addEventListener('click', async () => { const ch=(await dbGetAll('characters')).find(c=>c.id===currentCharId); if(ch){ch.bio=document.getElementById('input-bio').value; await dbPut('characters',ch); document.getElementById('sub-bio').classList.remove('active');} });
-  document.getElementById('btn-save-about').addEventListener('click', async () => { const ch=(await dbGetAll('characters')).find(c=>c.id===currentCharId); if(ch){ch.avatar=document.getElementById('input-avatar-url').value; ch.name=document.getElementById('input-char-name').value; ch.systemPrompt=document.getElementById('input-sys-prompt').value; await dbPut('characters',ch); document.getElementById('detail-avatar').style.backgroundImage=`url(${ch.avatar})`; document.getElementById('detail-name').textContent=ch.name; document.getElementById('sub-about').classList.remove('active');} });
+  function loadAboutData(ch){document.getElementById('input-bio').value=ch.bio||'';document.getElementById('input-avatar-url').value=ch.avatar||'';document.getElementById('input-char-name').value=ch.name||'';document.getElementById('input-sys-prompt').value=ch.systemPrompt||'';}
+  document.getElementById('btn-save-bio').addEventListener('click',async()=>{const ch=(await dbGetAll('characters')).find(c=>c.id===currentCharId);if(ch){ch.bio=document.getElementById('input-bio').value;await dbPut('characters',ch);document.getElementById('sub-bio').classList.remove('active');}});
+  document.getElementById('btn-save-about').addEventListener('click',async()=>{const ch=(await dbGetAll('characters')).find(c=>c.id===currentCharId);if(ch){ch.avatar=document.getElementById('input-avatar-url').value;ch.name=document.getElementById('input-char-name').value;ch.systemPrompt=document.getElementById('input-sys-prompt').value;await dbPut('characters',ch);document.getElementById('detail-avatar').style.backgroundImage=`url(${ch.avatar})`;document.getElementById('detail-name').textContent=ch.name;document.getElementById('sub-about').classList.remove('active');}});
 
   // ==========================================
   // 8. 条目/记忆/信件/便签
   // ==========================================
-  document.getElementById('btn-add-item').addEventListener('click', async()=>{const t=document.getElementById('input-new-item').value.trim();if(!t)return;await dbPut('items',{id:'item_'+Date.now(),characterId:currentCharId,content:t,createdAt:new Date().toISOString()});document.getElementById('input-new-item').value='';loadItems();});
+  document.getElementById('btn-add-item').addEventListener('click',async()=>{const t=document.getElementById('input-new-item').value.trim();if(!t)return;await dbPut('items',{id:'item_'+Date.now(),characterId:currentCharId,content:t,createdAt:new Date().toISOString()});document.getElementById('input-new-item').value='';loadItems();});
   async function loadItems(){const l=document.getElementById('items-list');l.innerHTML='';(await dbGetAll('items')).filter(i=>i.characterId===currentCharId).forEach(i=>{l.innerHTML+=`<div class="item-card"><div class="item-card-actions"><i class="fas fa-trash" onclick="window._del('items','${i.id}',loadItems)"></i></div><div class="item-card-content">${i.content}</div><div class="item-card-meta">${new Date(i.createdAt).toLocaleString()}</div></div>`;});}
-
-  document.getElementById('btn-add-memory').addEventListener('click', async()=>{const t=document.getElementById('input-new-memory').value.trim();if(!t)return;const d=new Date();await dbPut('memories',{id:'mem_'+Date.now(),characterId:currentCharId,content:t,date:d.toISOString(),month:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`});document.getElementById('input-new-memory').value='';loadMemories();});
+  document.getElementById('btn-add-memory').addEventListener('click',async()=>{const t=document.getElementById('input-new-memory').value.trim();if(!t)return;const d=new Date();await dbPut('memories',{id:'mem_'+Date.now(),characterId:currentCharId,content:t,date:d.toISOString(),month:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`});document.getElementById('input-new-memory').value='';loadMemories();});
   async function loadMemories(){const l=document.getElementById('memory-list');l.innerHTML='';const ms=(await dbGetAll('memories')).filter(m=>m.characterId===currentCharId);const mos={};ms.forEach(m=>{const k=m.month||'?';if(!mos[k])mos[k]=[];mos[k].push(m);});Object.keys(mos).sort().reverse().forEach(mo=>{l.innerHTML+=`<div class="month-divider">${mo}</div>`;mos[mo].forEach(m=>{l.innerHTML+=`<div class="item-card"><div class="item-card-actions"><i class="fas fa-trash" onclick="window._del('memories','${m.id}',loadMemories)"></i></div><div class="item-card-content">${m.content}</div><div class="item-card-meta">${new Date(m.date).toLocaleString()}</div></div>`;});});}
-
   document.getElementById('btn-write-letter').addEventListener('click',()=>{document.getElementById('letter-compose').style.display=document.getElementById('letter-compose').style.display==='none'?'block':'none';});
-  document.getElementById('btn-send-letter').addEventListener('click', async()=>{const ti=document.getElementById('input-letter-title').value.trim();const c=document.getElementById('input-letter-content').value.trim();if(!c)return;await dbPut('letters',{id:'let_'+Date.now(),characterId:currentCharId,title:ti||'无题',content:c,fromUser:true,readByAI:false,createdAt:new Date().toISOString()});document.getElementById('input-letter-title').value='';document.getElementById('input-letter-content').value='';document.getElementById('letter-compose').style.display='none';loadLetters();});
+  document.getElementById('btn-send-letter').addEventListener('click',async()=>{const ti=document.getElementById('input-letter-title').value.trim();const c=document.getElementById('input-letter-content').value.trim();if(!c)return;await dbPut('letters',{id:'let_'+Date.now(),characterId:currentCharId,title:ti||'无题',content:c,fromUser:true,readByAI:false,createdAt:new Date().toISOString()});document.getElementById('input-letter-title').value='';document.getElementById('input-letter-content').value='';document.getElementById('letter-compose').style.display='none';loadLetters();});
   async function loadLetters(){const l=document.getElementById('letters-list');l.innerHTML='';(await dbGetAll('letters')).filter(lt=>lt.characterId===currentCharId).forEach(lt=>{const tag=lt.fromUser?'<span style="color:var(--accent-gold);">From You</span>':'<span style="color:var(--accent-light);">From AI</span>';l.innerHTML+=`<div class="item-card"><div class="item-card-actions"><i class="fas fa-trash" onclick="window._del('letters','${lt.id}',loadLetters)"></i></div><div style="font-weight:600;margin-bottom:5px;">${lt.title} ${tag}</div><div class="item-card-content">${lt.content}</div><div class="item-card-meta">${new Date(lt.createdAt).toLocaleString()}</div></div>`;});}
-
-  document.getElementById('btn-add-note').addEventListener('click', async()=>{const t=document.getElementById('input-new-note').value.trim();if(!t)return;await dbPut('notes',{id:'note_'+Date.now(),characterId:currentCharId,content:t,done:false,createdAt:new Date().toISOString()});document.getElementById('input-new-note').value='';loadNotes();});
+  document.getElementById('btn-add-note').addEventListener('click',async()=>{const t=document.getElementById('input-new-note').value.trim();if(!t)return;await dbPut('notes',{id:'note_'+Date.now(),characterId:currentCharId,content:t,done:false,createdAt:new Date().toISOString()});document.getElementById('input-new-note').value='';loadNotes();});
   async function loadNotes(){const l=document.getElementById('notes-list');l.innerHTML='';(await dbGetAll('notes')).filter(n=>n.characterId===currentCharId).forEach(n=>{l.innerHTML+=`<div class="item-card ${n.done?'done':''}"><div class="item-card-actions"><i class="fas ${n.done?'fa-undo':'fa-check'}" onclick="window._togNote('${n.id}')"></i><i class="fas fa-trash" onclick="window._del('notes','${n.id}',loadNotes)"></i></div><div class="item-card-content">${n.content}</div><div class="item-card-meta">${n.done?'✓ Done':'Pending'} · ${new Date(n.createdAt).toLocaleString()}</div></div>`;});}
   window._togNote=async(id)=>{const ns=await dbGetAll('notes');const n=ns.find(x=>x.id===id);if(n){n.done=!n.done;await dbPut('notes',n);loadNotes();}};
   window._del=async(s,id,cb)=>{await dbDelete(s,id);cb();};
@@ -787,116 +460,194 @@
   // ==========================================
   // 9. 右栏：聊天管理
   // ==========================================
-  document.getElementById('btn-add-chat').addEventListener('click', async()=>{await dbPut('chats',{id:'chat_'+Date.now(),characterId:currentCharId,name:'New Chat',messages:[],createdAt:new Date().toISOString()});loadChats();});
+  document.getElementById('btn-add-chat').addEventListener('click',async()=>{await dbPut('chats',{id:'chat_'+Date.now(),characterId:currentCharId,name:'New Chat',messages:[],createdAt:new Date().toISOString()});loadChats();});
   async function loadChats(){const l=document.getElementById('chat-list');l.innerHTML='';(await dbGetAll('chats')).filter(c=>c.characterId===currentCharId).forEach(c=>{l.innerHTML+=`<div class="chat-item"><span class="chat-item-name" onclick="window._enterChat('${c.id}')">${c.name}</span><div class="chat-item-actions"><i class="fas fa-pen" onclick="window._renChat('${c.id}')"></i><i class="fas fa-trash" onclick="window._del('chats','${c.id}',loadChats)"></i></div></div>`;});}
   window._renChat=async(id)=>{const cs=await dbGetAll('chats');const c=cs.find(x=>x.id===id);if(c){const n=prompt('重命名:',c.name);if(n){c.name=n;await dbPut('chats',c);loadChats();}}};
   window._enterChat=(id)=>{currentChatId=id;openChatView();};
 
   // ==========================================
-  // 10. 聊天页面
+  // 10. 陪伴密度页面
   // ==========================================
-  const chatMessages = document.getElementById('chat-messages');
-  const chatInput = document.getElementById('chat-input');
-  const expandMenu = document.getElementById('expand-menu');
+  let calYear, calMonth; // 当前日历显示的年月
 
-  async function openChatView() {
-    chatSearchMode=false; chatThinkMode=false;
-    document.getElementById('toggle-search').classList.remove('active-feature');
-    document.getElementById('toggle-think').classList.remove('active-feature');
-    switchView('view-chat');
-    renderMessages();
+  // 打开陪伴密度
+  document.getElementById('btn-open-density').addEventListener('click', () => {
+    const now = new Date();
+    calYear = now.getFullYear();
+    calMonth = now.getMonth() + 1;
+    switchView('view-density');
+    loadDensityPage();
+  });
+  document.getElementById('btn-back-density').addEventListener('click', goBack);
+
+  async function loadDensityPage() {
+    // 加载头像
+    const char = (await dbGetAll('characters')).find(c => c.id === currentCharId);
+    if (char) {
+      const av = document.getElementById('density-avatar');
+      av.style.backgroundImage = `url(${char.avatar || ''})`;
+      av.style.backgroundSize = 'cover';
+      av.style.backgroundPosition = 'center';
+    }
+    loadAnniversaries();
+    renderCalendar();
   }
 
-  // 聊天页返回 → 回到详情页（不清栈，goBack处理）
-  document.getElementById('btn-chat-back').addEventListener('click', goBack);
+  // 纪念日管理
+  document.getElementById('btn-add-anni').addEventListener('click', async () => {
+    const name = document.getElementById('input-anni-name').value.trim();
+    const date = document.getElementById('input-anni-date').value;
+    if (!name || !date) return;
+    await dbPut('anniversaries', {
+      id: 'anni_' + Date.now(), characterId: currentCharId,
+      name: name, date: date
+    });
+    document.getElementById('input-anni-name').value = '';
+    document.getElementById('input-anni-date').value = '';
+    loadAnniversaries();
+  });
 
-  // 快捷键：跳转到详情页对应子页面
-  function jumpToSubpage(subId) {
-    pendingSubpage = subId;
-    // 不压栈，直接替换当前视图
-    allViews.forEach(id => document.getElementById(id).classList.remove('active'));
-    document.getElementById('view-detail').classList.add('active');
-    globalTopBar.classList.remove('hidden');
-    // 手动把 chat 压入历史，这样从 detail 返回就能回到 chat
-    viewHistory.push('view-chat');
-    // 加载详情页数据并打开子页面
-    openDetail(currentCharId);
-  }
-  document.getElementById('btn-chat-letter').addEventListener('click', () => jumpToSubpage('letters'));
-  document.getElementById('btn-chat-note').addEventListener('click', () => jumpToSubpage('notes'));
-  document.getElementById('btn-chat-memory').addEventListener('click', () => jumpToSubpage('memory'));
-
-  // +号菜单
-  document.getElementById('btn-expand-actions').addEventListener('click', () => expandMenu.classList.toggle('active'));
-  document.addEventListener('click', (e) => { if(!e.target.closest('.input-actions')) expandMenu.classList.remove('active'); });
-  document.getElementById('toggle-search').addEventListener('click', (e) => { e.stopPropagation(); chatSearchMode=!chatSearchMode; e.currentTarget.classList.toggle('active-feature',chatSearchMode); });
-  document.getElementById('toggle-think').addEventListener('click', (e) => { e.stopPropagation(); chatThinkMode=!chatThinkMode; e.currentTarget.classList.toggle('active-feature',chatThinkMode); });
-  document.querySelector('[data-action="image"]').addEventListener('click', () => document.getElementById('file-upload-image').click());
-  document.querySelector('[data-action="file"]').addEventListener('click', () => document.getElementById('file-upload-file').click());
-
-  // 渲染消息
-  async function renderMessages() {
-    chatMessages.innerHTML='';
-    const chat=(await dbGetAll('chats')).find(c=>c.id===currentChatId);
-    if(!chat)return;
-    const char=(await dbGetAll('characters')).find(c=>c.id===currentCharId);
-    chat.messages.forEach(msg=>appendMessageDOM(msg,char,false));
-    chatMessages.scrollTop=chatMessages.scrollHeight;
-  }
-
-  function appendMessageDOM(msg,char,animate=true) {
-    const row=document.createElement('div'); row.className=`msg-row ${msg.role==='user'?'user':'ai'}`;
-    if(animate) row.style.animation='fadeIn 0.3s ease';
-    const avSrc=msg.role==='user'?'':(char.avatar||'');
-    const avHTML=`<div class="msg-avatar" style="${avSrc?'background-image:url('+avSrc+');background-size:cover;':''}"></div>`;
-    let cHTML='';
-    if(msg.thinking){cHTML+=`<div class="thinking-block"><div class="thinking-header" onclick="this.parentElement.classList.toggle('open')"><span><i class="fas fa-lightbulb"></i> 深度思考</span><i class="fas fa-chevron-down"></i></div>${msg.thinkingSummary?`<div class="thinking-summary">${msg.thinkingSummary}</div>`:''}<div class="thinking-body">${msg.thinking}</div></div>`;}
-    if(msg.toolCalls&&msg.toolCalls.length>0){msg.toolCalls.forEach(tc=>{cHTML+=`<div class="tool-indicator"><i class="fas fa-cog fa-spin"></i>调用工具: ${tc.name} ${tc.status==='done'?'· 已完成':''}</div>`;});}
-    if(msg.content){cHTML+=`<div class="msg-bubble">${msg.content}</div>`;}
-    cHTML+=`<div class="msg-time">${new Date(msg.timestamp).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div>`;
-    row.innerHTML=msg.role==='user'?`${cHTML}${avHTML}`:`${avHTML}<div class="msg-content">${cHTML}</div>`;
-    chatMessages.appendChild(row); chatMessages.scrollTop=chatMessages.scrollHeight;
-    return row;
+  async function loadAnniversaries() {
+    const list = document.getElementById('anni-list');
+    list.innerHTML = '';
+    const annis = (await dbGetAll('anniversaries')).filter(a => a.characterId === currentCharId);
+    if (annis.length === 0) {
+      list.innerHTML = '<div style="font-size:0.85rem;color:var(--text-secondary);padding:10px 0;">还没有纪念日，添加一个吧</div>';
+      return;
+    }
+    const today = new Date();
+    annis.forEach(a => {
+      const anniDate = new Date(a.date);
+      // 计算已经过去多少天
+      const diffTime = today.getTime() - anniDate.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      const dayText = diffDays >= 0 ? `已经 ${diffDays} 天` : `还有 ${Math.abs(diffDays)} 天`;
+      list.innerHTML += `
+        <div class="anni-card">
+          <div class="anni-info">
+            <div class="anni-name">${a.name}</div>
+            <div class="anni-date">${a.date}</div>
+          </div>
+          <div class="anni-count">${diffDays >= 0 ? diffDays : -diffDays} <span>${diffDays >= 0 ? 'days' : 'days left'}</span></div>
+          <div class="anni-actions"><i class="fas fa-trash" onclick="window._del('anniversaries','${a.id}',loadAnniversaries)"></i></div>
+        </div>
+      `;
+    });
   }
 
-  // 发送消息
-  document.getElementById('btn-send').addEventListener('click', sendMessage);
-  chatInput.addEventListener('keydown', (e) => { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} });
+  // 日历热力图
+  document.getElementById('btn-cal-prev').addEventListener('click', () => {
+    calMonth--;
+    if (calMonth < 1) { calMonth = 12; calYear--; }
+    renderCalendar();
+  });
+  document.getElementById('btn-cal-next').addEventListener('click', () => {
+    calMonth++;
+    if (calMonth > 12) { calMonth = 1; calYear++; }
+    renderCalendar();
+  });
 
-  async function sendMessage() {
-    const text=chatInput.value.trim(); if(!text)return; chatInput.value=''; chatInput.style.height='auto';
-    const chat=(await dbGetAll('chats')).find(c=>c.id===currentChatId);
-    const char=(await dbGetAll('characters')).find(c=>c.id===currentCharId);
-    if(!chat||!char)return;
+  async function renderCalendar() {
+    const grid = document.getElementById('cal-grid');
+    const label = document.getElementById('cal-label');
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    label.textContent = `${monthNames[calMonth - 1]} ${calYear}`;
 
-    const userMsg={role:'user',content:text,timestamp:new Date().toISOString()};
-    chat.messages.push(userMsg); await dbPut('chats',chat); appendMessageDOM(userMsg,char);
+    // 获取当月消息统计
+    const counts = await getMessageCounts(calYear, calMonth);
 
-    const aiMsg={role:'assistant',content:'',timestamp:new Date().toISOString(),thinking:'',thinkingSummary:'',toolCalls:[]};
-    
-    if(chatThinkMode){aiMsg.thinkingSummary="分析用户意图与情感...";aiMsg.thinking="用户发送了这条消息，我需要结合之前的记忆和角色设定来回应...";appendMessageDOM(aiMsg,char);await sleep(1000);}
-    if(Math.random()>0.6){const tn=['save_memory','add_note','write_letter'][Math.floor(Math.random()*3)];const tr=appendMessageDOM({...aiMsg,toolCalls:[{name:tn,status:'running'}]},char);await sleep(1200);tr.remove();aiMsg.toolCalls=[{name:tn,status:'done'}];appendMessageDOM(aiMsg,char);await sleep(800);}
+    // 获取日历信息
+    const firstDay = new Date(calYear, calMonth - 1, 1).getDay(); // 0=周日
+    const daysInMonth = new Date(calYear, calMonth, 0).getDate();
+    const today = new Date();
+    const isCurrentMonth = today.getFullYear() === calYear && today.getMonth() + 1 === calMonth;
 
-    const fullText="这是一条模拟回复。真实API流式接口接入后，这里会逐字显示。当前深度思考："+(chatThinkMode?"是":"否")+"，联网搜索："+(chatSearchMode?"是":"否");
-    const streamRow=appendMessageDOM({...aiMsg,content:''},char);
-    const bubble=streamRow.querySelector('.msg-bubble');
-    for(let i=0;i<fullText.length;i++){bubble.innerHTML=fullText.substring(0,i+1)+'<span class="typing-cursor"></span>';chatMessages.scrollTop=chatMessages.scrollHeight;await sleep(30+Math.random()*30);}
-    bubble.innerHTML=fullText;
-    aiMsg.content=fullText; chat.messages.push(aiMsg); await dbPut('chats',chat);
+    let html = '';
+    // 星期标题
+    const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    weekdays.forEach(w => { html += `<div class="calendar-weekday">${w}</div>`; });
+
+    // 空白填充
+    for (let i = 0; i < firstDay; i++) {
+      html += '<div class="calendar-day empty"></div>';
+    }
+
+    // 日期格子
+    for (let d = 1; d <= daysInMonth; d++) {
+      const key = `${calYear}-${String(calMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const count = counts[key] || 0;
+      const heatLevel = getHeatLevel(count);
+      const isToday = isCurrentMonth && today.getDate() === d;
+      const hasData = count > 0;
+      html += `<div class="calendar-day ${hasData ? 'has-data' : ''} ${isToday ? 'today' : ''}" style="background:var(--heat-${heatLevel});" title="${key}: ${count}条消息">${d}</div>`;
+    }
+
+    grid.innerHTML = html;
   }
 
+  // 计算某月每日消息数
+  async function getMessageCounts(year, month) {
+    const chats = (await dbGetAll('chats')).filter(c => c.characterId === currentCharId);
+    const counts = {};
+    chats.forEach(chat => {
+      (chat.messages || []).forEach(msg => {
+        const d = new Date(msg.timestamp);
+        if (d.getFullYear() === year && d.getMonth() + 1 === month) {
+          const key = `${year}-${String(month).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+          counts[key] = (counts[key] || 0) + 1;
+        }
+      });
+    });
+    return counts;
+  }
+
+  // 根据消息数返回热力等级 (0-5)
+  function getHeatLevel(count) {
+    if (count === 0) return 0;
+    if (count <= 20) return 1;
+    if (count <= 50) return 2;
+    if (count <= 100) return 3;
+    if (count <= 200) return 4;
+    return 5;
+  }
+
+  // ==========================================
+  // 11. 聊天页面
+  // ==========================================
+  const chatMessages=document.getElementById('chat-messages');
+  const chatInput=document.getElementById('chat-input');
+  const expandMenu=document.getElementById('expand-menu');
+
+  async function openChatView(){chatSearchMode=false;chatThinkMode=false;document.getElementById('toggle-search').classList.remove('active-feature');document.getElementById('toggle-think').classList.remove('active-feature');switchView('view-chat');renderMessages();}
+  document.getElementById('btn-chat-back').addEventListener('click',goBack);
+
+  function jumpToSubpage(subId){pendingSubpage=subId;allViews.forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById('view-detail').classList.add('active');globalTopBar.classList.remove('hidden');viewHistory.push('view-chat');openDetail(currentCharId);}
+  document.getElementById('btn-chat-letter').addEventListener('click',()=>jumpToSubpage('letters'));
+  document.getElementById('btn-chat-note').addEventListener('click',()=>jumpToSubpage('notes'));
+  document.getElementById('btn-chat-memory').addEventListener('click',()=>jumpToSubpage('memory'));
+
+  document.getElementById('btn-expand-actions').addEventListener('click',()=>expandMenu.classList.toggle('active'));
+  document.addEventListener('click',(e)=>{if(!e.target.closest('.input-actions'))expandMenu.classList.remove('active');});
+  document.getElementById('toggle-search').addEventListener('click',(e)=>{e.stopPropagation();chatSearchMode=!chatSearchMode;e.currentTarget.classList.toggle('active-feature',chatSearchMode);});
+  document.getElementById('toggle-think').addEventListener('click',(e)=>{e.stopPropagation();chatThinkMode=!chatThinkMode;e.currentTarget.classList.toggle('active-feature',chatThinkMode);});
+  document.querySelector('[data-action="image"]').addEventListener('click',()=>document.getElementById('file-upload-image').click());
+  document.querySelector('[data-action="file"]').addEventListener('click',()=>document.getElementById('file-upload-file').click());
+
+  async function renderMessages(){chatMessages.innerHTML='';const chat=(await dbGetAll('chats')).find(c=>c.id===currentChatId);if(!chat)return;const char=(await dbGetAll('characters')).find(c=>c.id===currentCharId);chat.messages.forEach(msg=>appendMessageDOM(msg,char,false));chatMessages.scrollTop=chatMessages.scrollHeight;}
+
+  function appendMessageDOM(msg,char,animate=true){const row=document.createElement('div');row.className=`msg-row ${msg.role==='user'?'user':'ai'}`;if(animate)row.style.animation='fadeIn 0.3s ease';const avSrc=msg.role==='user'?'':(char.avatar||'');const avHTML=`<div class="msg-avatar" style="${avSrc?'background-image:url('+avSrc+');background-size:cover;':''}"></div>`;let cHTML='';if(msg.thinking){cHTML+=`<div class="thinking-block"><div class="thinking-header" onclick="this.parentElement.classList.toggle('open')"><span><i class="fas fa-lightbulb"></i> 深度思考</span><i class="fas fa-chevron-down"></i></div>${msg.thinkingSummary?`<div class="thinking-summary">${msg.thinkingSummary}</div>`:''}<div class="thinking-body">${msg.thinking}</div></div>`;}if(msg.toolCalls&&msg.toolCalls.length>0){msg.toolCalls.forEach(tc=>{cHTML+=`<div class="tool-indicator"><i class="fas fa-cog fa-spin"></i>调用工具: ${tc.name} ${tc.status==='done'?'· 已完成':''}</div>`;});}if(msg.content){cHTML+=`<div class="msg-bubble">${msg.content}</div>`;}cHTML+=`<div class="msg-time">${new Date(msg.timestamp).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div>`;row.innerHTML=msg.role==='user'?`${cHTML}${avHTML}`:`${avHTML}<div class="msg-content">${cHTML}</div>`;chatMessages.appendChild(row);chatMessages.scrollTop=chatMessages.scrollHeight;return row;}
+
+  document.getElementById('btn-send').addEventListener('click',sendMessage);
+  chatInput.addEventListener('keydown',(e)=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
+
+  async function sendMessage(){const text=chatInput.value.trim();if(!text)return;chatInput.value='';chatInput.style.height='auto';const chat=(await dbGetAll('chats')).find(c=>c.id===currentChatId);const char=(await dbGetAll('characters')).find(c=>c.id===currentCharId);if(!chat||!char)return;const userMsg={role:'user',content:text,timestamp:new Date().toISOString()};chat.messages.push(userMsg);await dbPut('chats',chat);appendMessageDOM(userMsg,char);const aiMsg={role:'assistant',content:'',timestamp:new Date().toISOString(),thinking:'',thinkingSummary:'',toolCalls:[]};if(chatThinkMode){aiMsg.thinkingSummary="分析用户意图与情感...";aiMsg.thinking="用户发送了这条消息，我需要结合之前的记忆和角色设定来回应...";appendMessageDOM(aiMsg,char);await sleep(1000);}if(Math.random()>0.6){const tn=['save_memory','add_note','write_letter'][Math.floor(Math.random()*3)];const tr=appendMessageDOM({...aiMsg,toolCalls:[{name:tn,status:'running'}]},char);await sleep(1200);tr.remove();aiMsg.toolCalls=[{name:tn,status:'done'}];appendMessageDOM(aiMsg,char);await sleep(800);}const fullText="这是一条模拟回复。真实API流式接口接入后，这里会逐字显示。当前深度思考："+(chatThinkMode?"是":"否")+"，联网搜索："+(chatSearchMode?"是":"否");const streamRow=appendMessageDOM({...aiMsg,content:''},char);const bubble=streamRow.querySelector('.msg-bubble');for(let i=0;i<fullText.length;i++){bubble.innerHTML=fullText.substring(0,i+1)+'<span class="typing-cursor"></span>';chatMessages.scrollTop=chatMessages.scrollHeight;await sleep(30+Math.random()*30);}bubble.innerHTML=fullText;aiMsg.content=fullText;chat.messages.push(aiMsg);await dbPut('chats',chat);}
   function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
   chatInput.addEventListener('input',()=>{chatInput.style.height='auto';chatInput.style.height=chatInput.scrollHeight+'px';});
 
   // ==========================================
   // 初始化
   // ==========================================
-  async function init() {
-    await openDB();
-    applyTheme(localStorage.getItem('limerence-theme')||'light');
-    const ss=localStorage.getItem('limerence-signature'); if(ss)signatureInput.value=ss;
-    await loadCharacters();
-  }
+  async function init(){await openDB();applyTheme(localStorage.getItem('limerence-theme')||'light');const ss=localStorage.getItem('limerence-signature');if(ss)signatureInput.value=ss;await loadCharacters();}
   init();
 </script>
 </body>
