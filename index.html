@@ -1,2763 +1,888 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Limerence</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-/* ========== CSS VARIABLES - THEMES ========== */
-:root {
-  --bg-primary: #f7f2ea;
-  --bg-secondary: #ede5d8;
-  --bg-card: #faf6f0;
-  --bg-overlay: rgba(247,242,234,0.96);
-  --text-primary: #2a1a0e;
-  --text-secondary: #6b4c35;
-  --text-muted: #a08060;
-  --accent: #7b4f8e;
-  --accent-light: #c4a8d4;
-  --accent-dim: rgba(123,79,142,0.12);
-  --border: #d4c4b0;
-  --border-light: #e8ddd0;
-  --shadow: rgba(42,26,14,0.10);
-  --shadow-strong: rgba(42,26,14,0.20);
-  --chat-user: #ede0f5;
-  --chat-ai: #f0ebe2;
-  --chat-tool: #e8f0e0;
-  --density-0: #ede5d8;
-  --density-1: #d8c4e8;
-  --density-2: #c4a0d8;
-  --density-3: #a870c0;
-  --density-4: #8040a8;
-  --density-5: #5a1a80;
-  --font-serif: 'Cormorant Garamond', 'ZCOOL XiaoWei', 'Ma Shan Zheng', serif;
-  --font-body: 'EB Garamond', 'ZCOOL XiaoWei', serif;
-  --radius: 12px;
-  --radius-sm: 6px;
-  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
-}
-[data-theme="dark"] {
-  --bg-primary: #1a1420;
-  --bg-secondary: #221830;
-  --bg-card: #1e1828;
-  --bg-overlay: rgba(26,20,32,0.97);
-  --text-primary: #f0e8ff;
-  --text-secondary: #b09ac8;
-  --text-muted: #7060a0;
-  --accent: #a870c8;
-  --accent-light: #7040a0;
-  --accent-dim: rgba(168,112,200,0.15);
-  --border: #3a2850;
-  --border-light: #2e2040;
-  --shadow: rgba(0,0,0,0.4);
-  --shadow-strong: rgba(0,0,0,0.6);
-  --chat-user: #2e1e40;
-  --chat-ai: #1e1830;
-  --chat-tool: #1a2820;
-  --density-0: #2a1e38;
-  --density-1: #3a2060;
-  --density-2: #5a2888;
-  --density-3: #7830a8;
-  --density-4: #9848c8;
-  --density-5: #c060f0;
-}
+  :root {
+    --bg-primary: #FAF8F5;
+    --bg-secondary: #F0ECF4;
+    --text-primary: #2D1B3D;
+    --text-secondary: #6B5B7B;
+    --accent: #5C3D7A;
+    --accent-light: #7B68AE;
+    --accent-gold: #BFA16A;
+    --border: #D8CDE0;
+    --card-bg: #FFFFFF;
+    --shadow: rgba(45, 27, 61, 0.08);
+    --danger: #A94442;
+  }
 
-/* ========== RESET & BASE ========== */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-body);font-size:16px;line-height:1.6;margin:0;padding:0;}
-body{display:flex;flex-direction:column;}
-button{border:none;background:none;cursor:pointer;font-family:var(--font-body);color:var(--text-primary);}
-input,textarea,select{font-family:var(--font-body);background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;outline:none;width:100%;}
-input:focus,textarea:focus,select:focus{border-color:var(--accent);}
-textarea{resize:vertical;min-height:80px;}
-a{color:var(--accent);text-decoration:none;}
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+  [data-theme="dark"] {
+    --bg-primary: #13101A;
+    --bg-secondary: #1E1829;
+    --text-primary: #EFEAED;
+    --text-secondary: #9890A6;
+    --accent: #A688C6;
+    --accent-light: #C4A9E0;
+    --accent-gold: #D4AF37;
+    --border: #342A41;
+    --card-bg: #251E30;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --danger: #E06C75;
+  }
 
-/* ========== SCREEN SYSTEM ========== */
-.screen{
-  position:fixed;inset:0;
-  display:none!important;flex-direction:column;
-  background:var(--bg-primary);
-  overflow:hidden;
-  z-index:10;
-  width:100vw;
-  height:100vh;
-  left:0;
-  top:0;
-}
-.screen.active{display:flex!important;z-index:11;}
-.screen.slide-in{animation:slideInRight 0.3s ease forwards;}
-.screen.slide-out{animation:slideOutLeft 0.3s ease forwards;}
-.screen.slide-in-left{animation:slideInLeft 0.3s ease forwards;}
-.screen.slide-out-right{animation:slideOutRight 0.3s ease forwards;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Serif SC', 'Cormorant Garamond', serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    height: 100vh; overflow: hidden;
+    transition: background-color 0.4s, color 0.4s;
+  }
 
-@keyframes slideInRight{from{transform:translateX(100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
-@keyframes slideOutLeft{from{transform:translateX(0);opacity:1;}to{transform:translateX(-30%);opacity:0;}}
-@keyframes slideInLeft{from{transform:translateX(-100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
-@keyframes slideOutRight{from{transform:translateX(0);opacity:1;}to{transform:translateX(100%);opacity:0;}}
+  /* 顶栏 */
+  #top-bar {
+    height: 50px; display: flex; justify-content: space-between; align-items: center;
+    padding: 0 20px; background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+    position: relative; z-index: 100;
+  }
+  .top-btn {
+    background: none; border: none; color: var(--text-secondary); font-size: 1.2rem;
+    cursor: pointer; padding: 8px; transition: color 0.2s;
+  }
+  .top-btn:hover, .top-btn:active { color: var(--accent); }
 
-/* ========== SPLASH SCREEN ========== */
-#screen-splash{
-  display:flex;align-items:center;justify-content:center;
-  background:var(--bg-primary);z-index:1000;
-  position:fixed;inset:0;
-}
-.splash-text{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(36px,10vw,72px);
-  font-style:italic;
-  font-weight:300;
-  color:var(--accent);
-  letter-spacing:0.15em;
-  animation:splashAnim 2.8s ease forwards;
-}
-.splash-sub{
-  font-family:'EB Garamond',serif;
-  font-size:clamp(12px,3vw,16px);
-  color:var(--text-muted);
-  letter-spacing:0.4em;
-  text-transform:uppercase;
-  margin-top:8px;
-  opacity:0;
-  animation:splashSubAnim 2.8s ease forwards 0.3s;
-  text-align:center;
-}
-.splash-inner{display:flex;flex-direction:column;align-items:center;}
-@keyframes splashAnim{
-  0%{opacity:0;transform:translateY(12px);}
-  30%{opacity:1;transform:translateY(0);}
-  70%{opacity:1;transform:translateY(0);}
-  100%{opacity:0;transform:translateY(-8px);}
-}
-@keyframes splashSubAnim{
-  0%{opacity:0;}
-  30%{opacity:0.6;}
-  70%{opacity:0.6;}
-  100%{opacity:0;}
-}
+  /* 视图容器 */
+  .view { display: none; height: calc(100vh - 50px); overflow: hidden; }
+  .view.active { display: flex; flex-direction: column; }
 
-/* ========== TOP BAR ========== */
-.top-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top));
-  background:var(--bg-primary);
-  border-bottom:1px solid var(--border-light);
-  flex-shrink:0;
-  min-height:56px;
-}
-.top-bar-title{
-  font-family:var(--font-serif);
-  font-size:18px;font-weight:600;
-  color:var(--text-primary);
-  letter-spacing:0.05em;
-  flex:1;text-align:center;
-}
-.top-bar-actions{display:flex;gap:8px;align-items:center;}
-.icon-btn{
-  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
-  border-radius:50%;background:var(--bg-secondary);
-  color:var(--text-secondary);font-size:16px;
-  transition:var(--transition);flex-shrink:0;
-}
-.icon-btn:hover{background:var(--accent-dim);color:var(--accent);}
-.back-btn{
-  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
-  border-radius:50%;background:var(--bg-secondary);
-  color:var(--text-secondary);font-size:18px;
-  flex-shrink:0;transition:var(--transition);
-}
-.back-btn:hover{background:var(--accent-dim);color:var(--accent);}
+  /* =================== 主页样式 =================== */
+  #home-slider {
+    flex: 1; display: flex; align-items: center; overflow-x: auto; scrollbar-width: none;
+  }
+  #home-slider::-webkit-scrollbar { display: none; }
+  .violet-screen {
+    flex: 0 0 100vw; height: 100%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .violet-ascii {
+    font-family: 'Cormorant Garamond', monospace; color: var(--accent); text-align: center;
+    line-height: 1.2; font-size: 1.2rem; margin-bottom: 20px; white-space: pre; user-select: none;
+  }
+  .characters-scroll-area {
+    flex: 0 0 auto; display: flex; align-items: center; height: 100%; padding: 0 30px; gap: 25px;
+  }
+  .char-card {
+    width: 200px; height: 260px; background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 25px 20px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; box-shadow: 0 4px 15px var(--shadow);
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .char-card:active { transform: scale(0.97); }
+  .avatar {
+    width: 80px; height: 80px; border-radius: 50%; background: var(--bg-secondary);
+    border: 2px solid var(--accent-light); margin-bottom: 15px; object-fit: cover;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  .char-name { font-weight: 600; color: var(--accent); margin-bottom: 5px; }
+  .char-bio { font-size: 0.85rem; color: var(--text-secondary); text-align: center; line-height: 1.4; max-height: 50px; overflow: hidden; }
+  .add-card { border: 2px dashed var(--border); background: transparent; box-shadow: none; color: var(--text-secondary); }
+  .add-card:active { background: var(--bg-secondary); }
+  #home-footer {
+    height: 60px; display: flex; align-items: center; justify-content: center;
+    background: var(--bg-secondary); border-top: 1px solid var(--border);
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem;
+    color: var(--text-secondary); padding: 0 20px;
+  }
+  #signature-input {
+    background: none; border: none; border-bottom: 1px solid var(--border); color: var(--text-primary);
+    text-align: center; font-family: inherit; font-style: inherit; font-size: inherit;
+    width: 80%; outline: none; padding: 2px 0;
+  }
+  #signature-input:focus { border-bottom: 1px solid var(--accent); }
 
-/* ========== MAIN SCREEN ========== */
-#screen-main{overflow:hidden;}
-.main-carousel-wrap{
-  flex:1;display:flex;flex-direction:column;overflow:hidden;
-  position:relative;
-}
-.main-carousel{
-  flex:1;display:flex;overflow-x:auto;overflow-y:hidden;
-  scroll-snap-type:x mandatory;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-}
-.main-carousel::-webkit-scrollbar{display:none;}
-.carousel-page{
-  min-width:100%;height:100%;
-  scroll-snap-align:start;
-  display:flex;align-items:center;justify-content:center;
-  flex-direction:column;
-  position:relative;
-  padding:20px;
-}
+  /* =================== 详情页样式 =================== */
+  #view-detail { background: var(--bg-primary); position: relative; }
+  
+  /* 详情头部：头像+名字 */
+  .detail-header {
+    display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
+  }
+  .detail-header .avatar { width: 50px; height: 50px; margin-bottom: 0; margin-right: 15px; }
+  .detail-name { font-size: 1.2rem; font-weight: 600; color: var(--accent); }
 
-/* Violet flower */
-.violet-wrap{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  flex:1;width:100%;
-}
-.violet-svg-wrap{
-  filter:drop-shadow(0 8px 24px rgba(123,79,142,0.25));
-  animation:violetFloat 4s ease-in-out infinite;
-}
-@keyframes violetFloat{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-8px);}
-}
-.violet-hint{
-  font-family:var(--font-serif);font-style:italic;
-  color:var(--text-muted);font-size:13px;letter-spacing:0.1em;
-  margin-top:12px;
-}
+  /* 双栏布局 */
+  .detail-body {
+    flex: 1; display: flex; overflow: hidden; position: relative;
+  }
+  .panel-left, .panel-right {
+    transition: flex 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+    overflow-y: auto; padding: 15px;
+    scrollbar-width: none;
+  }
+  .panel-left::-webkit-scrollbar, .panel-right::-webkit-scrollbar { display: none; }
+  
+  /* 默认各占一半 */
+  .panel-left { flex: 1; border-right: 1px solid var(--border); background: var(--bg-primary); }
+  .panel-right { flex: 1; background: var(--bg-secondary); }
 
-/* Character card */
-.char-card{
-  background:var(--bg-card);
-  border:1px solid var(--border-light);
-  border-radius:var(--radius);
-  padding:24px 20px;
-  display:flex;flex-direction:column;align-items:center;
-  gap:12px;
-  width:min(280px,90%);
-  box-shadow:0 4px 20px var(--shadow);
-  cursor:pointer;
-  transition:var(--transition);
-}
-.char-card:hover{box-shadow:0 8px 32px var(--shadow-strong);transform:translateY(-2px);}
-.char-avatar-wrap{position:relative;}
-.char-avatar{
-  width:80px;height:80px;border-radius:50%;
-  border:2px solid var(--accent-light);
-  object-fit:cover;background:var(--bg-secondary);
-  display:flex;align-items:center;justify-content:center;
-  font-size:32px;overflow:hidden;
-}
-.char-avatar img{width:100%;height:100%;object-fit:cover;}
-.char-name{
-  font-family:var(--font-serif);font-size:18px;font-weight:600;
-  color:var(--text-primary);letter-spacing:0.05em;
-}
-.char-intro{
-  font-size:13px;color:var(--text-muted);text-align:center;
-  line-height:1.5;max-height:60px;overflow:hidden;
-}
-.char-card-new{
-  background:transparent;border:2px dashed var(--border);
-  color:var(--text-muted);
-}
-.char-card-new .new-icon{font-size:32px;color:var(--border);}
-.char-card-new .new-label{font-family:var(--font-serif);font-style:italic;font-size:14px;}
+  /* 激活状态：左宽右窄 */
+  .detail-body.focus-left .panel-left { flex: 2; }
+  .detail-body.focus-left .panel-right { flex: 0.5; opacity: 0.6; }
+  /* 激活状态：右宽左窄 */
+  .detail-body.focus-right .panel-right { flex: 2; }
+  .detail-body.focus-right .panel-left { flex: 0.5; opacity: 0.6; }
 
-/* Main bottom text */
-.main-bottom{
-  padding:16px;padding-bottom:max(16px,env(safe-area-inset-bottom));
-  border-top:1px solid var(--border-light);
-  flex-shrink:0;
-  background:var(--bg-primary);
-}
-.main-motto{
-  font-family:var(--font-serif);font-style:italic;
-  font-size:clamp(14px,4vw,17px);
-  color:var(--text-muted);
-  text-align:center;
-  letter-spacing:0.08em;
-  outline:none;
-  width:100%;
-  border:none;background:transparent;
-  cursor:text;
-}
-.main-motto:focus{color:var(--text-primary);}
+  /* 左栏菜单项 */
+  .left-menu-item {
+    display: flex; align-items: center; padding: 14px 15px; background: var(--card-bg);
+    border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 2px 5px var(--shadow);
+  }
+  .left-menu-item:active { transform: scale(0.98); background: var(--bg-secondary); }
+  .left-menu-item i { color: var(--accent); font-size: 1.1rem; width: 30px; text-align: center; margin-right: 10px; }
+  .left-menu-item span { color: var(--text-primary); font-weight: 500; }
+  .left-menu-item .arrow { margin-left: auto; color: var(--text-secondary); font-size: 0.8rem; }
 
-/* Carousel dots */
-.carousel-dots{
-  display:flex;gap:6px;justify-content:center;
-  padding:8px 0;flex-shrink:0;
-}
-.carousel-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--border);transition:var(--transition);
-}
-.carousel-dot.active{background:var(--accent);width:18px;border-radius:3px;}
+  /* 右栏聊天窗口列表 */
+  .right-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+  .right-header h3 { color: var(--accent); font-size: 1rem; }
+  .chat-add-btn {
+    background: var(--accent); color: #fff; border: none; width: 28px; height: 28px;
+    border-radius: 50%; font-size: 1rem; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; box-shadow: 0 2px 6px var(--shadow);
+  }
+  .chat-item {
+    display: flex; align-items: center; justify-content: space-between; padding: 12px;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+    margin-bottom: 8px; box-shadow: 0 1px 4px var(--shadow);
+  }
+  .chat-item-name { font-weight: 500; cursor: pointer; color: var(--text-primary); flex: 1; }
+  .chat-item-actions { display: flex; gap: 10px; }
+  .chat-item-actions i { color: var(--text-secondary); cursor: pointer; font-size: 0.9rem; padding: 4px; }
+  .chat-item-actions i:hover { color: var(--accent); }
+  .chat-item-actions .fa-trash:hover { color: var(--danger); }
 
-/* ========== SETTINGS SCREEN ========== */
-.settings-list{
-  flex:1;overflow-y:auto;padding:16px;
-  display:flex;flex-direction:column;gap:8px;
-}
-.settings-item{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--bg-card);border:1px solid var(--border-light);
-  border-radius:var(--radius);padding:16px;
-  cursor:pointer;transition:var(--transition);
-}
-.settings-item:hover{border-color:var(--accent-light);background:var(--accent-dim);}
-.settings-item-left{display:flex;align-items:center;gap:12px;}
-.settings-item-icon{
-  width:40px;height:40px;border-radius:10px;
-  background:var(--accent-dim);color:var(--accent);
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;flex-shrink:0;
-}
-.settings-item-title{font-family:var(--font-serif);font-size:16px;font-weight:600;}
-.settings-item-desc{font-size:12px;color:var(--text-muted);margin-top:2px;}
-.settings-chevron{color:var(--text-muted);font-size:14px;}
+  /* =================== 子页面通用样式 (覆盖层) =================== */
+  .subpage-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg-primary); z-index: 50;
+    transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex; flex-direction: column;
+  }
+  .subpage-overlay.active { transform: translateX(0); }
+  
+  .subpage-header {
+    display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
+  }
+  .subpage-header h3 { margin-left: 15px; color: var(--accent); font-weight: 600; }
+  .subpage-body { flex: 1; overflow-y: auto; padding: 20px; }
 
-/* ========== API SETTINGS ========== */
-.api-tabs{
-  display:flex;gap:4px;padding:12px 16px 0;
-  border-bottom:1px solid var(--border-light);
-  overflow-x:auto;scrollbar-width:none;flex-shrink:0;
-}
-.api-tabs::-webkit-scrollbar{display:none;}
-.api-tab{
-  padding:8px 16px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;
-  font-family:var(--font-serif);font-size:14px;font-weight:600;
-  color:var(--text-muted);cursor:pointer;white-space:nowrap;
-  transition:var(--transition);border-bottom:2px solid transparent;
-}
-.api-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--accent-dim);}
-.api-panel{display:none;flex:1;overflow-y:auto;padding:16px;flex-direction:column;gap:12px;}
-.api-panel.active{display:flex;}
-.form-group{display:flex;flex-direction:column;gap:6px;}
-.form-label{font-size:13px;color:var(--text-secondary);font-weight:600;letter-spacing:0.05em;}
-.form-row{display:flex;gap:8px;align-items:flex-end;}
-.btn{
-  padding:10px 18px;border-radius:var(--radius-sm);
-  font-family:var(--font-serif);font-size:14px;font-weight:600;
-  cursor:pointer;transition:var(--transition);border:1px solid transparent;
-  white-space:nowrap;
-}
-.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);}
-.btn-primary:hover{opacity:0.85;}
-.btn-secondary{background:var(--bg-secondary);color:var(--text-primary);border-color:var(--border);}
-.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
-.btn-danger{background:transparent;color:#c0392b;border-color:#c0392b;}
-.btn-sm{padding:6px 12px;font-size:12px;}
-.btn-full{width:100%;}
+  /* 表单元素 */
+  .form-group { margin-bottom: 15px; }
+  .form-group label { display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px; }
+  .form-input {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--card-bg); color: var(--text-primary); font-family: inherit; font-size: 0.95rem;
+    outline: none; transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  textarea.form-input { min-height: 100px; resize: vertical; }
+  
+  .btn-primary {
+    background: var(--accent); color: #fff; border: none; padding: 10px 20px;
+    border-radius: 6px; font-family: inherit; font-size: 0.9rem; cursor: pointer;
+    transition: background 0.2s; box-shadow: 0 2px 6px var(--shadow);
+  }
+  .btn-primary:active { background: var(--accent-light); }
+  .btn-danger { background: var(--danger); }
 
-.preset-list{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
-.preset-item{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--bg-secondary);border:1px solid var(--border-light);
-  border-radius:var(--radius-sm);padding:8px 12px;
-  font-size:13px;cursor:pointer;transition:var(--transition);
-}
-.preset-item:hover{border-color:var(--accent-light);}
-.preset-item.selected{border-color:var(--accent);background:var(--accent-dim);}
-.preset-actions{display:flex;gap:4px;}
-.model-select-wrap{position:relative;}
-.model-loading{font-size:12px;color:var(--text-muted);padding:4px 0;}
+  /* 条目/便签/记忆/信件列表 */
+  .item-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px 15px; margin-bottom: 10px; box-shadow: 0 1px 4px var(--shadow);
+    position: relative;
+  }
+  .item-card-content { font-size: 0.9rem; line-height: 1.5; color: var(--text-primary); white-space: pre-wrap; }
+  .item-card-meta { font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px; }
+  .item-card-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; }
+  .item-card-actions i { color: var(--text-secondary); cursor: pointer; font-size: 0.85rem; }
+  .item-card-actions i:hover { color: var(--accent); }
+  .item-card-actions .fa-trash:hover { color: var(--danger); }
 
-/* ========== BEAUTY SETTINGS ========== */
-.beauty-editor{flex:1;display:flex;flex-direction:column;gap:12px;padding:16px;overflow-y:auto;}
-.beauty-preview{
-  height:120px;border-radius:var(--radius);
-  background:var(--bg-card);border:1px solid var(--border-light);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-serif);font-size:18px;color:var(--text-primary);
-  flex-shrink:0;
-}
-#beauty-css-editor{
-  flex:1;min-height:200px;font-family:monospace;font-size:13px;
-  background:var(--bg-secondary);border:1px solid var(--border);
-  border-radius:var(--radius-sm);padding:12px;resize:none;
-}
+  /* 便签划掉效果 */
+  .item-card.done .item-card-content { text-decoration: line-through; color: var(--text-secondary); }
 
-/* ========== DETAIL SCREEN ========== */
-#screen-detail{overflow-y:auto;overflow-x:hidden;}
-.detail-hero{
-  display:flex;align-items:center;gap:14px;
-  padding:16px;
-  border-bottom:1px solid var(--border-light);
-  flex-shrink:0;
-  background:var(--bg-primary);
-  position:sticky;top:0;z-index:5;
-}
-.detail-avatar{
-  width:56px;height:56px;border-radius:50%;
-  border:2px solid var(--accent-light);
-  background:var(--bg-secondary);
-  display:flex;align-items:center;justify-content:center;
-  font-size:24px;overflow:hidden;flex-shrink:0;
-}
-.detail-avatar img{width:100%;height:100%;object-fit:cover;}
-.detail-name{font-family:var(--font-serif);font-size:20px;font-weight:600;}
-.detail-body{
-  flex:1;display:flex;flex-direction:column;overflow:hidden;
-  /* will scroll via screen */
-}
-.detail-panels{
-  display:flex;gap:0;flex:1;overflow:hidden;
-  min-height:400px;
-}
-.detail-left,.detail-right{
-  flex:1;overflow-y:auto;padding:12px;
-  transition:flex 0.3s ease;
-  border-right:1px solid var(--border-light);
-}
-.detail-right{border-right:none;}
-.detail-left.collapsed{flex:0.3;overflow:hidden;}
-.detail-right.collapsed{flex:0.3;overflow:hidden;}
-.detail-section{
-  background:var(--bg-card);border:1px solid var(--border-light);
-  border-radius:var(--radius);padding:14px;
-  cursor:pointer;transition:var(--transition);
-  margin-bottom:8px;
-}
-.detail-section:hover{border-color:var(--accent-light);}
-.detail-section-title{
-  font-family:var(--font-serif);font-size:15px;font-weight:600;
-  display:flex;align-items:center;justify-content:space-between;
-  color:var(--text-primary);
-}
-.detail-section-desc{font-size:12px;color:var(--text-muted);margin-top:4px;}
-.chat-window-item{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--bg-secondary);border:1px solid var(--border-light);
-  border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:6px;
-  cursor:pointer;transition:var(--transition);
-}
-.chat-window-item:hover{border-color:var(--accent-light);}
-.chat-window-name{font-family:var(--font-serif);font-size:14px;}
-.chat-window-meta{font-size:11px;color:var(--text-muted);}
+  /* 月份分类标题 */
+  .month-divider { font-size: 0.9rem; color: var(--accent); font-weight: 600; margin: 15px 0 8px 0; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
 
-/* ========== COMPANION DENSITY ========== */
-.companion-density{
-  padding:16px;
-  background:var(--bg-primary);
-  min-height:100vh;
-}
-.companion-header{
-  display:flex;flex-direction:column;align-items:center;
-  gap:12px;padding-bottom:20px;
-  border-bottom:1px solid var(--border-light);
-  margin-bottom:16px;
-}
-.companion-avatar{
-  width:72px;height:72px;border-radius:50%;
-  border:2px solid var(--accent-light);
-  background:var(--bg-secondary);
-  display:flex;align-items:center;justify-content:center;
-  font-size:30px;overflow:hidden;
-}
-.anniversary-list{width:100%;display:flex;flex-direction:column;gap:6px;}
-.anniversary-item{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--bg-card);border:1px solid var(--border-light);
-  border-radius:var(--radius-sm);padding:8px 12px;
-}
-.anniversary-name{font-family:var(--font-serif);font-size:14px;}
-.anniversary-days{font-size:12px;color:var(--accent);}
-.density-calendar{margin-top:16px;}
-.density-calendar-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:8px;
-}
-.density-month-title{font-family:var(--font-serif);font-size:16px;font-weight:600;}
-.density-grid{
-  display:grid;grid-template-columns:repeat(7,1fr);
-  gap:3px;
-}
-.density-day{
-  aspect-ratio:1;border-radius:3px;
-  font-size:9px;display:flex;align-items:center;justify-content:center;
-  color:var(--text-muted);transition:var(--transition);
-  cursor:default;
-  background:var(--density-0);
-}
-.density-day.d1{background:var(--density-1);}
-.density-day.d2{background:var(--density-2);}
-.density-day.d3{background:var(--density-3);}
-.density-day.d4{background:var(--density-4);}
-.density-day.d5{background:var(--density-5);color:#fff;}
-.density-legend{
-  display:flex;align-items:center;gap:6px;margin-top:8px;
-  font-size:11px;color:var(--text-muted);
-}
-.density-legend-item{width:14px;height:14px;border-radius:2px;}
-
-/* ========== CHAT SCREEN ========== */
-#screen-chat{display:none;flex-direction:column;}
-#screen-chat.active{display:flex;}
-.chat-top-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top));
-  border-bottom:1px solid var(--border-light);
-  background:var(--bg-primary);flex-shrink:0;
-}
-.chat-top-left{display:flex;align-items:center;gap:8px;}
-.chat-top-right{display:flex;align-items:center;gap:6px;}
-.chat-top-title{font-family:var(--font-serif);font-size:16px;font-weight:600;flex:1;text-align:center;}
-.chat-messages{
-  flex:1;overflow-y:auto;padding:12px;
-  display:flex;flex-direction:column;gap:12px;
-}
-.message-wrap{display:flex;flex-direction:column;}
-.message-wrap.user{align-items:flex-end;}
-.message-wrap.assistant,.message-wrap.tool{align-items:flex-start;}
-.message-ts{
-  font-size:11px;color:var(--text-muted);margin-bottom:3px;
-  padding:0 4px;
-}
-.message-bubble{
-  max-width:82%;border-radius:var(--radius);
-  padding:10px 14px;font-size:15px;line-height:1.65;
-  word-break:break-word;position:relative;
-}
-.message-wrap.user .message-bubble{
-  background:var(--chat-user);border:1px solid var(--accent-light);
-  border-bottom-right-radius:4px;
-}
-.message-wrap.assistant .message-bubble{
-  background:var(--chat-ai);border:1px solid var(--border-light);
-  border-bottom-left-radius:4px;
-}
-.message-wrap.tool .message-bubble{
-  background:var(--chat-tool);border:1px solid var(--border-light);
-  border-radius:var(--radius-sm);font-size:12px;
-  color:var(--text-muted);font-style:italic;padding:6px 10px;
-}
-.message-actions{
-  display:none;gap:4px;margin-top:4px;
-}
-.message-wrap:hover .message-actions{display:flex;}
-.msg-action-btn{
-  padding:3px 8px;border-radius:var(--radius-sm);
-  font-size:11px;background:var(--bg-secondary);
-  border:1px solid var(--border);color:var(--text-muted);
-  cursor:pointer;
-}
-.thinking-wrap{margin-bottom:6px;}
-.thinking-toggle{
-  display:flex;align-items:center;gap:6px;
-  font-size:12px;color:var(--text-muted);cursor:pointer;
-  padding:4px 8px;background:var(--bg-secondary);
-  border-radius:var(--radius-sm);border:1px solid var(--border);
-  width:fit-content;
-}
-.thinking-content{
-  display:none;margin-top:6px;padding:10px;
-  background:var(--bg-secondary);border:1px solid var(--border);
-  border-radius:var(--radius-sm);font-size:13px;color:var(--text-muted);
-  max-height:200px;overflow-y:auto;
-}
-.thinking-content.show{display:block;}
-.thinking-summary{font-size:12px;color:var(--text-muted);font-style:italic;}
-
-/* Image in message */
-.message-img{max-width:100%;max-height:200px;border-radius:var(--radius-sm);object-fit:contain;display:block;margin-bottom:8px;}
-
-/* Chat input area */
-.chat-input-area{
-  padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom));
-  border-top:1px solid var(--border-light);
-  background:var(--bg-primary);flex-shrink:0;
-}
-.chat-input-options{
-  display:none;flex-wrap:wrap;gap:6px;margin-bottom:8px;
-}
-.chat-input-options.show{display:flex;}
-.chat-option-btn{
-  display:flex;align-items:center;gap:4px;
-  padding:6px 12px;border-radius:20px;
-  background:var(--bg-secondary);border:1px solid var(--border);
-  font-size:13px;color:var(--text-secondary);
-  cursor:pointer;transition:var(--transition);
-}
-.chat-option-btn.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
-.chat-input-row{display:flex;gap:8px;align-items:flex-end;}
-.chat-expand-btn{
-  width:36px;height:36px;border-radius:50%;background:var(--bg-secondary);
-  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
-  font-size:18px;flex-shrink:0;cursor:pointer;transition:var(--transition);
-  color:var(--text-secondary);
-}
-.chat-expand-btn.rotated{transform:rotate(45deg);}
-.chat-textarea{
-  flex:1;resize:none;min-height:38px;max-height:120px;
-  border-radius:20px;padding:9px 14px;
-  border:1px solid var(--border);background:var(--bg-secondary);
-  font-size:15px;line-height:1.4;overflow-y:auto;
-}
-.chat-send-btn{
-  width:36px;height:36px;border-radius:50%;
-  background:var(--accent);color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;flex-shrink:0;cursor:pointer;
-  transition:var(--transition);border:none;
-}
-.chat-send-btn:disabled{opacity:0.5;cursor:not-allowed;}
-
-/* Typing indicator */
-.typing-indicator{
-  display:flex;gap:4px;align-items:center;padding:10px 14px;
-}
-.typing-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--text-muted);
-  animation:typingBounce 1.2s ease-in-out infinite;
-}
-.typing-dot:nth-child(2){animation-delay:0.2s;}
-.typing-dot:nth-child(3){animation-delay:0.4s;}
-@keyframes typingBounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-6px);}}
-
-/* Cursor blink for typewriter */
-.cursor-blink::after{
-  content:'|';animation:blink 0.8s step-end infinite;color:var(--accent);
-}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
-
-/* ========== MODALS ========== */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.5);
-  display:none;align-items:flex-end;justify-content:center;
-  z-index:100;backdrop-filter:blur(4px);
-}
-.modal-overlay.show{display:flex;}
-.modal-overlay.center{align-items:center;}
-.modal-sheet{
-  background:var(--bg-primary);
-  border-radius:var(--radius) var(--radius) 0 0;
-  width:100%;max-height:85vh;overflow-y:auto;
-  padding:20px;padding-bottom:max(20px,env(safe-area-inset-bottom));
-  animation:sheetUp 0.3s ease;
-}
-.modal-overlay.center .modal-sheet{
-  border-radius:var(--radius);
-  max-width:480px;margin:16px;max-height:80vh;
-  animation:fadeInScale 0.2s ease;
-}
-@keyframes sheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
-@keyframes fadeInScale{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
-.modal-handle{
-  width:40px;height:4px;border-radius:2px;
-  background:var(--border);margin:0 auto 16px;
-}
-.modal-title{
-  font-family:var(--font-serif);font-size:18px;font-weight:600;
-  margin-bottom:16px;text-align:center;
-}
-
-/* ========== SUB-SCREENS (fullscreen modals) ========== */
-.sub-screen{
-  position:fixed;inset:0;background:var(--bg-primary);
-  display:none;flex-direction:column;z-index:50;
-  overflow:hidden;
-}
-.sub-screen.show{display:flex;}
-.sub-body{flex:1;overflow-y:auto;padding:16px;}
-
-/* ========== LIST ITEMS ========== */
-.list-item{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  background:var(--bg-card);border:1px solid var(--border-light);
-  border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;
-  gap:8px;
-}
-.list-item-content{flex:1;min-width:0;}
-.list-item-title{font-size:14px;color:var(--text-primary);word-break:break-word;}
-.list-item-meta{font-size:11px;color:var(--text-muted);margin-top:3px;}
-.list-item-actions{display:flex;gap:4px;flex-shrink:0;}
-.strikethrough .list-item-title{text-decoration:line-through;color:var(--text-muted);}
-.empty-state{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:40px 20px;color:var(--text-muted);
-  font-family:var(--font-serif);font-style:italic;font-size:15px;gap:8px;
-}
-.empty-icon{font-size:40px;opacity:0.4;}
-
-/* Memory month header */
-.month-header{
-  font-family:var(--font-serif);font-size:15px;font-weight:600;
-  color:var(--accent);padding:8px 0 4px;
-  border-bottom:1px solid var(--border-light);margin-bottom:6px;
-}
-
-/* ========== ABOUT PAGE ========== */
-.about-avatar-wrap{
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-  padding:20px 0;
-}
-.about-avatar-large{
-  width:100px;height:100px;border-radius:50%;
-  border:2px solid var(--accent-light);background:var(--bg-secondary);
-  display:flex;align-items:center;justify-content:center;font-size:40px;
-  overflow:hidden;cursor:pointer;position:relative;
-}
-.about-avatar-large img{width:100%;height:100%;object-fit:cover;}
-.about-avatar-edit{
-  position:absolute;inset:0;background:rgba(0,0,0,0.4);
-  display:flex;align-items:center;justify-content:center;
-  font-size:20px;opacity:0;transition:var(--transition);border-radius:50%;
-}
-.about-avatar-large:hover .about-avatar-edit{opacity:1;}
-
-/* ========== SWIPE DETECT ========== */
-/* handled via JS touch events */
-
-/* ========== MISC ========== */
-.divider{border:none;border-top:1px solid var(--border-light);margin:12px 0;}
-.tag{
-  display:inline-block;padding:2px 8px;border-radius:20px;
-  font-size:11px;background:var(--accent-dim);color:var(--accent);
-  border:1px solid var(--accent-light);
-}
-.file-preview{
-  background:var(--bg-secondary);border:1px solid var(--border);
-  border-radius:var(--radius-sm);padding:6px 10px;font-size:12px;
-  color:var(--text-muted);display:flex;align-items:center;gap:6px;
-  margin-bottom:6px;
-}
-.toast{
-  position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
-  background:var(--text-primary);color:var(--bg-primary);
-  padding:10px 20px;border-radius:20px;font-size:14px;
-  z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;
-  white-space:nowrap;
-}
-.toast.show{opacity:1;}
-
-/* ========== RESPONSIVE ========== */
-@media(max-width:480px){
-  .detail-panels{flex-direction:column;}
-  .detail-left,.detail-right{min-height:200px;border-right:none;border-bottom:1px solid var(--border-light);}
-  .detail-left.collapsed{flex:0;padding:0;border:none;overflow:hidden;}
-  .detail-right.collapsed{flex:0;padding:0;border:none;overflow:hidden;}
-  .message-bubble{max-width:92%;}
-}
-@media(min-width:481px){
-  .modal-overlay.center .modal-sheet{margin:auto;}
-}
-
-/* ========== CUSTOM CSS INJECT AREA ========== */
-#custom-css-style{}
+  /* 设置页 */
+  #view-settings { background: var(--bg-primary); padding: 20px; overflow-y: auto; }
+  .settings-header { display: flex; align-items: center; margin-bottom: 20px; }
+  .settings-header h2 { margin-left: 15px; font-weight: 600; color: var(--accent); }
+  .settings-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+  .settings-section h3 { font-size: 1rem; margin-bottom: 10px; color: var(--accent); }
 </style>
-<style id="custom-css-style"></style>
 </head>
-<body>
+<body data-theme="light">
 
-<!-- ===== TOAST ===== -->
-<div class="toast" id="toast"></div>
-
-<!-- ===== SPLASH ===== -->
-<div id="screen-splash" class="screen active">
-  <div class="splash-inner">
-    <div class="splash-text">Limerence</div>
-    <div class="splash-sub">where feeling lives</div>
-  </div>
+<!-- 顶栏 -->
+<div id="top-bar">
+  <button class="top-btn" id="btn-settings"><i class="fas fa-cog"></i></button>
+  <button class="top-btn" id="btn-theme"><i class="fas fa-moon"></i></button>
 </div>
 
-<!-- ===== MAIN SCREEN ===== -->
-<div id="screen-main" class="screen">
-  <div class="top-bar">
-    <div style="width:36px"></div>
-    <div class="top-bar-title" style="font-family:'Cormorant Garamond',serif;font-style:italic;">Limerence</div>
-    <div class="top-bar-actions">
-      <button class="icon-btn" id="btn-theme-main" title="切换主题">☀</button>
-      <button class="icon-btn" id="btn-settings" title="设置">⚙</button>
-    </div>
-  </div>
-  <div class="main-carousel-wrap">
-    <div class="main-carousel" id="main-carousel">
-      <!-- Violet page -->
-      <div class="carousel-page" id="carousel-violet">
-        <div class="violet-wrap">
-          <div class="violet-svg-wrap" id="violet-svg-container"></div>
-          <div class="violet-hint">向右滑动，发现角色</div>
-        </div>
+<!-- =================== 主页视图 =================== -->
+<div id="view-home" class="view active">
+  <div id="home-slider">
+    <div class="violet-screen">
+      <div class="violet-ascii">
+     _..._
+   .:::::::.
+  :::::::::::  ♡
+ :::::::::::::
+  \:::::::::/
+   \:::::::/
+    ':::'''
       </div>
-      <!-- Character cards injected here by JS -->
+      <div style="font-family:'Cormorant Garamond'; font-size:1.5rem; color:var(--accent); letter-spacing: 2px;">Limerence</div>
     </div>
-    <div class="carousel-dots" id="carousel-dots"></div>
-  </div>
-  <div class="main-bottom">
-    <div class="main-motto" id="main-motto" contenteditable="true" spellcheck="false">I am because you are.</div>
-  </div>
-</div>
-
-<!-- ===== SETTINGS HUB ===== -->
-<div id="screen-settings" class="screen">
-  <div class="top-bar">
-    <button class="back-btn" onclick="Nav.back()">←</button>
-    <div class="top-bar-title">设置</div>
-    <div style="width:36px"></div>
-  </div>
-  <div class="settings-list">
-    <div class="settings-item" onclick="Nav.go('screen-settings-api')">
-      <div class="settings-item-left">
-        <div class="settings-item-icon">🔑</div>
-        <div>
-          <div class="settings-item-title">API 设置</div>
-          <div class="settings-item-desc">配置主、搜索、识图 API 及预设</div>
-        </div>
-      </div>
-      <div class="settings-chevron">›</div>
-    </div>
-    <div class="settings-item" onclick="Nav.go('screen-settings-beauty')">
-      <div class="settings-item-left">
-        <div class="settings-item-icon">🎨</div>
-        <div>
-          <div class="settings-item-title">美化设置</div>
-          <div class="settings-item-desc">自定义整体 CSS 样式</div>
-        </div>
-      </div>
-      <div class="settings-chevron">›</div>
-    </div>
-    <div class="settings-item" onclick="Nav.go('screen-settings-backup')">
-      <div class="settings-item-left">
-        <div class="settings-item-icon">💾</div>
-        <div>
-          <div class="settings-item-title">数据备份</div>
-          <div class="settings-item-desc">导入 / 导出全部数据</div>
-        </div>
-      </div>
-      <div class="settings-chevron">›</div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== SETTINGS API ===== -->
-<div id="screen-settings-api" class="screen">
-  <div class="top-bar">
-    <button class="back-btn" onclick="Nav.back()">←</button>
-    <div class="top-bar-title">API 设置</div>
-    <div style="width:36px"></div>
-  </div>
-  <div class="api-tabs">
-    <div class="api-tab active" data-panel="api-main">主 API</div>
-    <div class="api-tab" data-panel="api-search">搜索 API</div>
-    <div class="api-tab" data-panel="api-vision">识图 API</div>
-  </div>
-  <!-- Main API Panel -->
-  <div class="api-panel active" id="api-main">
-    <div class="form-group">
-      <div class="form-label">API Endpoint</div>
-      <input type="url" id="main-endpoint" placeholder="https://api.openai.com" />
-    </div>
-    <div class="form-group">
-      <div class="form-label">API Key</div>
-      <input type="password" id="main-key" placeholder="sk-..." />
-    </div>
-    <div class="form-group">
-      <div class="form-label">模型</div>
-      <div class="form-row">
-        <input type="text" id="main-model" placeholder="gpt-4o" style="flex:1;" />
-        <button class="btn btn-secondary btn-sm" onclick="APISettings.fetchModels('main')">拉取</button>
-      </div>
-      <div class="model-loading" id="main-model-loading"></div>
-      <select id="main-model-select" style="display:none;margin-top:6px;" onchange="document.getElementById('main-model').value=this.value"></select>
-    </div>
-    <div class="form-row" style="gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-primary" onclick="APISettings.savePreset('main')">保存为预设</button>
-      <button class="btn btn-secondary" onclick="APISettings.save('main')">保存当前</button>
-    </div>
-    <div style="margin-top:12px;">
-      <div class="form-label">已保存预设</div>
-      <div class="preset-list" id="main-preset-list"></div>
-    </div>
-  </div>
-  <!-- Search API Panel -->
-  <div class="api-panel" id="api-search">
-    <div class="form-group">
-      <div class="form-label">搜索 API Endpoint</div>
-      <input type="url" id="search-endpoint" placeholder="https://..." />
-    </div>
-    <div class="form-group">
-      <div class="form-label">API Key</div>
-      <input type="password" id="search-key" placeholder="..." />
-    </div>
-    <div class="form-group">
-      <div class="form-label">API 类型</div>
-      <select id="search-type">
-        <option value="serper">Serper.dev</option>
-        <option value="bing">Bing Search</option>
-        <option value="openai">OpenAI Compatible</option>
-        <option value="custom">Custom (POST json {q})</option>
-      </select>
-    </div>
-    <div class="form-row">
-      <button class="btn btn-primary" onclick="APISettings.savePreset('search')">保存为预设</button>
-      <button class="btn btn-secondary" onclick="APISettings.save('search')">保存当前</button>
-    </div>
-    <div style="margin-top:12px;">
-      <div class="form-label">已保存预设</div>
-      <div class="preset-list" id="search-preset-list"></div>
-    </div>
-  </div>
-  <!-- Vision API Panel -->
-  <div class="api-panel" id="api-vision">
-    <div class="form-group">
-      <div class="form-label">识图 API Endpoint</div>
-      <input type="url" id="vision-endpoint" placeholder="https://api.openai.com" />
-    </div>
-    <div class="form-group">
-      <div class="form-label">API Key</div>
-      <input type="password" id="vision-key" placeholder="sk-..." />
-    </div>
-    <div class="form-group">
-      <div class="form-label">模型</div>
-      <div class="form-row">
-        <input type="text" id="vision-model" placeholder="gpt-4o" style="flex:1;" />
-        <button class="btn btn-secondary btn-sm" onclick="APISettings.fetchModels('vision')">拉取</button>
-      </div>
-      <div class="model-loading" id="vision-model-loading"></div>
-      <select id="vision-model-select" style="display:none;margin-top:6px;" onchange="document.getElementById('vision-model').value=this.value"></select>
-    </div>
-    <div class="form-row">
-      <button class="btn btn-primary" onclick="APISettings.savePreset('vision')">保存为预设</button>
-      <button class="btn btn-secondary" onclick="APISettings.save('vision')">保存当前</button>
-    </div>
-    <div style="margin-top:12px;">
-      <div class="form-label">已保存预设</div>
-      <div class="preset-list" id="vision-preset-list"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== SETTINGS BEAUTY ===== -->
-<div id="screen-settings-beauty" class="screen">
-  <div class="top-bar">
-    <button class="back-btn" onclick="Nav.back()">←</button>
-    <div class="top-bar-title">美化设置</div>
-    <div style="width:36px"></div>
-  </div>
-  <div class="beauty-editor">
-    <div class="beauty-preview" id="beauty-preview">
-      <span style="font-family:'Cormorant Garamond',serif;font-style:italic;">Limerence</span>
-    </div>
-    <div class="form-group">
-      <div class="form-label">自定义 CSS（将覆盖默认样式）</div>
-      <textarea id="beauty-css-editor" placeholder="/* 在此输入自定义 CSS */&#10;:root { --accent: #7b4f8e; }"></textarea>
-    </div>
-    <div class="form-row" style="gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-primary" onclick="Beauty.apply()">应用</button>
-      <button class="btn btn-secondary" onclick="Beauty.reset()">重置默认</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== SETTINGS BACKUP ===== -->
-<div id="screen-settings-backup" class="screen">
-  <div class="top-bar">
-    <button class="back-btn" onclick="Nav.back()">←</button>
-    <div class="top-bar-title">数据备份</div>
-    <div style="width:36px"></div>
-  </div>
-  <div class="sub-body" style="display:flex;flex-direction:column;gap:12px;">
-    <div style="background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px;">
-      <div style="font-family:var(--font-serif);font-size:16px;font-weight:600;margin-bottom:8px;">导出数据</div>
-      <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">将全部数据导出为 JSON 文件保存到本地。</div>
-      <button class="btn btn-primary btn-full" onclick="Backup.exportAll()">📤 导出全部数据</button>
-    </div>
-    <div style="background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius);padding:16px;">
-      <div style="font-family:var(--font-serif);font-size:16px;font-weight:600;margin-bottom:8px;">导入数据</div>
-      <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">从之前导出的 JSON 文件恢复数据。⚠️ 将覆盖当前数据。</div>
-      <label class="btn btn-secondary btn-full" style="display:block;text-align:center;cursor:pointer;">
-        📥 选择文件导入
-        <input type="file" accept=".json" style="display:none;" onchange="Backup.importAll(this)">
-      </label>
-    </div>
-  </div>
-</div>
-
-<!-- ===== DETAIL SCREEN ===== -->
-<div id="screen-detail" class="screen">
-  <div class="detail-hero" id="detail-hero">
-    <button class="back-btn" onclick="Nav.back()">←</button>
-    <div class="detail-avatar" id="detail-avatar">👤</div>
-    <div style="flex:1;min-width:0;">
-      <div class="detail-name" id="detail-name">角色名称</div>
-      <div style="font-size:12px;color:var(--text-muted);">点击下方卡片进入各功能</div>
-    </div>
-    <button class="icon-btn" id="detail-scroll-density" title="陪伴密度" onclick="CompanionDensity.scrollTo()">📅</button>
-  </div>
-  <!-- Main detail body (scrollable) -->
-  <div style="flex:1;overflow-y:auto;" id="detail-scroll-body">
-    <div class="detail-panels" id="detail-panels">
-      <!-- Left panel -->
-      <div class="detail-left" id="detail-left">
-        <div style="font-family:var(--font-serif);font-size:13px;color:var(--text-muted);margin-bottom:8px;text-align:center;">角色设置</div>
-        <div class="detail-section" onclick="CharDetail.openIntro()">
-          <div class="detail-section-title">📝 主页简介 <span>›</span></div>
-          <div class="detail-section-desc" id="detail-intro-preview">点击填写主页展示简介</div>
-        </div>
-        <div class="detail-section" onclick="CharDetail.openAbout()">
-          <div class="detail-section-title">💫 关于 <span>›</span></div>
-          <div class="detail-section-desc">头像、名字、系统指令、API</div>
-        </div>
-        <div class="detail-section" onclick="CharDetail.openEntries()">
-          <div class="detail-section-title">📋 条目 <span>›</span></div>
-          <div class="detail-section-desc" id="detail-entries-count">注入给 AI 的知识条目</div>
-        </div>
-        <div class="detail-section" onclick="CharDetail.openMemories()">
-          <div class="detail-section-title">🧠 记忆库 <span>›</span></div>
-          <div class="detail-section-desc" id="detail-memory-count">AI 的记忆管理</div>
-        </div>
-        <div class="detail-section" onclick="CharDetail.openLetters()">
-          <div class="detail-section-title">✉️ 信件 <span>›</span></div>
-          <div class="detail-section-desc" id="detail-letters-count">往来信件</div>
-        </div>
-        <div class="detail-section" onclick="CharDetail.openNotes()">
-          <div class="detail-section-title">🗒 便签 <span>›</span></div>
-          <div class="detail-section-desc" id="detail-notes-count">提醒与待办</div>
-        </div>
-      </div>
-      <!-- Right panel -->
-      <div class="detail-right" id="detail-right">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-          <div style="font-family:var(--font-serif);font-size:13px;color:var(--text-muted);">聊天窗口</div>
-          <button class="btn btn-primary btn-sm" onclick="CharDetail.newChat()">＋ 新建</button>
-        </div>
-        <div id="chat-windows-list"></div>
-      </div>
-    </div>
-    <!-- Companion Density Section -->
-    <div id="companion-density-section" class="companion-density">
-      <div style="text-align:center;font-family:var(--font-serif);font-size:18px;font-weight:600;color:var(--accent);margin-bottom:16px;padding-top:8px;border-top:2px solid var(--border-light);">陪伴密度</div>
-      <div class="companion-header">
-        <div class="companion-avatar" id="companion-avatar">👤</div>
-        <div style="width:100%;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-            <div style="font-family:var(--font-serif);font-size:14px;font-weight:600;">纪念日</div>
-            <button class="btn btn-secondary btn-sm" onclick="CompanionDensity.addAnniversary()">＋ 添加</button>
-          </div>
-          <div class="anniversary-list" id="anniversary-list"></div>
-        </div>
-      </div>
-      <div class="density-calendar" id="density-calendar"></div>
-      <div class="density-legend">
-        <span>少</span>
-        <div class="density-legend-item" style="background:var(--density-0);"></div>
-        <div class="density-legend-item" style="background:var(--density-1);"></div>
-        <div class="density-legend-item" style="background:var(--density-2);"></div>
-        <div class="density-legend-item" style="background:var(--density-3);"></div>
-        <div class="density-legend-item" style="background:var(--density-4);"></div>
-        <div class="density-legend-item" style="background:var(--density-5);"></div>
-        <span>多</span>
+    <div class="characters-scroll-area" id="char-container">
+      <div class="char-card add-card" id="btn-add-char">
+        <i class="fas fa-plus" style="color:var(--accent-light)"></i>
+        <div style="font-size:0.9rem; margin-top:10px; color:var(--text-secondary)">新建角色</div>
       </div>
     </div>
   </div>
-</div>
-
-<!-- ===== CHAT SCREEN ===== -->
-<div id="screen-chat" class="screen">
-  <div class="chat-top-bar">
-    <div class="chat-top-left">
-      <button class="back-btn" onclick="Nav.back()">←</button>
-    </div>
-    <div class="chat-top-title" id="chat-title">聊天</div>
-    <div class="chat-top-right">
-      <button class="icon-btn" id="chat-quick-letters" title="信件" onclick="CharDetail.openLetters()">✉</button>
-      <button class="icon-btn" id="chat-quick-notes" title="便签" onclick="CharDetail.openNotes()">🗒</button>
-      <button class="icon-btn" id="chat-quick-memory" title="记忆库" onclick="CharDetail.openMemories()">🧠</button>
-      <button class="icon-btn" id="btn-theme-chat" onclick="toggleTheme()">☀</button>
-    </div>
-  </div>
-  <div class="chat-messages" id="chat-messages"></div>
-  <div class="chat-input-area">
-    <div class="chat-input-options" id="chat-options">
-      <button class="chat-option-btn" id="opt-image" onclick="Chat.toggleOption('image')">🖼 图片</button>
-      <button class="chat-option-btn" id="opt-file" onclick="Chat.toggleOption('file')">📄 文件</button>
-      <button class="chat-option-btn" id="opt-search" onclick="Chat.toggleOption('search')">🔍 联网</button>
-      <button class="chat-option-btn" id="opt-think" onclick="Chat.toggleOption('think')">💭 深思</button>
-    </div>
-    <div id="file-preview-area"></div>
-    <div class="chat-input-row">
-      <button class="chat-expand-btn" id="chat-expand-btn" onclick="Chat.toggleOptions()">＋</button>
-      <textarea class="chat-textarea" id="chat-input" placeholder="说点什么…" rows="1" onkeydown="Chat.onKeyDown(event)" oninput="Chat.autoResize(this)"></textarea>
-      <button class="chat-send-btn" id="chat-send-btn" onclick="Chat.send()">▶</button>
-    </div>
-  </div>
-  <!-- Hidden file inputs -->
-  <input type="file" id="file-image-input" accept="image/*" style="display:none;" onchange="Chat.handleImageFile(this)">
-  <input type="file" id="file-doc-input" accept=".txt,.md,.pdf,.csv,.json,.xml,.html,.js,.py,.java,.c,.cpp,.ts" style="display:none;" onchange="Chat.handleDocFile(this)">
-</div>
-
-<!-- ===== SUB-SCREENS ===== -->
-
-<!-- Intro Edit -->
-<div class="sub-screen" id="sub-intro">
-  <div class="top-bar">
-    <button class="back-btn" onclick="SubScreen.close('sub-intro')">←</button>
-    <div class="top-bar-title">主页简介</div>
-    <button class="icon-btn" onclick="SubScreen.saveIntro()">✓</button>
-  </div>
-  <div class="sub-body">
-    <div class="form-group">
-      <div class="form-label">简介内容（展示在主页角色卡片下方）</div>
-      <textarea id="intro-editor" placeholder="简单描述这个角色…" style="min-height:120px;"></textarea>
-    </div>
+  <div id="home-footer">
+    <input type="text" id="signature-input" value="I am because you are." />
   </div>
 </div>
 
-<!-- About Edit -->
-<div class="sub-screen" id="sub-about">
-  <div class="top-bar">
-    <button class="back-btn" onclick="SubScreen.close('sub-about')">←</button>
-    <div class="top-bar-title">关于</div>
-    <button class="icon-btn" onclick="SubScreen.saveAbout()">✓</button>
+<!-- =================== 详情页视图 =================== -->
+<div id="view-detail" class="view">
+  <!-- 详情头部 -->
+  <div class="detail-header">
+    <button class="top-btn" id="btn-back-home-detail"><i class="fas fa-arrow-left"></i></button>
+    <div class="avatar" id="detail-avatar"></div>
+    <div class="detail-name" id="detail-name">角色名</div>
   </div>
-  <div class="sub-body">
-    <div class="about-avatar-wrap">
-      <div class="about-avatar-large" id="about-avatar-preview" onclick="SubScreen.pickAvatar()">
-        <span id="about-avatar-emoji">👤</span>
-        <img id="about-avatar-img" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:50%;" />
-        <div class="about-avatar-edit">✏️</div>
+
+  <!-- 双栏主体 -->
+  <div class="detail-body" id="detail-body">
+    <!-- 左栏：AI设置 -->
+    <div class="panel-left" id="panel-left">
+      <div class="left-menu-item" data-sub="bio"><i class="fas fa-feather-alt"></i><span>简介</span><i class="fas fa-chevron-right arrow"></i></div>
+      <div class="left-menu-item" data-sub="about"><i class="fas fa-user-cog"></i><span>关于</span><i class="fas fa-chevron-right arrow"></i></div>
+      <div class="left-menu-item" data-sub="items"><i class="fas fa-bookmark"></i><span>条目</span><i class="fas fa-chevron-right arrow"></i></div>
+      <div class="left-menu-item" data-sub="memory"><i class="fas fa-brain"></i><span>记忆库</span><i class="fas fa-chevron-right arrow"></i></div>
+      <div class="left-menu-item" data-sub="letters"><i class="fas fa-envelope-open-text"></i><span>信件</span><i class="fas fa-chevron-right arrow"></i></div>
+      <div class="left-menu-item" data-sub="notes"><i class="fas fa-sticky-note"></i><span>便签</span><i class="fas fa-chevron-right arrow"></i></div>
+    </div>
+
+    <!-- 右栏：聊天管理 -->
+    <div class="panel-right" id="panel-right">
+      <div class="right-header">
+        <h3>聊天窗口</h3>
+        <button class="chat-add-btn" id="btn-add-chat"><i class="fas fa-plus"></i></button>
       </div>
-      <input type="file" id="about-avatar-input" accept="image/*" style="display:none;" onchange="SubScreen.handleAvatarFile(this)">
-    </div>
-    <div class="form-group">
-      <div class="form-label">角色名称</div>
-      <input type="text" id="about-name" placeholder="角色名…" />
-    </div>
-    <div class="form-group">
-      <div class="form-label">系统指令（注入给 AI 的 System Prompt）</div>
-      <textarea id="about-system" placeholder="你是…" style="min-height:150px;"></textarea>
-    </div>
-    <div class="form-group">
-      <div class="form-label">使用主 API 预设</div>
-      <select id="about-api-preset"></select>
+      <div id="chat-list"></div>
     </div>
   </div>
+
+  <!-- ===== 子页面覆盖层 ===== -->
+  <!-- 1. 简介 -->
+  <div class="subpage-overlay" id="sub-bio">
+    <div class="subpage-header">
+      <button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button>
+      <h3>简介</h3>
+    </div>
+    <div class="subpage-body">
+      <div class="form-group">
+        <label>角色简介 (展示在主页)</label>
+        <textarea class="form-input" id="input-bio" placeholder="为你的角色写一段简介..."></textarea>
+      </div>
+      <button class="btn-primary" id="btn-save-bio">保存简介</button>
+    </div>
+  </div>
+
+  <!-- 2. 关于 -->
+  <div class="subpage-overlay" id="sub-about">
+    <div class="subpage-header">
+      <button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button>
+      <h3>关于</h3>
+    </div>
+    <div class="subpage-body">
+      <div class="form-group">
+        <label>头像链接</label>
+        <input class="form-input" id="input-avatar-url" placeholder="输入图片URL">
+      </div>
+      <div class="form-group">
+        <label>名字</label>
+        <input class="form-input" id="input-char-name" placeholder="角色名字">
+      </div>
+      <div class="form-group">
+        <label>系统指令 (System Prompt)</label>
+        <textarea class="form-input" id="input-sys-prompt" placeholder="注入给AI的系统指令..." style="min-height:150px;"></textarea>
+      </div>
+      <div class="form-group">
+        <label>API预设</label>
+        <select class="form-input" id="select-api-preset">
+          <option value="default">默认预设</option>
+        </select>
+      </div>
+      <button class="btn-primary" id="btn-save-about">保存设置</button>
+    </div>
+  </div>
+
+  <!-- 3. 条目 -->
+  <div class="subpage-overlay" id="sub-items">
+    <div class="subpage-header">
+      <button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button>
+      <h3>条目</h3>
+    </div>
+    <div class="subpage-body">
+      <div style="display:flex; gap:10px; margin-bottom:20px;">
+        <input class="form-input" id="input-new-item" placeholder="添加新条目，让AI知道..." style="flex:1;">
+        <button class="btn-primary" id="btn-add-item">添加</button>
+      </div>
+      <div id="items-list"></div>
+    </div>
+  </div>
+
+  <!-- 4. 记忆库 -->
+  <div class="subpage-overlay" id="sub-memory">
+    <div class="subpage-header">
+      <button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button>
+      <h3>记忆库</h3>
+    </div>
+    <div class="subpage-body">
+      <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:15px;">AI在聊天中通过工具自动记录的记忆，按月份分类。你也可以手动添加或编辑。</p>
+      <div style="display:flex; gap:10px; margin-bottom:20px;">
+        <input class="form-input" id="input-new-memory" placeholder="手动添加记忆..." style="flex:1;">
+        <button class="btn-primary" id="btn-add-memory">添加</button>
+      </div>
+      <div id="memory-list"></div>
+    </div>
+  </div>
+
+  <!-- 5. 信件 -->
+  <div class="subpage-overlay" id="sub-letters">
+    <div class="subpage-header">
+      <button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button>
+      <h3>信件</h3>
+    </div>
+    <div class="subpage-body">
+      <div style="display:flex; gap:10px; margin-bottom:20px;">
+        <button class="btn-primary" id="btn-write-letter" style="white-space:nowrap;">写信</button>
+      </div>
+      <!-- 写信表单 (默认隐藏) -->
+      <div id="letter-compose" style="display:none; margin-bottom:20px; background:var(--card-bg); padding:15px; border-radius:8px; border:1px solid var(--border);">
+        <input class="form-input" id="input-letter-title" placeholder="信件标题" style="margin-bottom:10px;">
+        <textarea class="form-input" id="input-letter-content" placeholder="写下你的心里话..." style="min-height:120px;"></textarea>
+        <div style="margin-top:10px; text-align:right;">
+          <button class="btn-primary" id="btn-send-letter">寄出</button>
+        </div>
+      </div>
+      <div id="letters-list"></div>
+    </div>
+  </div>
+
+  <!-- 6. 便签 -->
+  <div class="subpage-overlay" id="sub-notes">
+    <div class="subpage-header">
+      <button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button>
+      <h3>便签</h3>
+    </div>
+    <div class="subpage-body">
+      <div style="display:flex; gap:10px; margin-bottom:20px;">
+        <input class="form-input" id="input-new-note" placeholder="添加新便签，提醒AI或一起完成..." style="flex:1;">
+        <button class="btn-primary" id="btn-add-note">添加</button>
+      </div>
+      <div id="notes-list"></div>
+    </div>
+  </div>
+
 </div>
 
-<!-- Entries -->
-<div class="sub-screen" id="sub-entries">
-  <div class="top-bar">
-    <button class="back-btn" onclick="SubScreen.close('sub-entries')">←</button>
-    <div class="top-bar-title">条目</div>
-    <button class="icon-btn" onclick="SubScreen.addEntry()">＋</button>
+<!-- =================== 设置页视图 =================== -->
+<div id="view-settings" class="view">
+  <div class="settings-header">
+    <button class="top-btn" id="btn-back-home"><i class="fas fa-arrow-left"></i></button>
+    <h2>设置</h2>
   </div>
-  <div class="sub-body" id="entries-list-body">
-    <div class="empty-state"><div class="empty-icon">📋</div>暂无条目，点击右上角添加</div>
+  <div class="settings-section">
+    <h3><i class="fas fa-server"></i> API 设置</h3>
+    <p style="font-size:0.85rem; color:var(--text-secondary);">主、搜索、识图、语音预设配置（下个版本开放）</p>
   </div>
-</div>
-
-<!-- Memories -->
-<div class="sub-screen" id="sub-memories">
-  <div class="top-bar">
-    <button class="back-btn" onclick="SubScreen.close('sub-memories')">←</button>
-    <div class="top-bar-title">记忆库</div>
-    <button class="icon-btn" onclick="SubScreen.addMemory()">＋</button>
+  <div class="settings-section">
+    <h3><i class="fas fa-palette"></i> 美化设置</h3>
+    <p style="font-size:0.85rem; color:var(--text-secondary);">自定义全局CSS（下个版本开放）</p>
   </div>
-  <div class="sub-body" id="memories-list-body">
-    <div class="empty-state"><div class="empty-icon">🧠</div>AI 尚未留下记忆</div>
-  </div>
-</div>
-
-<!-- Letters -->
-<div class="sub-screen" id="sub-letters">
-  <div class="top-bar">
-    <button class="back-btn" onclick="SubScreen.close('sub-letters')">←</button>
-    <div class="top-bar-title">信件</div>
-    <button class="icon-btn" onclick="SubScreen.addLetter()">✍</button>
-  </div>
-  <div class="sub-body" id="letters-list-body">
-    <div class="empty-state"><div class="empty-icon">✉️</div>尚无信件</div>
-  </div>
-</div>
-
-<!-- Notes -->
-<div class="sub-screen" id="sub-notes">
-  <div class="top-bar">
-    <button class="back-btn" onclick="SubScreen.close('sub-notes')">←</button>
-    <div class="top-bar-title">便签</div>
-    <button class="icon-btn" onclick="SubScreen.addNote()">＋</button>
-  </div>
-  <div class="sub-body" id="notes-list-body">
-    <div class="empty-state"><div class="empty-icon">🗒</div>暂无便签</div>
-  </div>
-</div>
-
-<!-- ===== MODALS ===== -->
-
-<!-- Generic text edit modal -->
-<div class="modal-overlay" id="modal-text-edit">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-text-title">编辑</div>
-    <textarea id="modal-text-content" style="min-height:100px;margin-bottom:12px;"></textarea>
-    <div style="display:flex;gap:8px;">
-      <button class="btn btn-secondary" style="flex:1;" onclick="Modal.close('modal-text-edit')">取消</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="Modal.confirmText()">确认</button>
-    </div>
-  </div>
-</div>
-
-<!-- Generic input modal -->
-<div class="modal-overlay center" id="modal-input">
-  <div class="modal-sheet">
-    <div class="modal-title" id="modal-input-title">输入</div>
-    <input type="text" id="modal-input-field" style="margin-bottom:12px;" />
-    <div style="display:flex;gap:8px;">
-      <button class="btn btn-secondary" style="flex:1;" onclick="Modal.close('modal-input')">取消</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="Modal.confirmInput()">确认</button>
-    </div>
-  </div>
-</div>
-
-<!-- Anniversary add modal -->
-<div class="modal-overlay center" id="modal-anniversary">
-  <div class="modal-sheet">
-    <div class="modal-title">添加纪念日</div>
-    <div class="form-group" style="margin-bottom:10px;">
-      <div class="form-label">名称</div>
-      <input type="text" id="anniversary-name-input" placeholder="在一起 / 相识…" />
-    </div>
-    <div class="form-group" style="margin-bottom:12px;">
-      <div class="form-label">日期</div>
-      <input type="date" id="anniversary-date-input" />
-    </div>
-    <div style="display:flex;gap:8px;">
-      <button class="btn btn-secondary" style="flex:1;" onclick="Modal.close('modal-anniversary')">取消</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="CompanionDensity.saveAnniversary()">保存</button>
-    </div>
-  </div>
-</div>
-
-<!-- API preset name modal -->
-<div class="modal-overlay center" id="modal-preset-name">
-  <div class="modal-sheet">
-    <div class="modal-title">保存预设</div>
-    <input type="text" id="preset-name-input" placeholder="预设名称…" style="margin-bottom:12px;" />
-    <div style="display:flex;gap:8px;">
-      <button class="btn btn-secondary" style="flex:1;" onclick="Modal.close('modal-preset-name')">取消</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="APISettings.confirmSavePreset()">保存</button>
-    </div>
-  </div>
-</div>
-
-<!-- Letter editor -->
-<div class="sub-screen" id="sub-letter-editor">
-  <div class="top-bar">
-    <button class="back-btn" onclick="SubScreen.closeLetterEditor()">←</button>
-    <div class="top-bar-title" id="letter-editor-title">写信</div>
-    <button class="icon-btn" onclick="SubScreen.saveLetter()">✓</button>
-  </div>
-  <div class="sub-body">
-    <div class="form-group">
-      <div class="form-label">标题</div>
-      <input type="text" id="letter-title-input" placeholder="信的标题…" />
-    </div>
-    <div class="form-group" style="flex:1;">
-      <div class="form-label">内容</div>
-      <textarea id="letter-content-input" style="min-height:300px;" placeholder="亲爱的…"></textarea>
-    </div>
+  <div class="settings-section">
+    <h3><i class="fas fa-database"></i> 数据备份</h3>
+    <p style="font-size:0.85rem; color:var(--text-secondary);">导入与导出（下个版本开放）</p>
   </div>
 </div>
 
 <script>
-'use strict';
+  // ==========================================
+  // 1. 数据库层
+  // ==========================================
+  const DB_NAME = 'LimerenceDB';
+  const DB_VERSION = 1;
+  let db = null;
 
-// ============================================================
-// UTILITIES
-// ============================================================
-function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
-function formatDate(d){const dt=new Date(d);return`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;}
-function formatDateTime(d){const dt=new Date(d);return`${formatDate(d)} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;}
-function getMonthKey(d){const dt=new Date(d);return`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;}
-function showToast(msg,dur=2000){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
-function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function markdownToHtml(text){
-  if(!text)return'';
-  let h=escHtml(text);
-  h=h.replace(/```([\s\S]*?)```/g,'<pre><code>$1</code></pre>');
-  h=h.replace(/`([^`]+)`/g,'<code>$1</code>');
-  h=h.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
-  h=h.replace(/\*([^*]+)\*/g,'<em>$1</em>');
-  h=h.replace(/\n/g,'<br>');
-  return h;
-}
-
-// ============================================================
-// INDEXEDDB MANAGER
-// ============================================================
-const DB = {
-  db: null,
-  STORES: ['characters','chats','messages','memories','letters','notes','entries','anniversaries','apiPresets','messageCounts'],
-  async init(){
-    return new Promise((res,rej)=>{
-      const req=indexedDB.open('LimerenceDB',1);
-      req.onupgradeneeded=e=>{
-        const db=e.target.result;
-        this.STORES.forEach(s=>{
-          if(!db.objectStoreNames.contains(s)){
-            db.createObjectStore(s,{keyPath:'id'});
-          }
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(DB_NAME, DB_VERSION);
+      request.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        ['characters', 'chats', 'memories', 'letters', 'notes', 'items', 'anniversaries', 'apiPresets'].forEach(name => {
+          if (!db.objectStoreNames.contains(name)) db.createObjectStore(name, { keyPath: 'id' });
         });
       };
-      req.onsuccess=e=>{this.db=e.target.result;res();};
-      req.onerror=e=>rej(e);
+      request.onsuccess = (e) => { db = e.target.result; resolve(db); };
+      request.onerror = (e) => reject(e);
     });
-  },
-  async get(store,id){
-    // Check IDB first, then localStorage compat
-    const val=await this._idbGet(store,id);
-    if(val!==undefined)return val;
-    // Try legacy localStorage
-    try{
-      const legacy=localStorage.getItem(`limerence_${store}_${id}`);
-      if(legacy){
-        const parsed=JSON.parse(legacy);
-        await this.put(store,parsed);
-        localStorage.removeItem(`limerence_${store}_${id}`);
-        return parsed;
-      }
-    }catch(e){}
-    return undefined;
-  },
-  async getAll(store,filter){
-    const all=await this._idbGetAll(store);
-    // Also check localStorage for migration
-    const prefix=`limerence_${store}_`;
-    const keys=Object.keys(localStorage).filter(k=>k.startsWith(prefix));
-    for(const k of keys){
-      try{
-        const item=JSON.parse(localStorage.getItem(k));
-        if(item&&item.id){
-          await this.put(store,item);
-          localStorage.removeItem(k);
-          all.push(item);
-        }
-      }catch(e){}
-    }
-    if(filter)return all.filter(filter);
-    return all;
-  },
-  async put(store,item){return this._idbPut(store,item);},
-  async delete(store,id){return this._idbDelete(store,id);},
-  _idbGet(store,id){
-    return new Promise((res,rej)=>{
-      const tx=this.db.transaction(store,'readonly');
-      const req=tx.objectStore(store).get(id);
-      req.onsuccess=()=>res(req.result);
-      req.onerror=e=>rej(e);
-    });
-  },
-  _idbGetAll(store){
-    return new Promise((res,rej)=>{
-      const tx=this.db.transaction(store,'readonly');
-      const req=tx.objectStore(store).getAll();
-      req.onsuccess=()=>res(req.result||[]);
-      req.onerror=e=>rej(e);
-    });
-  },
-  _idbPut(store,item){
-    return new Promise((res,rej)=>{
-      const tx=this.db.transaction(store,'readwrite');
-      const req=tx.objectStore(store).put(item);
-      req.onsuccess=()=>res();
-      req.onerror=e=>rej(e);
-    });
-  },
-  _idbDelete(store,id){
-    return new Promise((res,rej)=>{
-      const tx=this.db.transaction(store,'readwrite');
-      const req=tx.objectStore(store).delete(id);
-      req.onsuccess=()=>res();
-      req.onerror=e=>rej(e);
-    });
-  },
-  async exportAll(){
-    const data={};
-    for(const s of this.STORES){data[s]=await this._idbGetAll(s);}
-    // Also include localStorage config
-    data._localStorage={};
-    ['limerence_theme','limerence_motto','limerence_custom_css'].forEach(k=>{
-      if(localStorage.getItem(k))data._localStorage[k]=localStorage.getItem(k);
-    });
-    return data;
-  },
-  async importAll(data){
-    for(const s of this.STORES){
-      if(data[s]){
-        for(const item of data[s]){await this._idbPut(s,item);}
-      }
-    }
-    if(data._localStorage){
-      Object.entries(data._localStorage).forEach(([k,v])=>localStorage.setItem(k,v));
-    }
   }
-};
 
-// ============================================================
-// APP STATE
-// ============================================================
-const State = {
-  currentCharId: null,
-  currentChatId: null,
-  chatOptions: {image:false,file:false,search:false,think:false},
-  pendingImage: null,  // {base64, mime, name}
-  pendingFile: null,   // {name, content}
-  pendingModalCallback: null,
-  pendingPresetType: null,
-  pendingEntryEdit: null,
-  pendingMemoryEdit: null,
-  pendingLetterEdit: null,
-  pendingNoteEdit: null,
-  isGenerating: false,
-};
-
-// ============================================================
-// NAVIGATION
-// ============================================================
-const Nav = {
-  stack: [],
-  go(screenId, dir='right'){
-    const current = document.querySelector('.screen.active');
-    const next = document.getElementById(screenId);
-    if(!next||next===current)return;
-    if(current){
-      current.classList.remove('active');
-      current.classList.add(dir==='right'?'slide-out':'slide-out-right');
-    }
-    next.classList.add('active','slide-in');
-    this.stack.push(screenId);
-    setTimeout(()=>{
-      if(current)current.classList.remove('slide-out','slide-out-right');
-      next.classList.remove('slide-in','slide-in-left');
-    },300);
-  },
-  back(){
-    if(this.stack.length<1)return;
-    const current=document.querySelector('.screen.active');
-    if(!current)return;
-    const prev=this.stack.length>1?this.stack[this.stack.length-2]:'screen-main';
-    current.classList.remove('active');
-    current.classList.add('slide-out-right');
-    const prevScreen=document.getElementById(prev);
-    prevScreen.classList.add('active','slide-in-left');
-    setTimeout(()=>{
-      current.classList.remove('slide-out-right');
-      prevScreen.classList.remove('slide-in-left');
-      this.stack.pop();
-    },300);
+  function dbPut(storeName, data) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readwrite');
+      tx.objectStore(storeName).put(data);
+      tx.oncomplete = () => resolve();
+      tx.onerror = (e) => reject(e);
+    });
   }
-};
 
-// ============================================================
-// THEME MANAGEMENT
-// ============================================================
-const Theme = {
-  isDark: localStorage.getItem('limerence_theme')==='dark',
-  init(){
-    if(this.isDark)document.documentElement.setAttribute('data-theme','dark');
-    this.updateBtn();
-  },
-  toggle(){
-    this.isDark=!this.isDark;
-    if(this.isDark){
-      document.documentElement.setAttribute('data-theme','dark');
-      localStorage.setItem('limerence_theme','dark');
-    }else{
-      document.documentElement.removeAttribute('data-theme');
-      localStorage.removeItem('limerence_theme');
-    }
-    this.updateBtn();
-  },
-  updateBtn(){
-    const mainBtn=document.getElementById('btn-theme-main');
-    const chatBtn=document.getElementById('btn-theme-chat');
-    const icon=this.isDark?'🌙':'☀';
-    if(mainBtn)mainBtn.textContent=icon;
-    if(chatBtn)chatBtn.textContent=icon;
+  function dbGetAll(storeName) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readonly');
+      const req = tx.objectStore(storeName).getAll();
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = (e) => reject(e);
+    });
   }
-};
-function toggleTheme(){Theme.toggle();}
 
-// ============================================================
-// SPLASH SCREEN
-// ============================================================
-async function initSplash(){
-  return new Promise(resolve => {
-    setTimeout(() => {
-      const splash = document.getElementById('screen-splash');
-      const main = document.getElementById('screen-main');
-      
-      if(!splash || !main) {
-        console.error('缺少元素');
-        resolve();
-        return;
-      }
-      
-      splash.style.opacity = '0';
-      splash.style.transition = 'opacity 0.4s ease';
-      
-      setTimeout(() => {
-        splash.classList.remove('active');
-        splash.style.display = 'none';
-        main.classList.add('active');
-        main.style.display = 'flex';
-        resolve();
-      }, 400);
-    }, 2800);
+  function dbDelete(storeName, id) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readwrite');
+      tx.objectStore(storeName).delete(id);
+      tx.oncomplete = () => resolve();
+      tx.onerror = (e) => reject(e);
+    });
+  }
+
+  // ==========================================
+  // 2. 状态管理
+  // ==========================================
+  let currentCharId = null; // 当前查看的角色ID
+
+  // ==========================================
+  // 3. 视图路由
+  // ==========================================
+  const views = ['view-home', 'view-settings', 'view-detail'];
+  function switchView(viewId) {
+    views.forEach(id => document.getElementById(id).classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+  }
+
+  // ==========================================
+  // 4. 主题与基础交互
+  // ==========================================
+  const themeBtn = document.getElementById('btn-theme');
+  function applyTheme(theme) {
+    document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('limerence-theme', theme);
+    themeBtn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+  }
+  themeBtn.addEventListener('click', () => {
+    applyTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
   });
-}
-const splashStyle=document.createElement('style');
-splashStyle.textContent=`@keyframes fadeOut{from{opacity:1;}to{opacity:0;}}`;
-document.head.append(splashStyle);
+  document.getElementById('btn-settings').addEventListener('click', () => switchView('view-settings'));
+  document.getElementById('btn-back-home').addEventListener('click', () => switchView('view-home'));
 
-// ============================================================
-// VIOLET FLOWER SVG GENERATOR
-// ============================================================
-function generateVioletSvg(){
-  const svg=`<svg viewBox="0 0 200 280" width="140" height="196" xmlns="http://www.w3.org/2000/svg">
-    <!-- Stem -->
-    <path d="M 100 280 Q 95 220 98 160 Q 100 100 100 0" stroke="#5a8a3a" stroke-width="2" fill="none"/>
-    <!-- Leaves -->
-    <ellipse cx="75" cy="180" rx="18" ry="28" fill="#6fa042" transform="rotate(-30 75 180)" opacity="0.8"/>
-    <ellipse cx="125" cy="200" rx="16" ry="26" fill="#7aae4d" transform="rotate(35 125 200)" opacity="0.8"/>
-    <!-- Petals (5 violet petals) -->
-    <ellipse cx="100" cy="40" rx="16" ry="20" fill="#a870c8" opacity="0.95"/>
-    <ellipse cx="65" cy="58" rx="15" ry="22" fill="#9656b8" transform="rotate(-72 65 58)" opacity="0.9"/>
-    <ellipse cx="145" cy="60" rx="15" ry="22" fill="#b488d8" transform="rotate(72 145 60)" opacity="0.9"/>
-    <ellipse cx="55" cy="95" rx="14" ry="21" fill="#8640a8" transform="rotate(-144 55 95)" opacity="0.85"/>
-    <ellipse cx="145" cy="97" rx="14" ry="21" fill="#c0a0e0" transform="rotate(144 145 97)" opacity="0.85"/>
-    <!-- Center -->
-    <circle cx="100" cy="70" r="8" fill="#f5d547" opacity="0.9"/>
-    <circle cx="100" cy="70" r="5" fill="#f9e68a" opacity="0.6"/>
-  </svg>`;
-  return svg;
-}
+  const signatureInput = document.getElementById('signature-input');
+  signatureInput.addEventListener('blur', () => localStorage.setItem('limerence-signature', signatureInput.value));
 
-// ============================================================
-// CHARACTER & CAROUSEL
-// ============================================================
-const Carousel = {
-  async init(){
-    await this.render();
-    this.attachSwipe();
-    this.updateDots();
-  },
-  async render(){
-    const carousel=document.getElementById('main-carousel');
-    const chars=await DB.getAll('characters');
-    
-    // Keep violet page
-    let html=carousel.innerHTML;
-    
-    // Append character cards
-    chars.forEach(c=>{
-      html+='<div class="carousel-page" data-char-id="'+c.id+'"><div class="char-card" onclick="CharDetail.enter(\''+c.id+'\')"><div class="char-avatar-wrap"><div class="char-avatar">'+escHtml(c.avatar||'👤')+'</div></div><div class="char-name">'+escHtml(c.name)+'</div><div class="char-intro">'+escHtml(c.intro||'')+'</div></div></div>';
-    });
-    
-    // Append new card
-    html+='<div class="carousel-page"><div class="char-card char-card-new" onclick="CharDetail.createNew()"><div class="new-icon">＋</div><div class="new-label">创建角色</div></div></div>';
-    
-    carousel.innerHTML=html;
-    this.updateDots();
-  },
-  attachSwipe(){
-    const carousel=document.getElementById('main-carousel');
-    let startX=0;
-    carousel.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;},{passive:true});
-    carousel.addEventListener('touchend',e=>{
-      const endX=e.changedTouches[0].clientX;
-      const diff=startX-endX;
-      if(Math.abs(diff)>30){
-        if(diff>0)carousel.scrollBy({left:window.innerWidth,behavior:'smooth'});
-        else carousel.scrollBy({left:-window.innerWidth,behavior:'smooth'});
-      }
-    });
-    setTimeout(()=>this.updateDots(),100);
-    carousel.addEventListener('scroll',()=>this.updateDots());
-  },
-  updateDots(){
-    const carousel=document.getElementById('main-carousel');
-    const pages=carousel.querySelectorAll('.carousel-page');
-    const dotContainer=document.getElementById('carousel-dots');
-    const scrollPos=carousel.scrollLeft;
-    const pageWidth=window.innerWidth;
-    const currentPage=Math.round(scrollPos/pageWidth);
-    
-    dotContainer.innerHTML='';
-    pages.forEach((p,i)=>{
-      const dot=document.createElement('div');
-      dot.className='carousel-dot'+(i===currentPage?' active':'');
-      dotContainer.appendChild(dot);
+  // ==========================================
+  // 5. 主页逻辑
+  // ==========================================
+  document.getElementById('btn-add-char').addEventListener('click', async () => {
+    const newChar = {
+      id: 'char_' + Date.now(), name: '新角色', avatar: '',
+      bio: '点击编辑简介...', systemPrompt: '', apiPresetId: 'default'
+    };
+    await dbPut('characters', newChar);
+    loadCharacters();
+  });
+
+  async function loadCharacters() {
+    const container = document.getElementById('char-container');
+    const addBtn = document.getElementById('btn-add-char');
+    container.querySelectorAll('.char-card:not(.add-card)').forEach(card => card.remove());
+    const chars = await dbGetAll('characters');
+    chars.forEach(char => {
+      const card = document.createElement('div');
+      card.className = 'char-card';
+      card.setAttribute('data-id', char.id);
+      card.innerHTML = `
+        <div class="avatar" style="background-image:url(${char.avatar || ''}); background-size:cover; background-position:center;"></div>
+        <div class="char-name">${char.name}</div>
+        <div class="char-bio">${char.bio}</div>
+      `;
+      card.addEventListener('click', () => openDetail(char.id));
+      container.insertBefore(card, addBtn);
     });
   }
-};
 
-// ============================================================
-// CHARACTER DETAIL
-// ============================================================
-const CharDetail = {
-  async enter(charId){
-    State.currentCharId=charId;
-    const char=await DB.get('characters',charId);
-    if(!char)return showToast('角色不存在');
+  // ==========================================
+  // 6. 详情页核心逻辑
+  // ==========================================
+  const detailBody = document.getElementById('detail-body');
+  const panelLeft = document.getElementById('panel-left');
+  const panelRight = document.getElementById('panel-right');
+
+  // 打开详情页
+  async function openDetail(charId) {
+    currentCharId = charId;
+    const chars = await dbGetAll('characters');
+    const char = chars.find(c => c.id === charId);
+    if (!char) return;
+
+    // 渲染头部
+    document.getElementById('detail-avatar').style.backgroundImage = `url(${char.avatar || ''})`;
+    document.getElementById('detail-avatar').style.backgroundSize = 'cover';
+    document.getElementById('detail-avatar').style.backgroundPosition = 'center';
+    document.getElementById('detail-name').textContent = char.name;
+
+    // 重置双栏状态
+    detailBody.className = 'detail-body';
+
+    // 加载子页面数据
+    loadAboutData(char);
+    loadChats();
     
-    document.getElementById('detail-name').textContent=char.name;
-    document.getElementById('detail-avatar').innerHTML=escHtml(char.avatar||'👤');
-    document.getElementById('companion-avatar').innerHTML=escHtml(char.avatar||'👤');
-    
-    this.refreshDetailUI();
-    Nav.go('screen-detail','right');
-  },
-  async refreshDetailUI(){
-    if(!State.currentCharId)return;
-    const char=await DB.get('characters',State.currentCharId);
-    if(!char)return;
-    
-    // Update section counts
-    const entries=await DB.getAll('entries',e=>e.charId===State.currentCharId);
-    const memories=await DB.getAll('memories',e=>e.charId===State.currentCharId);
-    const letters=await DB.getAll('letters',e=>e.charId===State.currentCharId);
-    const notes=await DB.getAll('notes',e=>e.charId===State.currentCharId);
-    const chats=await DB.getAll('chats',e=>e.charId===State.currentCharId);
-    
-    document.getElementById('detail-intro-preview').textContent=char.intro||'点击填写主页展示简介';
-    document.getElementById('detail-entries-count').textContent=`${entries.length} 个条目`;
-    document.getElementById('detail-memory-count').textContent=`${memories.length} 条记忆`;
-    document.getElementById('detail-letters-count').textContent=`${letters.length} 封信`;
-    document.getElementById('detail-notes-count').textContent=`${notes.length} 个便签`;
-    
-    // Chat windows list
-    const chatList=document.getElementById('chat-windows-list');
-    chatList.innerHTML='';
-    if(chats.length===0){
-      chatList.innerHTML='<div class="empty-state" style="padding:20px;"><div class="empty-icon">💬</div>暂无聊天</div>';
-    }else{
-      chats.forEach(c=>{
-        const item=document.createElement('div');
-        item.className='chat-window-item';
-        item.innerHTML=`<div><div class="chat-window-name">${escHtml(c.name)}</div><div class="chat-window-meta">${c.messageCount||0} 条消息</div></div><div class="chat-window-actions" style="display:flex;gap:4px;"><button class="btn btn-sm btn-secondary" onclick="event.stopPropagation();CharDetail.renameChat('${c.id}')">📝</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();CharDetail.deleteChat('${c.id}')">🗑</button></div>`;
-        item.style.cursor='pointer';
-        item.addEventListener('click',()=>Chat.enter(c.id));
-        chatList.appendChild(item);
-      });
-    }
-    
-    CompanionDensity.refresh();
-  },
-  openIntro(){SubScreen.editIntro();},
-  openAbout(){SubScreen.editAbout();},
-  openEntries(){SubScreen.listEntries();},
-  openMemories(){SubScreen.listMemories();},
-  openLetters(){SubScreen.listLetters();},
-  openNotes(){SubScreen.listNotes();},
-  async newChat(){
-    const charId=State.currentCharId;
-    const chatName=new Date().toLocaleDateString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
-    const chat={
-      id:genId(),
-      charId,
-      name:chatName,
-      createdAt:new Date().toISOString(),
-      messageCount:0
-    };
-    await DB.put('chats',chat);
-    showToast('新建成功');
-    this.refreshDetailUI();
-  },
-  async renameChat(chatId){
-    const chat=await DB.get('chats',chatId);
-    if(!chat)return;
-    Modal.openInput('重命名聊天','新名称',chat.name,async(newName)=>{
-      chat.name=newName;
-      await DB.put('chats',chat);
-      this.refreshDetailUI();
-    });
-  },
-  async deleteChat(chatId){
-    if(!confirm('确定删除此聊天？相关消息也会删除。'))return;
-    await DB.delete('chats',chatId);
-    // Delete messages in this chat
-    const msgs=await DB.getAll('messages',m=>m.chatId===chatId);
-    for(const m of msgs)await DB.delete('messages',m.id);
-    showToast('已删除');
-    this.refreshDetailUI();
-  },
-  async createNew(){
-    // Create minimal character
-    const char={
-      id:genId(),
-      name:'新角色',
-      avatar:'👤',
-      intro:'',
-      about:{
-        systemPrompt:'你是一个友好的AI助手。',
-        apiPreset:null
-      },
-      motto:''
-    };
-    await DB.put('characters',char);
-    State.currentCharId=char.id;
-    await Carousel.render();
-    this.enter(char.id);
+    switchView('view-detail');
   }
-};
 
-// ============================================================
-// COMPANION DENSITY
-// ============================================================
-const CompanionDensity = {
-  async refresh(){
-    if(!State.currentCharId)return;
-    await this.renderAnniversaries();
-    await this.renderCalendar();
-  },
-  async renderAnniversaries(){
-    const list=await DB.getAll('anniversaries',a=>a.charId===State.currentCharId);
-    const container=document.getElementById('anniversary-list');
-    container.innerHTML='';
-    if(list.length===0){
-      container.innerHTML='<div style="font-size:12px;color:var(--text-muted);padding:8px;text-align:center;">暂无纪念日</div>';
-      return;
+  // 返回主页
+  document.getElementById('btn-back-home-detail').addEventListener('click', () => {
+    switchView('view-home');
+    loadCharacters(); // 刷新主页卡片
+  });
+
+  // 左右栏焦点交互
+  panelLeft.addEventListener('click', (e) => {
+    // 如果点的是菜单项，打开子页面，不调整宽度
+    if (e.target.closest('.left-menu-item')) return;
+    detailBody.className = 'detail-body focus-left';
+  });
+  panelRight.addEventListener('click', (e) => {
+    if (e.target.closest('.chat-item') || e.target.closest('.chat-add-btn')) return;
+    detailBody.className = 'detail-body focus-right';
+  });
+  // 点击其他地方恢复平衡
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.panel-left') && !e.target.closest('.panel-right')) {
+      if (document.getElementById('view-detail').classList.contains('active')) {
+        detailBody.className = 'detail-body';
+      }
     }
-    list.forEach(a=>{
-      const startDate=new Date(a.date);
-      const diff=Math.floor((Date.now()-startDate.getTime())/(1000*60*60*24));
-      const item=document.createElement('div');
-      item.className='anniversary-item';
-      item.innerHTML=`<div><div class="anniversary-name">${escHtml(a.name)}</div></div><div style="display:flex;align-items:center;gap:6px;"><div class="anniversary-days">已${diff}天</div><button class="btn btn-sm btn-danger" style="padding:2px 6px;" onclick="CompanionDensity.deleteAnniversary('${a.id}')">✕</button></div>`;
-      container.appendChild(item);
+  });
+
+  // ==========================================
+  // 7. 子页面路由与通用逻辑
+  // ==========================================
+  const subpages = document.querySelectorAll('.subpage-overlay');
+  
+  // 打开子页面
+  document.querySelectorAll('.left-menu-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const subId = item.getAttribute('data-sub');
+      openSubpage(subId);
     });
-  },
-  async addAnniversary(){Modal.open('modal-anniversary');},
-  async saveAnniversary(){
-    const name=document.getElementById('anniversary-name-input').value.trim();
-    const date=document.getElementById('anniversary-date-input').value;
-    if(!name||!date){showToast('请填写完整');return;}
-    const ann={
-      id:genId(),
-      charId:State.currentCharId,
-      name,
-      date
-    };
-    await DB.put('anniversaries',ann);
-    Modal.close('modal-anniversary');
-    document.getElementById('anniversary-name-input').value='';
-    document.getElementById('anniversary-date-input').value='';
-    showToast('已保存');
-    this.refresh();
-  },
-  async deleteAnniversary(id){
-    if(!confirm('删除此纪念日？'))return;
-    await DB.delete('anniversaries',id);
-    this.renderAnniversaries();
-  },
-  async renderCalendar(){
-    const charId=State.currentCharId;
-    const now=new Date();
-    const year=now.getFullYear();
-    const month=now.getMonth();
-    
-    const container=document.getElementById('density-calendar');
-    container.innerHTML='';
-    
-    // Render last 3 months
-    for(let m=-2;m<=0;m++){
-      const d=new Date(year,month+m,1);
-      const y=d.getFullYear();
-      const mo=d.getMonth();
-      
-      const monthKey=`${y}-${String(mo+1).padStart(2,'0')}`;
-      const msgCounts=await DB.getAll('messageCounts',mc=>mc.charId===charId&&mc.monthKey===monthKey);
-      const countMap={};
-      msgCounts.forEach(mc=>countMap[mc.day]=mc.count||0);
-      
-      const monthDiv=document.createElement('div');
-      monthDiv.style.marginBottom='16px';
-      
-      const headerDiv=document.createElement('div');
-      headerDiv.className='density-calendar-header';
-      headerDiv.innerHTML=`<div class="density-month-title">${y}年${mo+1}月</div>`;
-      monthDiv.appendChild(headerDiv);
-      
-      const gridDiv=document.createElement('div');
-      gridDiv.className='density-grid';
-      
-      const daysInMonth=new Date(y,mo+1,0).getDate();
-      const firstDay=new Date(y,mo,1).getDay();
-      
-      for(let i=0;i<firstDay;i++){
-        const empty=document.createElement('div');
-        gridDiv.appendChild(empty);
-      }
-      
-      for(let day=1;day<=daysInMonth;day++){
-        const dayDiv=document.createElement('div');
-        dayDiv.className='density-day';
-        const count=countMap[day]||0;
-        let level=0;
-        if(count>200)level=5;
-        else if(count>=100)level=4;
-        else if(count>=50)level=3;
-        else if(count>=20)level=2;
-        else if(count>0)level=1;
-        
-        if(level>0)dayDiv.classList.add('d'+level);
-        dayDiv.textContent=day;
-        gridDiv.appendChild(dayDiv);
-      }
-      
-      monthDiv.appendChild(gridDiv);
-      container.appendChild(monthDiv);
+  });
+
+  function openSubpage(subId) {
+    const target = document.getElementById('sub-' + subId);
+    if (target) {
+      target.classList.add('active');
+      // 加载对应数据
+      if (subId === 'items') loadItems();
+      if (subId === 'memory') loadMemories();
+      if (subId === 'letters') loadLetters();
+      if (subId === 'notes') loadNotes();
     }
-  },
-  scrollTo(){
-    const section=document.getElementById('companion-density-section');
-    if(section)section.scrollIntoView({behavior:'smooth'});
   }
-};
 
-// ============================================================
-// CHAT
-// ============================================================
-const Chat = {
-  async enter(chatId){
-    State.currentChatId=chatId;
-    const chat=await DB.get('chats',chatId);
-    if(!chat)return showToast('聊天不存在');
-    
-    document.getElementById('chat-title').textContent=chat.name;
-    await this.loadMessages();
-    Nav.go('screen-chat','right');
-  },
-  async loadMessages(){
-    const chatId=State.currentChatId;
-    const msgs=await DB.getAll('messages',m=>m.chatId===chatId);
-    msgs.sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
-    
-    const container=document.getElementById('chat-messages');
-    container.innerHTML='';
-    
-    msgs.forEach(msg=>{
-      const wrap=document.createElement('div');
-      wrap.className='message-wrap '+msg.role;
-      
-      if(msg.role==='tool'){
-        wrap.innerHTML=`<div class="message-bubble"><strong>[${escHtml(msg.toolName||'工具')}]</strong> ${markdownToHtml(msg.content)}</div>`;
-      }else{
-        let bubble='';
-        if(msg.thinking&&msg.role==='assistant'){
-          bubble+=`<div class="thinking-wrap"><div class="thinking-toggle" onclick="this.nextElementSibling.classList.toggle('show')"><span>▶</span><span class="thinking-summary">${escHtml(msg.thinkingSummary||'思考过程')}</span></div><div class="thinking-content">${markdownToHtml(msg.thinking)}</div></div>`;
-        }
-        if(msg.imageBase64){
-          bubble+=`<img src="${msg.imageBase64}" class="message-img" alt="image">`;
-        }
-        if(msg.filePreview){
-          bubble+=`<div class="file-preview">📄 ${escHtml(msg.filePreview)}</div>`;
-        }
-        bubble+=`<div class="message-bubble"><div class="message-ts">${formatDateTime(msg.createdAt)}</div>${markdownToHtml(msg.content)}</div>`;
-        wrap.innerHTML=bubble;
-      }
-      
-      wrap.innerHTML+=`<div class="message-actions"><button class="msg-action-btn" onclick="Chat.editMessage('${msg.id}')">编辑</button><button class="msg-action-btn btn-danger" onclick="Chat.deleteMessage('${msg.id}')">删除</button></div>`;
-      
-      container.appendChild(wrap);
+  // 关闭子页面
+  document.querySelectorAll('.btn-close-sub').forEach(btn => {
+    btn.addEventListener('click', () => {
+      subpages.forEach(sub => sub.classList.remove('active'));
     });
-    
-    container.scrollTop=container.scrollHeight;
-  },
-  async send(){
-    const input=document.getElementById('chat-input');
-    const text=input.value.trim();
-    if(!text&&!State.pendingImage&&!State.pendingFile){showToast('请输入内容');return;}
-    
-    const char=await DB.get('characters',State.currentCharId);
-    const chat=await DB.get('chats',State.currentChatId);
-    if(!char||!chat)return showToast('数据缺失');
-    
-    // Add user message
-    const userMsg={
-      id:genId(),
-      chatId:State.currentChatId,
-      role:'user',
-      content:text,
-      imageBase64:State.pendingImage?.base64||null,
-      imageFilename:State.pendingImage?.name||null,
-      filePreview:State.pendingFile?.name||null,
-      createdAt:new Date().toISOString(),
-      updatedAt:new Date().toISOString()
-    };
-    await DB.put('messages',userMsg);
-    
-    // Update message count
-    const today=formatDate(new Date());
-    const key=`${State.currentCharId}_${today}`;
-    let count=await DB.get('messageCounts',key);
-    if(!count){
-      count={
-        id:key,
-        charId:State.currentCharId,
-        monthKey:getMonthKey(new Date()),
-        day:parseInt(today.split('-')[2]),
-        count:0
-      };
-    }
-    count.count=(count.count||0)+1;
-    await DB.put('messageCounts',count);
-    
-    // Clear inputs
-    input.value='';
-    input.style.height='38px';
-    State.pendingImage=null;
-    State.pendingFile=null;
-    document.getElementById('file-preview-area').innerHTML='';
-    State.chatOptions={image:false,file:false,search:false,think:false};
-    this.updateOptionBtns();
-    
-    await this.loadMessages();
-    
-    // Simulate AI response after delay
-    State.isGenerating=true;
-    document.getElementById('chat-send-btn').disabled=true;
-    
-    setTimeout(async()=>{
-      const assistantMsg={
-        id:genId(),
-        chatId:State.currentChatId,
-        role:'assistant',
-        content:'这是一个模拟回复。在实际应用中，这里会调用 API 获取真实的 AI 回复。',
-        thinking:State.chatOptions.think?'我在思考如何最好地回答这个问题...':'',
-        thinkingSummary:State.chatOptions.think?'思考过程中...':'',
-        createdAt:new Date().toISOString(),
-        updatedAt:new Date().toISOString()
-      };
-      await DB.put('messages',assistantMsg);
-      
-      // Update message count again
-      count.count=(count.count||0)+1;
-      await DB.put('messageCounts',count);
-      
-      State.isGenerating=false;
-      document.getElementById('chat-send-btn').disabled=false;
-      this.loadMessages();
-    },1500);
-  },
-  async editMessage(msgId){
-    const msg=await DB.get('messages',msgId);
-    if(!msg)return;
-    Modal.openTextEdit('编辑消息',msg.content,async(newContent)=>{
-      msg.content=newContent;
-      msg.updatedAt=new Date().toISOString();
-      await DB.put('messages',msg);
-      this.loadMessages();
-    });
-  },
-  async deleteMessage(msgId){
-    if(!confirm('确定删除此消息？'))return;
-    await DB.delete('messages',msgId);
-    this.loadMessages();
-  },
-  async handleImageFile(input){
-    const file=input.files?.[0];
-    if(!file)return;
-    const reader=new FileReader();
-    reader.onload=e=>{
-      State.pendingImage={
-        base64:e.target.result,
-        mime:file.type,
-        name:file.name
-      };
-      this.showFilePreview();
-    };
-    reader.readAsDataURL(file);
-    input.value='';
-  },
-  async handleDocFile(input){
-    const file=input.files?.[0];
-    if(!file)return;
-    const reader=new FileReader();
-    reader.onload=e=>{
-      State.pendingFile={
-        name:file.name,
-        content:e.target.result
-      };
-      this.showFilePreview();
-    };
-    reader.readAsText(file);
-    input.value='';
-  },
-  showFilePreview(){
-    const area=document.getElementById('file-preview-area');
-    area.innerHTML='';
-    if(State.pendingImage){
-      const div=document.createElement('div');
-      div.className='file-preview';
-      div.innerHTML=`🖼 ${escHtml(State.pendingImage.name)}<button class="btn btn-sm btn-danger" style="margin-left:auto;" onclick="State.pendingImage=null;Chat.showFilePreview()">✕</button>`;
-      area.appendChild(div);
-    }
-    if(State.pendingFile){
-      const div=document.createElement('div');
-      div.className='file-preview';
-      div.innerHTML=`📄 ${escHtml(State.pendingFile.name)}<button class="btn btn-sm btn-danger" style="margin-left:auto;" onclick="State.pendingFile=null;Chat.showFilePreview()">✕</button>`;
-      area.appendChild(div);
-    }
-  },
-  toggleOptions(){
-    const opts=document.getElementById('chat-options');
-    const btn=document.getElementById('chat-expand-btn');
-    opts.classList.toggle('show');
-    btn.classList.toggle('rotated');
-  },
-  toggleOption(opt){
-    State.chatOptions[opt]=!State.chatOptions[opt];
-    this.updateOptionBtns();
-  },
-  updateOptionBtns(){
-    document.getElementById('opt-image').classList.toggle('active',State.chatOptions.image);
-    document.getElementById('opt-file').classList.toggle('active',State.chatOptions.file);
-    document.getElementById('opt-search').classList.toggle('active',State.chatOptions.search);
-    document.getElementById('opt-think').classList.toggle('active',State.chatOptions.think);
-  },
-  onKeyDown(e){
-    if(e.key==='Enter'&&!e.shiftKey){
-      e.preventDefault();
-      this.send();
-    }
-  },
-  autoResize(textarea){
-    textarea.style.height='38px';
-    textarea.style.height=Math.min(textarea.scrollHeight,120)+'px';
+  });
+
+  // ==========================================
+  // 8. 关于 & 简介逻辑
+  // ==========================================
+  function loadAboutData(char) {
+    document.getElementById('input-bio').value = char.bio || '';
+    document.getElementById('input-avatar-url').value = char.avatar || '';
+    document.getElementById('input-char-name').value = char.name || '';
+    document.getElementById('input-sys-prompt').value = char.systemPrompt || '';
   }
-};
 
-// ============================================================
-// SUB-SCREENS (for editing)
-// ============================================================
-const SubScreen = {
-  async editIntro(){
-    const char=await DB.get('characters',State.currentCharId);
-    if(!char)return;
-    document.getElementById('intro-editor').value=char.intro||'';
-    document.getElementById('sub-intro').classList.add('show');
-  },
-  async saveIntro(){
-    const intro=document.getElementById('intro-editor').value;
-    const char=await DB.get('characters',State.currentCharId);
-    if(char){
-      char.intro=intro;
-      await DB.put('characters',char);
-      await Carousel.render();
-      await CharDetail.refreshDetailUI();
+  // 保存简介
+  document.getElementById('btn-save-bio').addEventListener('click', async () => {
+    const chars = await dbGetAll('characters');
+    const char = chars.find(c => c.id === currentCharId);
+    if (char) {
+      char.bio = document.getElementById('input-bio').value;
+      await dbPut('characters', char);
+      alert('简介已保存');
+      // 关闭子页面
+      document.getElementById('sub-bio').classList.remove('active');
     }
-    this.close('sub-intro');
-    showToast('已保存');
-  },
-  async editAbout(){
-    const char=await DB.get('characters',State.currentCharId);
-    if(!char)return;
-    
-    const about=char.about||{systemPrompt:'',apiPreset:null};
-    document.getElementById('about-name').value=char.name||'';
-    document.getElementById('about-system').value=about.systemPrompt||'';
-    
-    // Load API presets
-    const presets=await DB.getAll('apiPresets',p=>p.type==='main');
-    const select=document.getElementById('about-api-preset');
-    select.innerHTML='<option value="">-- 使用默认 --</option>';
-    presets.forEach(p=>{
-      const opt=document.createElement('option');
-      opt.value=p.id;
-      opt.textContent=p.name;
-      if(p.id===about.apiPreset)opt.selected=true;
-      select.appendChild(opt);
+  });
+
+  // 保存关于
+  document.getElementById('btn-save-about').addEventListener('click', async () => {
+    const chars = await dbGetAll('characters');
+    const char = chars.find(c => c.id === currentCharId);
+    if (char) {
+      char.avatar = document.getElementById('input-avatar-url').value;
+      char.name = document.getElementById('input-char-name').value;
+      char.systemPrompt = document.getElementById('input-sys-prompt').value;
+      await dbPut('characters', char);
+      // 更新详情页头部
+      document.getElementById('detail-avatar').style.backgroundImage = `url(${char.avatar})`;
+      document.getElementById('detail-name').textContent = char.name;
+      alert('设置已保存');
+      document.getElementById('sub-about').classList.remove('active');
+    }
+  });
+
+  // ==========================================
+  // 9. 条目逻辑 (Items)
+  // ==========================================
+  document.getElementById('btn-add-item').addEventListener('click', async () => {
+    const input = document.getElementById('input-new-item');
+    const text = input.value.trim();
+    if (!text) return;
+    await dbPut('items', {
+      id: 'item_' + Date.now(), characterId: currentCharId,
+      content: text, createdAt: new Date().toISOString()
     });
-    
-    // Avatar
-    if(char.avatarBase64){
-      const img=document.getElementById('about-avatar-img');
-      img.src=char.avatarBase64;
-      img.style.display='block';
-      document.getElementById('about-avatar-emoji').style.display='none';
-    }else{
-      document.getElementById('about-avatar-emoji').textContent=char.avatar||'👤';
-      document.getElementById('about-avatar-img').style.display='none';
-    }
-    
-    document.getElementById('sub-about').classList.add('show');
-  },
-  async saveAbout(){
-    const char=await DB.get('characters',State.currentCharId);
-    if(!char)return;
-    
-    char.name=document.getElementById('about-name').value;
-    char.about={
-      systemPrompt:document.getElementById('about-system').value,
-      apiPreset:document.getElementById('about-api-preset').value||null
-    };
-    
-    await DB.put('characters',char);
-    await Carousel.render();
-    await CharDetail.refreshDetailUI();
-    
-    this.close('sub-about');
-    showToast('已保存');
-  },
-  pickAvatar(){
-    document.getElementById('about-avatar-input').click();
-  },
-  handleAvatarFile(input){
-    const file=input.files?.[0];
-    if(!file)return;
-    const reader=new FileReader();
-    reader.onload=async e=>{
-      const img=document.getElementById('about-avatar-img');
-      img.src=e.target.result;
-      img.style.display='block';
-      document.getElementById('about-avatar-emoji').style.display='none';
-      
-      // Save to character
-      const char=await DB.get('characters',State.currentCharId);
-      if(char){
-        char.avatarBase64=e.target.result;
-        await DB.put('characters',char);
-      }
-    };
-    reader.readAsDataURL(file);
-    input.value='';
-  },
-  async listEntries(){
-    const entries=await DB.getAll('entries',e=>e.charId===State.currentCharId);
-    const body=document.getElementById('entries-list-body');
-    body.innerHTML='';
-    
-    if(entries.length===0){
-      body.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div>暂无条目，点击右上角添加</div>';
-      return;
-    }
-    
-    entries.forEach(e=>{
-      const item=document.createElement('div');
-      item.className='list-item';
-      item.innerHTML=`
-        <div class="list-item-content">
-          <div class="list-item-title">${escHtml(e.title)}</div>
-          <div class="list-item-meta">${escHtml(e.content.substring(0,40))}...</div>
-        </div>
-        <div class="list-item-actions">
-          <button class="btn btn-sm btn-secondary" onclick="SubScreen.editEntry('${e.id}')">✎</button>
-          <button class="btn btn-sm btn-danger" onclick="SubScreen.deleteEntry('${e.id}')">🗑</button>
+    input.value = '';
+    loadItems();
+  });
+
+  async function loadItems() {
+    const list = document.getElementById('items-list');
+    list.innerHTML = '';
+    const items = (await dbGetAll('items')).filter(i => i.characterId === currentCharId);
+    items.forEach(item => {
+      list.innerHTML += `
+        <div class="item-card">
+          <div class="item-card-actions">
+            <i class="fas fa-trash" onclick="deleteItem('${item.id}')"></i>
+          </div>
+          <div class="item-card-content">${item.content}</div>
+          <div class="item-card-meta">${new Date(item.createdAt).toLocaleString()}</div>
         </div>
       `;
-      body.appendChild(item);
     });
-    
-    document.getElementById('sub-entries').classList.add('show');
-  },
-  addEntry(){
-    State.pendingEntryEdit=null;
-    Modal.openTextEdit('新增条目','条目内容','',(content)=>{
-      Modal.openInput('输入标题','标题','标题',(title)=>{
-        this._saveEntry(title,content);
-      });
+  }
+  window.deleteItem = async (id) => { await dbDelete('items', id); loadItems(); };
+
+  // ==========================================
+  // 10. 记忆库逻辑 (Memories) - 按月分类
+  // ==========================================
+  document.getElementById('btn-add-memory').addEventListener('click', async () => {
+    const input = document.getElementById('input-new-memory');
+    const text = input.value.trim();
+    if (!text) return;
+    const now = new Date();
+    await dbPut('memories', {
+      id: 'mem_' + Date.now(), characterId: currentCharId,
+      content: text, date: now.toISOString(), month: `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`
     });
-  },
-  async editEntry(id){
-    const entry=await DB.get('entries',id);
-    if(!entry)return;
-    State.pendingEntryEdit=id;
-    Modal.openTextEdit('编辑条目',entry.content,(content)=>{
-      Modal.openInput('编辑标题','标题',entry.title,(title)=>{
-        this._saveEntry(title,content,id);
-      });
+    input.value = '';
+    loadMemories();
+  });
+
+  async function loadMemories() {
+    const list = document.getElementById('memory-list');
+    list.innerHTML = '';
+    const mems = (await dbGetAll('memories')).filter(m => m.characterId === currentCharId);
+    // 按月份分组
+    const months = {};
+    mems.forEach(m => {
+      const key = m.month || '未知月份';
+      if (!months[key]) months[key] = [];
+      months[key].push(m);
     });
-  },
-  async _saveEntry(title,content,id){
-    if(!title.trim()||!content.trim()){showToast('请填写完整');return;}
-    const entry=id?await DB.get('entries',id):{id:genId(),charId:State.currentCharId};
-    entry.title=title;
-    entry.content=content;
-    await DB.put('entries',entry);
-    showToast('已保存');
-    this.listEntries();
-  },
-  async deleteEntry(id){
-    if(!confirm('确定删除？'))return;
-    await DB.delete('entries',id);
-    this.listEntries();
-  },
-  async listMemories(){
-    const memories=await DB.getAll('memories',m=>m.charId===State.currentCharId);
-    const body=document.getElementById('memories-list-body');
-    body.innerHTML='';
-    
-    if(memories.length===0){
-      body.innerHTML='<div class="empty-state"><div class="empty-icon">🧠</div>AI 尚未留下记忆</div>';
-      document.getElementById('sub-memories').classList.add('show');
-      return;
-    }
-    
-    const grouped={};
-    memories.forEach(m=>{
-      const monthKey=getMonthKey(m.createdAt);
-      if(!grouped[monthKey])grouped[monthKey]=[];
-      grouped[monthKey].push(m);
-    });
-    
-    Object.keys(grouped).sort().reverse().forEach(month=>{
-      const header=document.createElement('div');
-      header.className='month-header';
-      header.textContent=month;
-      body.appendChild(header);
-      
-      grouped[month].forEach(m=>{
-        const item=document.createElement('div');
-        item.className='list-item';
-        item.innerHTML=`
-          <div class="list-item-content">
-            <div class="list-item-title">${escHtml(m.title)}</div>
-            <div class="list-item-meta">${formatDate(m.createdAt)}</div>
-          </div>
-          <div class="list-item-actions">
-            <button class="btn btn-sm btn-secondary" onclick="SubScreen.viewMemory('${m.id}')">👁</button>
-            <button class="btn btn-sm btn-secondary" onclick="SubScreen.editMemory('${m.id}')">✎</button>
-            <button class="btn btn-sm btn-danger" onclick="SubScreen.deleteMemory('${m.id}')">🗑</button>
+    // 降序排列月份
+    Object.keys(months).sort().reverse().forEach(month => {
+      list.innerHTML += `<div class="month-divider"><i class="fas fa-calendar-alt"></i> ${month}</div>`;
+      months[month].forEach(m => {
+        list.innerHTML += `
+          <div class="item-card">
+            <div class="item-card-actions">
+              <i class="fas fa-trash" onclick="deleteMemory('${m.id}')"></i>
+            </div>
+            <div class="item-card-content">${m.content}</div>
+            <div class="item-card-meta">${new Date(m.date).toLocaleString()}</div>
           </div>
         `;
-        body.appendChild(item);
       });
     });
-    
-    document.getElementById('sub-memories').classList.add('show');
-  },
-  async viewMemory(id){
-    const mem=await DB.get('memories',id);
-    if(!mem)return;
-    Modal.openTextEdit(`查看记忆 - ${mem.title}`,mem.content||'','',()=>{},true);
-  },
-  async editMemory(id){
-    const mem=await DB.get('memories',id);
-    if(!mem)return;
-    State.pendingMemoryEdit=id;
-    Modal.openTextEdit('编辑记忆',mem.content||'',(newContent)=>{
-      mem.content=newContent;
-      DB.put('memories',mem);
-      this.listMemories();
-      showToast('已保存');
-    });
-  },
-  async deleteMemory(id){
-    if(!confirm('确定删除此记忆？'))return;
-    await DB.delete('memories',id);
-    this.listMemories();
-  },
-  addMemory(){
-    State.pendingMemoryEdit=null;
-    Modal.openTextEdit('新增记忆','记忆内容','',(content)=>{
-      Modal.openInput('输入标题','标题','记忆',(title)=>{
-        this._saveMemory(title,content);
-      });
-    });
-  },
-  async _saveMemory(title,content,id){
-    if(!title.trim()||!content.trim()){showToast('请填写完整');return;}
-    const mem=id?await DB.get('memories',id):{id:genId(),charId:State.currentCharId};
-    mem.title=title;
-    mem.content=content;
-    mem.createdAt=mem.createdAt||new Date().toISOString();
-    await DB.put('memories',mem);
-    showToast('已保存');
-    this.listMemories();
-  },
-  async listLetters(){
-    const letters=await DB.getAll('letters',l=>l.charId===State.currentCharId);
-    const body=document.getElementById('letters-list-body');
-    body.innerHTML='';
-    
-    if(letters.length===0){
-      body.innerHTML='<div class="empty-state"><div class="empty-icon">✉️</div>尚无信件</div>';
-      document.getElementById('sub-letters').classList.add('show');
-      return;
-    }
-    
-    letters.forEach(l=>{
-      const item=document.createElement('div');
-      item.className='list-item';
-      const from=l.from==='user'?'我':'AI';
-      item.innerHTML=`
-        <div class="list-item-content">```html
-          <div class="list-item-title">${escHtml(l.title)}</div>
-          <div class="list-item-meta">来自: ${from} · ${formatDate(l.createdAt)}</div>
-        </div>
-        <div class="list-item-actions">
-          <button class="btn btn-sm btn-secondary" onclick="SubScreen.viewLetter('${l.id}')">👁</button>
-          <button class="btn btn-sm btn-secondary" onclick="SubScreen.editLetter('${l.id}')">✎</button>
-          <button class="btn btn-sm btn-danger" onclick="SubScreen.deleteLetter('${l.id}')">🗑</button>
-        </div>
-      `;
-      body.appendChild(item);
-    });
-    
-    document.getElementById('sub-letters').classList.add('show');
-  },
-  async viewLetter(id){
-    const letter=await DB.get('letters',id);
-    if(!letter)return;
-    Modal.openTextEdit(`查看信件 - ${letter.title}`,letter.content||'','',()=>{},true);
-  },
-  async editLetter(id){
-    State.pendingLetterEdit=id;
-    const letter=await DB.get('letters',id);
-    if(!letter)return;
-    document.getElementById('letter-editor-title').textContent=`编辑信件`;
-    document.getElementById('letter-title-input').value=letter.title||'';
-    document.getElementById('letter-content-input').value=letter.content||'';
-    document.getElementById('sub-letter-editor').classList.add('show');
-  },
-  addLetter(){
-    State.pendingLetterEdit=null;
-    document.getElementById('letter-editor-title').textContent=`写信`;
-    document.getElementById('letter-title-input').value='';
-    document.getElementById('letter-content-input').value='';
-    document.getElementById('sub-letter-editor').classList.add('show');
-  },
-  async saveLetter(){
-    const title=document.getElementById('letter-title-input').value.trim();
-    const content=document.getElementById('letter-content-input').value.trim();
-    if(!title||!content){showToast('请填写完整');return;}
-    
-    const id=State.pendingLetterEdit;
-    const letter=id?await DB.get('letters',id):{id:genId(),charId:State.currentCharId,from:'user'};
-    letter.title=title;
-    letter.content=content;
-    letter.createdAt=letter.createdAt||new Date().toISOString();
-    await DB.put('letters',letter);
-    
-    this.closeLetterEditor();
-    this.listLetters();
-    showToast('已保存');
-  },
-  async deleteLetter(id){
-    if(!confirm('确定删除此信件？'))return;
-    await DB.delete('letters',id);
-    this.listLetters();
-  },
-  closeLetterEditor(){
-    document.getElementById('sub-letter-editor').classList.remove('show');
-  },
-  async listNotes(){
-    const notes=await DB.getAll('notes',n=>n.charId===State.currentCharId);
-    const body=document.getElementById('notes-list-body');
-    body.innerHTML='';
-    
-    if(notes.length===0){
-      body.innerHTML='<div class="empty-state"><div class="empty-icon">🗒</div>暂无便签</div>';
-      document.getElementById('sub-notes').classList.add('show');
-      return;
-    }
-    
-    notes.forEach(n=>{
-      const item=document.createElement('div');
-      item.className='list-item'+(n.completed?' strikethrough':'');
-      item.innerHTML=`
-        <div class="list-item-content">
-          <div class="list-item-title">${escHtml(n.title)}</div>
-          <div class="list-item-meta">${escHtml(n.content.substring(0,40))}${n.content.length>40?'...':''}</div>
-        </div>
-        <div class="list-item-actions">
-          <button class="btn btn-sm ${n.completed?'btn-secondary':'btn-primary'}" onclick="SubScreen.toggleNote('${n.id}')">${n.completed?'↻':'✓'}</button>
-          <button class="btn btn-sm btn-secondary" onclick="SubScreen.editNote('${n.id}')">✎</button>
-          <button class="btn btn-sm btn-danger" onclick="SubScreen.deleteNote('${n.id}')">🗑</button>
-        </div>
-      `;
-      body.appendChild(item);
-    });
-    
-    document.getElementById('sub-notes').classList.add('show');
-  },
-  addNote(){
-    Modal.openTextEdit('新增便签','便签内容','',(content)=>{
-      Modal.openInput('输入标题','标题','提醒',(title)=>{
-        this._saveNote(title,content);
-      });
-    });
-  },
-  async editNote(id){
-    const note=await DB.get('notes',id);
-    if(!note)return;
-    Modal.openTextEdit('编辑便签',note.content||'',(newContent)=>{
-      Modal.openInput('编辑标题','标题',note.title,(newTitle)=>{
-        this._saveNote(newTitle,newContent,id);
-      });
-    });
-  },
-  async _saveNote(title,content,id){
-    if(!title.trim()||!content.trim()){showToast('请填写完整');return;}
-    const note=id?await DB.get('notes',id):{id:genId(),charId:State.currentCharId,completed:false};
-    note.title=title;
-    note.content=content;
-    await DB.put('notes',note);
-    showToast('已保存');
-    this.listNotes();
-  },
-  async toggleNote(id){
-    const note=await DB.get('notes',id);
-    if(note){
-      note.completed=!note.completed;
-      await DB.put('notes',note);
-      this.listNotes();
-    }
-  },
-  async deleteNote(id){
-    if(!confirm('确定删除此便签？'))return;
-    await DB.delete('notes',id);
-    this.listNotes();
-  },
-  close(screenId){
-    document.getElementById(screenId).classList.remove('show');
   }
-};
+  window.deleteMemory = async (id) => { await dbDelete('memories', id); loadMemories(); };
 
-// ============================================================
-// MODALS
-// ============================================================
-const Modal = {
-  open(id){
-    document.getElementById(id).classList.add('show');
-  },
-  close(id){
-    document.getElementById(id).classList.remove('show');
-  },
-  openTextEdit(title,content,defaultVal='',callback=null,readOnly=false){
-    document.getElementById('modal-text-title').textContent=title;
-    const textarea=document.getElementById('modal-text-content');
-    textarea.value=defaultVal||content;
-    textarea.readOnly=readOnly;
-    State.pendingModalCallback=callback;
-    this.open('modal-text-edit');
-  },
-  confirmText(){
-    const content=document.getElementById('modal-text-content').value;
-    if(State.pendingModalCallback)State.pendingModalCallback(content);
-    this.close('modal-text-edit');
-  },
-  openInput(title,label,defaultVal='',callback=null){
-    document.getElementById('modal-input-title').textContent=title;
-    const field=document.getElementById('modal-input-field');
-    field.placeholder=label;
-    field.value=defaultVal;
-    State.pendingModalCallback=callback;
-    this.open('modal-input');
-    field.focus();
-  },
-  confirmInput(){
-    const val=document.getElementById('modal-input-field').value.trim();
-    if(!val){showToast('请输入内容');return;}
-    if(State.pendingModalCallback)State.pendingModalCallback(val);
-    this.close('modal-input');
-  }
-};
-
-// ============================================================
-// API SETTINGS
-// ============================================================
-const APISettings = {
-  async init(){
-    this.loadAll();
-    document.querySelectorAll('.api-tab').forEach(tab=>{
-      tab.addEventListener('click',e=>{
-        document.querySelectorAll('.api-tab').forEach(t=>t.classList.remove('active'));
-        document.querySelectorAll('.api-panel').forEach(p=>p.classList.remove('active'));
-        e.target.classList.add('active');
-        document.getElementById(e.target.dataset.panel).classList.add('active');
-      });
-    });
-  },
-  async loadAll(){
-    const main=await DB.get('apiPresets','main')||{};
-    const search=await DB.get('apiPresets','search')||{};
-    const vision=await DB.get('apiPresets','vision')||{};
-    
-    document.getElementById('main-endpoint').value=main.endpoint||'';
-    document.getElementById('main-key').value=main.key||'';
-    document.getElementById('main-model').value=main.model||'';
-    
-    document.getElementById('search-endpoint').value=search.endpoint||'';
-    document.getElementById('search-key').value=search.key||'';
-    document.getElementById('search-type').value=search.type||'serper';
-    
-    document.getElementById('vision-endpoint').value=vision.endpoint||'';
-    document.getElementById('vision-key').value=vision.key||'';
-    document.getElementById('vision-model').value=vision.model||'';
-    
-    this.loadPresets('main');
-    this.loadPresets('search');
-    this.loadPresets('vision');
-  },
-  async loadPresets(type){
-    const presets=await DB.getAll('apiPresets',p=>p.type===type&&p.isPreset);
-    const container=document.getElementById(type+'-preset-list');
-    container.innerHTML='';
-    
-    if(presets.length===0){
-      container.innerHTML='<div style="font-size:12px;color:var(--text-muted);padding:8px;">暂无预设</div>';
-      return;
-    }
-    
-    presets.forEach(p=>{
-      const item=document.createElement('div');
-      item.className='preset-item';
-      item.innerHTML=`
-        <span>${escHtml(p.name)}</span>
-        <div class="preset-actions">
-          <button class="btn btn-sm btn-secondary" onclick="APISettings.loadPreset('${p.id}','${type}')">载入</button>
-          <button class="btn btn-sm btn-danger" onclick="APISettings.deletePreset('${p.id}')">🗑</button>
-        </div>
-      `;
-      container.appendChild(item);
-    });
-  },
-  async loadPreset(presetId,type){
-    const preset=await DB.get('apiPresets',presetId);
-    if(!preset)return;
-    
-    if(type==='main'){
-      document.getElementById('main-endpoint').value=preset.endpoint||'';
-      document.getElementById('main-key').value=preset.key||'';
-      document.getElementById('main-model').value=preset.model||'';
-    }else if(type==='search'){
-      document.getElementById('search-endpoint').value=preset.endpoint||'';
-      document.getElementById('search-key').value=preset.key||'';
-      document.getElementById('search-type').value=preset.type||'serper';
-    }else if(type==='vision'){
-      document.getElementById('vision-endpoint').value=preset.endpoint||'';
-      document.getElementById('vision-key').value=preset.key||'';
-      document.getElementById('vision-model').value=preset.model||'';
-    }
-    
-    showToast('已加载预设');
-  },
-  async save(type){
-    let endpoint,key,model;
-    
-    if(type==='main'){
-      endpoint=document.getElementById('main-endpoint').value;
-      key=document.getElementById('main-key').value;
-      model=document.getElementById('main-model').value;
-    }else if(type==='search'){
-      endpoint=document.getElementById('search-endpoint').value;
-      key=document.getElementById('search-key').value;
-    }else if(type==='vision'){
-      endpoint=document.getElementById('vision-endpoint').value;
-      key=document.getElementById('vision-key').value;
-      model=document.getElementById('vision-model').value;
-    }
-    
-    if(!endpoint||!key){showToast('请填写必须字段');return;}
-    
-    const config={id:type,type,endpoint,key,model:model||undefined,isPreset:false};
-    await DB.put('apiPresets',config);
-    showToast('已保存');
-  },
-  async savePreset(type){
-    State.pendingPresetType=type;
-    Modal.openInput('保存预设','预设名称','我的'+type+'预设',name=>{
-      this.confirmSavePreset(name,type);
-    });
-  },
-  async confirmSavePreset(name,type){
-    type=type||State.pendingPresetType;
-    if(!name.trim()){showToast('请输入名称');return;}
-    
-    let endpoint,key,model,searchType;
-    if(type==='main'){
-      endpoint=document.getElementById('main-endpoint').value;
-      key=document.getElementById('main-key').value;
-      model=document.getElementById('main-model').value;
-    }else if(type==='search'){
-      endpoint=document.getElementById('search-endpoint').value;
-      key=document.getElementById('search-key').value;
-      searchType=document.getElementById('search-type').value;
-    }else if(type==='vision'){
-      endpoint=document.getElementById('vision-endpoint').value;
-      key=document.getElementById('vision-key').value;
-      model=document.getElementById('vision-model').value;
-    }
-    
-    if(!endpoint||!key){showToast('请先填写配置');return;}
-    
-    const preset={
-      id:genId(),
-      type,
-      name:name.trim(),
-      endpoint,key,model,type:searchType,
-      isPreset:true
-    };
-    await DB.put('apiPresets',preset);
-    Modal.close('modal-preset-name');
-    showToast('已保存预设');
-    this.loadPresets(type);
-  },
-  async deletePreset(id){
-    if(!confirm('确定删除此预设？'))return;
-    await DB.delete('apiPresets',id);
-    showToast('已删除');
-    const presets=await DB.getAll('apiPresets');
-    const type=presets.find(p=>p.id===id)?.type;
-    if(type)this.loadPresets(type);
-  },
-  async fetchModels(type){
-    const endpoint=document.getElementById(type+'-endpoint').value;
-    const key=document.getElementById(type+'-key').value;
-    
-    if(!endpoint||!key){showToast('请先填写 API 配置');return;}
-    
-    const loading=document.getElementById(type+'-model-loading');
-    loading.textContent='获取中...';
-    
-    try{
-      const res=await fetch(endpoint+'/models',{
-        headers:{'Authorization':`Bearer ${key}`}
-      });
-      const data=await res.json();
-      const models=data.data||[];
-      
-      const select=document.getElementById(type+'-model-select');
-      select.innerHTML='';
-      models.forEach(m=>{
-        const opt=document.createElement('option');
-        opt.value=m.id;
-        opt.textContent=m.id;
-        select.appendChild(opt);
-      });
-      
-      select.style.display='block';
-      loading.textContent=`已获取 ${models.length} 个模型`;
-    }catch(e){
-      loading.textContent='获取失败: '+e.message;
-    }
-  }
-};
-
-// ============================================================
-// BEAUTY SETTINGS
-// ============================================================
-const Beauty = {
-  async init(){
-    const saved=localStorage.getItem('limerence_custom_css');
-    if(saved){
-      document.getElementById('beauty-css-editor').value=saved;
-      this.apply();
-    }
-  },
-  async apply(){
-    const css=document.getElementById('beauty-css-editor').value;
-    const styleEl=document.getElementById('custom-css-style');
-    styleEl.textContent=css;
-    localStorage.setItem('limerence_custom_css',css);
-    showToast('已应用');
-  },
-  async reset(){
-    if(!confirm('确定重置为默认样式？'))return;
-    document.getElementById('beauty-css-editor').value='';
-    document.getElementById('custom-css-style').textContent='';
-    localStorage.removeItem('limerence_custom_css');
-    showToast('已重置');
-  }
-};
-
-// ============================================================
-// BACKUP
-// ============================================================
-const Backup = {
-  async exportAll(){
-    const data=await DB.exportAll();
-    const json=JSON.stringify(data,null,2);
-    const blob=new Blob([json],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download=`limerence_backup_${formatDate(new Date()).replace(/-/g,'')}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('已导出');
-  },
-  async importAll(input){
-    if(!input.files?.[0])return;
-    const file=input.files[0];
-    const reader=new FileReader();
-    reader.onload=async e=>{
-      try{
-        const data=JSON.parse(e.target.result);
-        await DB.importAll(data);
-        showToast('导入成功，请刷新页面');
-        setTimeout(()=>location.reload(),1500);
-      }catch(err){
-        showToast('导入失败: '+err.message);
-      }
-    };
-    reader.readAsText(file);
-    input.value='';
-  }
-};
-
-// ============================================================
-// MAIN MOTTO
-// ============================================================
-async function initMotto(){
-  const motto=document.getElementById('main-motto');
-  const saved=localStorage.getItem('limerence_motto');
-  if(saved)motto.textContent=saved;
-  
-  motto.addEventListener('blur',async()=>{
-    const text=motto.textContent;
-    localStorage.setItem('limerence_motto',text);
+  // ==========================================
+  // 11. 信件逻辑 (Letters)
+  // ==========================================
+  document.getElementById('btn-write-letter').addEventListener('click', () => {
+    document.getElementById('letter-compose').style.display = document.getElementById('letter-compose').style.display === 'none' ? 'block' : 'none';
   });
-}
 
-// ============================================================
-// APP INITIALIZATION
-// ============================================================
-async function init(){
-  try {
-    await DB.init();
-    Theme.init();
-    
-    // 主屏幕 HTML 准备
-    document.getElementById('violet-svg-container').innerHTML = generateVioletSvg();
-    
-    // 事件监听注册
-    document.getElementById('btn-settings').addEventListener('click',()=>Nav.go('screen-settings','right'));
-    const motto=document.getElementById('main-motto');
-    motto.addEventListener('click',()=>motto.focus());
-    
-    // 初始化各模块
-    await Carousel.init();
-    await APISettings.init();
-    await Beauty.init();
-    await initMotto();
-    
-    // 最后才显示splash
-    await initSplash();
-    
-  } catch(e) {
-    console.error('初始化失败:', e);
-    document.getElementById('screen-splash').classList.remove('active');
-    document.getElementById('screen-main').classList.add('active');
+  document.getElementById('btn-send-letter').addEventListener('click', async () => {
+    const title = document.getElementById('input-letter-title').value.trim();
+    const content = document.getElementById('input-letter-content').value.trim();
+    if (!content) return;
+    await dbPut('letters', {
+      id: 'let_' + Date.now(), characterId: currentCharId,
+      title: title || '无题', content: content, fromUser: true,
+      readByAI: false, createdAt: new Date().toISOString()
+    });
+    document.getElementById('input-letter-title').value = '';
+    document.getElementById('input-letter-content').value = '';
+    document.getElementById('letter-compose').style.display = 'none';
+    loadLetters();
+  });
+
+  async function loadLetters() {
+    const list = document.getElementById('letters-list');
+    list.innerHTML = '';
+    const lets = (await dbGetAll('letters')).filter(l => l.characterId === currentCharId);
+    lets.forEach(l => {
+      const fromTag = l.fromUser ? '<span style="color:var(--accent-gold);">来自你</span>' : '<span style="color:var(--accent-light);">来自AI</span>';
+      list.innerHTML += `
+        <div class="item-card">
+          <div class="item-card-actions">
+            <i class="fas fa-trash" onclick="deleteLetter('${l.id}')"></i>
+          </div>
+          <div style="font-weight:600; margin-bottom:5px;">${l.title} ${fromTag}</div>
+          <div class="item-card-content">${l.content}</div>
+          <div class="item-card-meta">${new Date(l.createdAt).toLocaleString()}</div>
+        </div>
+      `;
+    });
   }
-}
+  window.deleteLetter = async (id) => { await dbDelete('letters', id); loadLetters(); };
 
-// DOMContentLoaded
-window.addEventListener('DOMContentLoaded', init);
+  // ==========================================
+  // 12. 便签逻辑 (Notes) - 带划掉功能
+  // ==========================================
+  document.getElementById('btn-add-note').addEventListener('click', async () => {
+    const input = document.getElementById('input-new-note');
+    const text = input.value.trim();
+    if (!text) return;
+    await dbPut('notes', {
+      id: 'note_' + Date.now(), characterId: currentCharId,
+      content: text, done: false, createdAt: new Date().toISOString()
+    });
+    input.value = '';
+    loadNotes();
+  });
 
+  async function loadNotes() {
+    const list = document.getElementById('notes-list');
+    list.innerHTML = '';
+    const notes = (await dbGetAll('notes')).filter(n => n.characterId === currentCharId);
+    notes.forEach(n => {
+      list.innerHTML += `
+        <div class="item-card ${n.done ? 'done' : ''}">
+          <div class="item-card-actions">
+            <i class="fas ${n.done ? 'fa-undo' : 'fa-check'}" onclick="toggleNote('${n.id}')" title="${n.done ? '恢复' : '划掉'}"></i>
+            <i class="fas fa-trash" onclick="deleteNote('${n.id}')"></i>
+          </div>
+          <div class="item-card-content">${n.content}</div>
+          <div class="item-card-meta">${n.done ? '✓ 已完成' : '待完成'} · ${new Date(n.createdAt).toLocaleString()}</div>
+        </div>
+      `;
+    });
+  }
+  window.toggleNote = async (id) => {
+    const notes = await dbGetAll('notes');
+    const note = notes.find(n => n.id === id);
+    if (note) { note.done = !note.done; await dbPut('notes', note); loadNotes(); }
+  };
+  window.deleteNote = async (id) => { await dbDelete('notes', id); loadNotes(); };
 
-// Attach event listeners
-document.addEventListener('DOMContentLoaded',()=>{
+  // ==========================================
+  // 13. 右栏：聊天窗口管理
+  // ==========================================
+  document.getElementById('btn-add-chat').addEventListener('click', async () => {
+    const chatName = prompt('为新聊天命名：', '新的对话');
+    if (!chatName) return;
+    await dbPut('chats', {
+      id: 'chat_' + Date.now(), characterId: currentCharId,
+      name: chatName, messages: [], createdAt: new Date().toISOString()
+    });
+    loadChats();
+  });
+
+  async function loadChats() {
+    const list = document.getElementById('chat-list');
+    list.innerHTML = '';
+    const chats = (await dbGetAll('chats')).filter(c => c.characterId === currentCharId);
+    chats.forEach(c => {
+      list.innerHTML += `
+        <div class="chat-item">
+          <span class="chat-item-name" onclick="enterChat('${c.id}')">${c.name}</span>
+          <div class="chat-item-actions">
+            <i class="fas fa-pen" onclick="renameChat('${c.id}')" title="重命名"></i>
+            <i class="fas fa-trash" onclick="deleteChat('${c.id}')" title="删除"></i>
+          </div>
+        </div>
+      `;
+    });
+  }
+  window.renameChat = async (id) => {
+    const chats = await dbGetAll('chats');
+    const chat = chats.find(c => c.id === id);
+    if (chat) {
+      const newName = prompt('重命名聊天：', chat.name);
+      if (newName) { chat.name = newName; await dbPut('chats', chat); loadChats(); }
+    }
+  };
+  window.deleteChat = async (id) => { await dbDelete('chats', id); loadChats(); };
+  window.enterChat = (id) => {
+    alert(`进入聊天 ${id}（聊天界面下个版本补充）`);
+  };
+
+  // ==========================================
+  // 初始化
+  // ==========================================
+  async function init() {
+    await openDB();
+    applyTheme(localStorage.getItem('limerence-theme') || 'light');
+    const savedSig = localStorage.getItem('limerence-signature');
+    if (savedSig) signatureInput.value = savedSig;
+    await loadCharacters();
+  }
   init();
-});
-
-
-// Prevent body scroll when modals open
-const observer=new MutationObserver(()=>{
-  const hasModal=document.querySelector('.modal-overlay.show')?.classList.contains('show');
-  const hasSubScreen=document.querySelector('.sub-screen.show')?.classList.contains('show');
-  document.body.style.overflow=(hasModal||hasSubScreen)?'hidden':'';
-});
-observer.observe(document.body,{
-  subtree:true,
-  attributes:true,
-  attributeFilter:['class']
-});
 </script>
 </body>
 </html>
-
