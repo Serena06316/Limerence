@@ -710,7 +710,20 @@ function renderAttachmentsBar(){
   attachmentsBar.querySelectorAll('[data-file-idx]').forEach(btn=>btn.addEventListener('click',()=>{pendingFiles.splice(parseInt(btn.dataset.fileIdx),1);renderAttachmentsBar();}));
 }
 
-async function renderMessages(){chatMessages.innerHTML='';const chat=(await dbGetAll('chats')).find(c=>c.id===currentChatId);if(!chat)return;const char=(await dbGetAll('characters')).find(c=>c.id===currentCharId);chat.messages.forEach(msg=>appendMessageDOM(msg,char,false));chatMessages.scrollTop=chatMessages.scrollHeight;addCodeCopyButtons(chatMessages);}
+async function renderMessages(){
+  chatMessages.innerHTML='';
+  const chat=(await dbGetAll('chats')).find(c=>c.id===currentChatId);if(!chat)return;
+  const char=(await dbGetAll('characters')).find(c=>c.id===currentCharId);
+  if(chat.messages.length===0){
+    chatMessages.innerHTML=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0.35;text-align:center;padding:40px;user-select:none;">
+      <i class="fas fa-feather-alt" style="font-size:2.8rem;color:var(--accent);margin-bottom:15px;"></i>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--text-secondary);margin-bottom:5px;">Start a Conversation</div>
+      <div style="font-size:.85rem;color:var(--text-secondary);">写下你的心声，开始与 ${char?char.name:'TA'} 的对话</div>
+    </div>`;
+    return;
+  }
+  chat.messages.forEach(msg=>appendMessageDOM(msg,char,false));chatMessages.scrollTop=chatMessages.scrollHeight;addCodeCopyButtons(chatMessages);
+}
 
 function appendMessageDOM(msg,char,anim=true){
   const row=document.createElement('div');row.className=`msg-row ${msg.role==='user'?'user':'ai'}`;row.setAttribute('data-msg-id',msg.id||'');
@@ -738,7 +751,9 @@ function appendMessageDOM(msg,char,anim=true){
   let actionsHTML='<div class="msg-actions">';
   if(msg.role==='assistant'){
     actionsHTML+=`<button class="msg-action-btn" onclick="window._copyMsg('${msg.id}')" title="复制"><i class="fas fa-copy"></i></button>`;
+    actionsHTML+=`<button class="msg-action-btn" onclick="window._regenerate('${msg.id}')" title="重新生成"><i class="fas fa-redo"></i></button>`;
     actionsHTML+=`<button class="msg-action-btn" onclick="window._editAIMsg('${msg.id}')" title="编辑"><i class="fas fa-pen"></i></button>`;
+    actionsHTML+=`<button class="msg-action-btn danger" onclick="window._deleteMsg('${msg.id}')" title="删除"><i class="fas fa-trash"></i></button>`;
     actionsHTML+=`<button class="msg-action-btn danger" onclick="window._deleteMsg('${msg.id}')" title="删除"><i class="fas fa-trash"></i></button>`;
   }else{
     actionsHTML+=`<button class="msg-action-btn" onclick="window._copyMsg('${msg.id}')" title="复制"><i class="fas fa-copy"></i></button>`;
@@ -847,20 +862,20 @@ window._deleteMsg=async function(msgId){
 };
 
 // ========== A3: 重新生成 ==========
-window._regenerate=async function(){
+window._regenerate=async function(msgId){
   if(isGenerating)return;
   const chat=(await dbGetAll('chats')).find(c=>c.id===currentChatId);if(!chat||chat.messages.length===0)return;
-
-  // 从末尾开始，删除连续的 tool + assistant 消息
-  let removeCount=0;
-  for(let i=chat.messages.length-1;i>=0;i--){
-    const m=chat.messages[i];
-    if(m.role==='tool'){removeCount++;continue;}
-    if(m.role==='assistant'){removeCount++;break;}
-    break; // 遇到 user 消息停止
-  }
-  if(removeCount===0)return;
-  chat.messages.splice(chat.messages.length-removeCount,removeCount);
+  
+  // 找到对应消息的索引
+  const msgIdx = msgId ? chat.messages.findIndex(m=>m.id===msgId) : -1;
+  if(msgIdx < 0) return;
+  const msg = chat.messages[msgIdx];
+  
+  // 只能对 AI 消息重新生成
+  if(msg.role !== 'assistant') return;
+  
+  // 删除该 AI 消息以及它后面的所有消息（包括级联的 tool 消息等）
+  chat.messages.splice(msgIdx);
   await dbPut('chats',chat);
   renderMessages();
   // 重新请求 AI 回复
