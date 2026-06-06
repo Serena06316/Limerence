@@ -36,7 +36,6 @@
   .btn-primary:active{opacity:.8;}
   .btn-sm{padding:6px 12px;font-size:.8rem;}
 
-  /* 全局顶栏 */
   #global-top-bar{flex-shrink:0;height:50px;display:flex;justify-content:space-between;align-items:center;padding:0 20px;background:var(--bg-secondary);border-bottom:1px solid var(--border);z-index:100;transition:transform .3s,opacity .3s,height .3s;}
   #global-top-bar.hidden{transform:translateY(-100%);opacity:0;height:0;overflow:hidden;padding:0;border:none;}
 
@@ -59,25 +58,31 @@
   #signature-input{background:none;border:none;border-bottom:1px solid var(--border);color:var(--text-primary);text-align:center;font-family:inherit;font-style:inherit;font-size:inherit;width:80%;outline:none;}
 
   /* ========== 详情页 ========== */
+  /* 整体紫色渐变背景 - 下拉时露出 */
+  #view-detail{background:linear-gradient(180deg,var(--accent) 0%,var(--accent-light) 30%,var(--bg-primary) 60%);}
+
+  /* 内容包裹器 - 有自己的背景覆盖紫色渐变 */
+  #detail-wrapper{
+    position:relative;z-index:1;display:flex;flex-direction:column;height:100%;
+    background:var(--bg-primary);
+  }
+
   .detail-header{
     flex-shrink:0;display:flex;align-items:center;padding:12px 15px;
     border-bottom:1px solid var(--border);background:var(--bg-secondary);
-    position:relative;overflow:hidden;
-    touch-action:pan-y;user-select:none;
+    position:relative;touch-action:pan-y;user-select:none;
   }
-  /* 下拉提示层 */
   .pull-indicator{
-    position:absolute;bottom:0;left:0;width:100%;text-align:center;
-    font-size:.7rem;color:var(--text-secondary);
-    opacity:0;transition:opacity .2s;
+    position:absolute;bottom:-22px;left:0;width:100%;text-align:center;
+    font-size:.7rem;color:rgba(255,255,255,.7);
+    opacity:0;transition:opacity .2s;pointer-events:none;
     display:flex;flex-direction:column;align-items:center;gap:2px;
-    pointer-events:none;
   }
-  .pull-indicator i{transition:transform .2s;}
-  .pull-indicator.ready{color:var(--accent);font-weight:600;}
+  .pull-indicator i{transition:transform .2s;font-size:.8rem;}
+  .pull-indicator.ready{color:#fff;font-weight:600;}
   .pull-indicator.ready i{transform:rotate(180deg);}
 
-  .detail-header .avatar{width:45px;height:45px;margin-bottom:0;margin-right:12px;flex-shrink:0;transition:transform .3s,margin .3s;}
+  .detail-header .avatar{width:45px;height:45px;margin-bottom:0;margin-right:12px;flex-shrink:0;transition:transform .15s;}
   .detail-name{font-size:1.1rem;font-weight:600;color:var(--accent);font-family:'Cormorant Garamond',serif;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .detail-header-actions{display:flex;gap:2px;flex-shrink:0;}
 
@@ -134,7 +139,6 @@
   .density-header{flex-shrink:0;display:flex;align-items:center;padding:15px 20px;border-bottom:1px solid var(--border);background:var(--bg-secondary);}
   .density-header h3{margin-left:15px;color:var(--accent);font-weight:600;font-family:'Cormorant Garamond',serif;letter-spacing:1px;}
   .density-body{flex:1;overflow-y:auto;padding:20px;padding-bottom:110px;min-height:0;-webkit-overflow-scrolling:touch;}
-
   .anni-section{margin-bottom:25px;}
   .anni-section-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
   .anni-card{display:flex;align-items:center;justify-content:space-between;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:12px 15px;margin-bottom:8px;}
@@ -149,7 +153,6 @@
   .anni-add-form{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
   .anni-add-form input{flex:1;min-width:100px;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card-bg);color:var(--text-primary);font-family:inherit;font-size:.85rem;outline:none;}
   .anni-add-form input:focus{border-color:var(--accent);}
-
   .calendar-section{margin-bottom:20px;}
   .calendar-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
   .calendar-nav-btn{background:none;border:none;color:var(--accent);font-size:1rem;cursor:pointer;padding:8px;}
@@ -162,21 +165,10 @@
   .calendar-day.today{box-shadow:inset 0 0 0 2px var(--accent-gold);}
   .calendar-day:active{transform:scale(.9);}
   .calendar-day.selected{outline:2px solid var(--accent-gold);outline-offset:-1px;}
-
-  /* 纯色块图例 */
   .heat-legend{display:flex;align-items:center;gap:4px;margin-top:12px;justify-content:center;}
   .heat-box{width:18px;height:18px;border-radius:3px;}
-
-  /* 选中日期信息 */
-  .cal-day-info{text-align:center;margin-top:10px;font-size:.85rem;color:var(--text-secondary);min-height:1.4em;font-style:italic;transition:opacity .2s;}
-
-  /* 底部头像 */
-  .density-avatar-area{
-    position:absolute;bottom:0;left:0;width:100%;display:flex;flex-direction:column;align-items:center;
-    padding:15px 0 calc(15px + var(--safe-bottom));
-    background:linear-gradient(transparent,var(--bg-primary) 40%);
-    pointer-events:none;
-  }
+  .cal-day-info{text-align:center;margin-top:10px;font-size:.85rem;color:var(--text-secondary);min-height:1.4em;font-style:italic;}
+  .density-avatar-area{position:absolute;bottom:0;left:0;width:100%;display:flex;flex-direction:column;align-items:center;padding:15px 0 calc(15px + var(--safe-bottom));background:linear-gradient(transparent,var(--bg-primary) 40%);pointer-events:none;}
   .density-avatar{width:70px;height:70px;border-radius:50%;border:3px solid var(--accent-light);object-fit:cover;box-shadow:0 4px 15px var(--shadow);}
 
   /* ========== 聊天页 ========== */
@@ -218,7 +210,6 @@
   .send-btn{background:var(--accent);color:#fff;border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;}
   .send-btn:active{background:var(--accent-light);}
 
-  /* 设置页 */
   #view-settings{background:var(--bg-primary);padding:20px;overflow-y:auto;}
   .settings-header{display:flex;align-items:center;margin-bottom:20px;}
   .settings-header h2{margin-left:15px;font-weight:600;color:var(--accent);font-family:'Cormorant Garamond',serif;}
@@ -257,48 +248,46 @@
     <div id="home-footer"><input type="text" id="signature-input" value="I am because you are." /></div>
   </div>
 
-  <!-- 详情页 -->
+  <!-- 详情页 - 紫色渐变背景，下拉时露出 -->
   <div id="view-detail" class="view">
-    <!-- 可下拉的头部 -->
-    <div class="detail-header" id="detail-header">
-      <button class="top-btn" id="btn-back-detail"><i class="fas fa-arrow-left"></i></button>
-      <div class="avatar" id="detail-avatar"></div>
-      <div class="detail-name" id="detail-name">Character Name</div>
-      <div class="detail-header-actions">
-        <button class="top-btn" id="btn-detail-theme"><i class="fas fa-adjust"></i></button>
-        <button class="top-btn" id="btn-detail-settings"><i class="fas fa-cog"></i></button>
-      </div>
-      <!-- 下拉提示 -->
-      <div class="pull-indicator" id="pull-indicator">
-        <i class="fas fa-chevron-down"></i>
-        <span>Pull for Density</span>
-      </div>
-    </div>
-
-    <div class="detail-body" id="detail-body">
-      <div class="panel-left" id="panel-left">
-        <div class="left-menu">
-          <div class="left-menu-item" data-sub="bio"><div class="menu-icon-box"><i class="fas fa-feather-alt"></i></div><div class="menu-text-box"><span class="menu-title">Biography</span><span class="menu-subtitle">展示在主页的简介</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
-          <div class="left-menu-item" data-sub="about"><div class="menu-icon-box"><i class="fas fa-user-cog"></i></div><div class="menu-text-box"><span class="menu-title">About</span><span class="menu-subtitle">头像、名字、指令与API预设</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
-          <div class="left-menu-item" data-sub="items"><div class="menu-icon-box"><i class="fas fa-bookmark"></i></div><div class="menu-text-box"><span class="menu-title">Entries</span><span class="menu-subtitle">让AI知晓的设定条目</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
-          <div class="left-menu-item" data-sub="memory"><div class="menu-icon-box"><i class="fas fa-brain"></i></div><div class="menu-text-box"><span class="menu-title">Memories</span><span class="menu-subtitle">AI的记忆管理区</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
-          <div class="left-menu-item" data-sub="letters"><div class="menu-icon-box"><i class="fas fa-envelope-open-text"></i></div><div class="menu-text-box"><span class="menu-title">Letters</span><span class="menu-subtitle">书信往来</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
-          <div class="left-menu-item" data-sub="notes"><div class="menu-icon-box"><i class="fas fa-sticky-note"></i></div><div class="menu-text-box"><span class="menu-title">Notes</span><span class="menu-subtitle">便签与待办提醒</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
+    <div id="detail-wrapper">
+      <div class="detail-header" id="detail-header">
+        <button class="top-btn" id="btn-back-detail"><i class="fas fa-arrow-left"></i></button>
+        <div class="avatar" id="detail-avatar"></div>
+        <div class="detail-name" id="detail-name">Character Name</div>
+        <div class="detail-header-actions">
+          <button class="top-btn" id="btn-detail-theme"><i class="fas fa-adjust"></i></button>
+          <button class="top-btn" id="btn-detail-settings"><i class="fas fa-cog"></i></button>
+        </div>
+        <div class="pull-indicator" id="pull-indicator">
+          <i class="fas fa-chevron-down"></i>
+          <span>Pull for Density</span>
         </div>
       </div>
-      <div class="panel-right" id="panel-right">
-        <div class="right-header"><h3>Chats</h3><button class="chat-add-btn" id="btn-add-chat"><i class="fas fa-plus"></i></button></div>
-        <div id="chat-list"></div>
+      <div class="detail-body" id="detail-body">
+        <div class="panel-left" id="panel-left">
+          <div class="left-menu">
+            <div class="left-menu-item" data-sub="bio"><div class="menu-icon-box"><i class="fas fa-feather-alt"></i></div><div class="menu-text-box"><span class="menu-title">Biography</span><span class="menu-subtitle">展示在主页的简介</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
+            <div class="left-menu-item" data-sub="about"><div class="menu-icon-box"><i class="fas fa-user-cog"></i></div><div class="menu-text-box"><span class="menu-title">About</span><span class="menu-subtitle">头像、名字、指令与API预设</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
+            <div class="left-menu-item" data-sub="items"><div class="menu-icon-box"><i class="fas fa-bookmark"></i></div><div class="menu-text-box"><span class="menu-title">Entries</span><span class="menu-subtitle">让AI知晓的设定条目</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
+            <div class="left-menu-item" data-sub="memory"><div class="menu-icon-box"><i class="fas fa-brain"></i></div><div class="menu-text-box"><span class="menu-title">Memories</span><span class="menu-subtitle">AI的记忆管理区</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
+            <div class="left-menu-item" data-sub="letters"><div class="menu-icon-box"><i class="fas fa-envelope-open-text"></i></div><div class="menu-text-box"><span class="menu-title">Letters</span><span class="menu-subtitle">书信往来</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
+            <div class="left-menu-item" data-sub="notes"><div class="menu-icon-box"><i class="fas fa-sticky-note"></i></div><div class="menu-text-box"><span class="menu-title">Notes</span><span class="menu-subtitle">便签与待办提醒</span></div><i class="fas fa-chevron-right menu-arrow"></i></div>
+          </div>
+        </div>
+        <div class="panel-right" id="panel-right">
+          <div class="right-header"><h3>Chats</h3><button class="chat-add-btn" id="btn-add-chat"><i class="fas fa-plus"></i></button></div>
+          <div id="chat-list"></div>
+        </div>
       </div>
+      <!-- 子页面 -->
+      <div class="subpage-overlay" id="sub-bio"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Biography</h3></div><div class="subpage-body"><div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:var(--text-secondary);margin-bottom:5px;">角色简介</label><textarea class="form-input" id="input-bio" placeholder="为你的角色写一段简介..."></textarea></div><button class="btn-primary" id="btn-save-bio">保存简介</button></div></div>
+      <div class="subpage-overlay" id="sub-about"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>About</h3></div><div class="subpage-body"><div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:var(--text-secondary);margin-bottom:5px;">头像链接</label><input class="form-input" id="input-avatar-url" placeholder="输入图片URL"></div><div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:var(--text-secondary);margin-bottom:5px;">名字</label><input class="form-input" id="input-char-name" placeholder="角色名字"></div><div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:var(--text-secondary);margin-bottom:5px;">系统指令</label><textarea class="form-input" id="input-sys-prompt" placeholder="注入给AI的系统指令..." style="min-height:150px;"></textarea></div><div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:var(--text-secondary);margin-bottom:5px;">API预设</label><select class="form-input" id="select-api-preset"><option value="default">默认预设</option></select></div><button class="btn-primary" id="btn-save-about">保存设置</button></div></div>
+      <div class="subpage-overlay" id="sub-items"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Entries</h3></div><div class="subpage-body"><div style="display:flex;gap:10px;margin-bottom:20px;"><input class="form-input" id="input-new-item" placeholder="添加新条目..." style="flex:1;"><button class="btn-primary" id="btn-add-item">添加</button></div><div id="items-list"></div></div></div>
+      <div class="subpage-overlay" id="sub-memory"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Memories</h3></div><div class="subpage-body"><p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:15px;">AI在聊天中自动记录的记忆，按月份分类</p><div style="display:flex;gap:10px;margin-bottom:20px;"><input class="form-input" id="input-new-memory" placeholder="手动添加记忆..." style="flex:1;"><button class="btn-primary" id="btn-add-memory">添加</button></div><div id="memory-list"></div></div></div>
+      <div class="subpage-overlay" id="sub-letters"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Letters</h3></div><div class="subpage-body"><button class="btn-primary" id="btn-write-letter" style="margin-bottom:15px;">写一封信</button><div id="letter-compose" style="display:none;margin-bottom:20px;background:var(--card-bg);padding:15px;border-radius:8px;border:1px solid var(--border);"><input class="form-input" id="input-letter-title" placeholder="信件标题" style="margin-bottom:10px;"><textarea class="form-input" id="input-letter-content" placeholder="写下你的心里话..." style="min-height:120px;"></textarea><div style="margin-top:10px;text-align:right;"><button class="btn-primary" id="btn-send-letter">寄出</button></div></div><div id="letters-list"></div></div></div>
+      <div class="subpage-overlay" id="sub-notes"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Notes</h3></div><div class="subpage-body"><div style="display:flex;gap:10px;margin-bottom:20px;"><input class="form-input" id="input-new-note" placeholder="添加新便签..." style="flex:1;"><button class="btn-primary" id="btn-add-note">添加</button></div><div id="notes-list"></div></div></div>
     </div>
-
-    <!-- 子页面 -->
-    <div class="subpage-overlay" id="sub-bio"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Biography</h3></div><div class="subpage-body"><div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:var(--text-secondary);margin-bottom:5px;">角色简介</label><textarea class="form-input" id="input-bio" placeholder="为你的角色写一段简介..."></textarea></div><button class="btn-primary" id="btn-save-bio">保存简介</button></div></div>
-    <div class="subpage-overlay" id="sub-about"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>About</h3></div><div class="subpage-body"><div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:var(--text-secondary);margin-bottom:5px;">头像链接</label><input class="form-input" id="input-avatar-url" placeholder="输入图片URL"></div><div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:var(--text-secondary);margin-bottom:5px;">名字</label><input class="form-input" id="input-char-name" placeholder="角色名字"></div><div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:var(--text-secondary);margin-bottom:5px;">系统指令</label><textarea class="form-input" id="input-sys-prompt" placeholder="注入给AI的系统指令..." style="min-height:150px;"></textarea></div><div style="margin-bottom:15px;"><label style="display:block;font-size:.85rem;color:var(--text-secondary);margin-bottom:5px;">API预设</label><select class="form-input" id="select-api-preset"><option value="default">默认预设</option></select></div><button class="btn-primary" id="btn-save-about">保存设置</button></div></div>
-    <div class="subpage-overlay" id="sub-items"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Entries</h3></div><div class="subpage-body"><div style="display:flex;gap:10px;margin-bottom:20px;"><input class="form-input" id="input-new-item" placeholder="添加新条目..." style="flex:1;"><button class="btn-primary" id="btn-add-item">添加</button></div><div id="items-list"></div></div></div>
-    <div class="subpage-overlay" id="sub-memory"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Memories</h3></div><div class="subpage-body"><p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:15px;">AI在聊天中自动记录的记忆，按月份分类</p><div style="display:flex;gap:10px;margin-bottom:20px;"><input class="form-input" id="input-new-memory" placeholder="手动添加记忆..." style="flex:1;"><button class="btn-primary" id="btn-add-memory">添加</button></div><div id="memory-list"></div></div></div>
-    <div class="subpage-overlay" id="sub-letters"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Letters</h3></div><div class="subpage-body"><button class="btn-primary" id="btn-write-letter" style="margin-bottom:15px;">写一封信</button><div id="letter-compose" style="display:none;margin-bottom:20px;background:var(--card-bg);padding:15px;border-radius:8px;border:1px solid var(--border);"><input class="form-input" id="input-letter-title" placeholder="信件标题" style="margin-bottom:10px;"><textarea class="form-input" id="input-letter-content" placeholder="写下你的心里话..." style="min-height:120px;"></textarea><div style="margin-top:10px;text-align:right;"><button class="btn-primary" id="btn-send-letter">寄出</button></div></div><div id="letters-list"></div></div></div>
-    <div class="subpage-overlay" id="sub-notes"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Notes</h3></div><div class="subpage-body"><div style="display:flex;gap:10px;margin-bottom:20px;"><input class="form-input" id="input-new-note" placeholder="添加新便签..." style="flex:1;"><button class="btn-primary" id="btn-add-note">添加</button></div><div id="notes-list"></div></div></div>
   </div>
 
   <!-- 陪伴密度 -->
@@ -335,9 +324,7 @@
         <div class="cal-day-info" id="cal-day-info"></div>
       </div>
     </div>
-    <div class="density-avatar-area">
-      <div class="density-avatar" id="density-avatar"></div>
-    </div>
+    <div class="density-avatar-area"><div class="density-avatar" id="density-avatar"></div></div>
   </div>
 
   <!-- 聊天页 -->
@@ -385,8 +372,11 @@ function dbGetAll(s){return new Promise((res,rej)=>{const tx=db.transaction(s,'r
 function dbDelete(s,id){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');tx.objectStore(s).delete(id);tx.oncomplete=()=>res();tx.onerror=(e)=>rej(e);});}
 
 // ========== 导航与状态 ==========
-let viewHistory=[];let currentCharId=null,currentChatId=null,chatSearchMode=false,chatThinkMode=false,pendingSubpage=null;
+let viewHistory=[];
+let currentCharId=null,currentChatId=null,chatSearchMode=false,chatThinkMode=false,pendingSubpage=null;
+let fromChatJump=false; // 标记是否从聊天页快捷键跳来
 let calYear,calMonth,calCounts={};
+
 const globalTopBar=document.getElementById('global-top-bar');
 const allViews=['view-home','view-settings','view-detail','view-chat','view-density'];
 
@@ -394,10 +384,16 @@ function switchView(viewId,skipHistory=false){
   if(!skipHistory){const cur=allViews.find(id=>document.getElementById(id).classList.contains('active'));if(cur&&cur!==viewId)viewHistory.push(cur);}
   allViews.forEach(id=>document.getElementById(id).classList.remove('active'));
   document.getElementById(viewId).classList.add('active');
-  // 详情页和聊天页隐藏全局顶栏
   globalTopBar.classList.toggle('hidden',viewId==='view-chat'||viewId==='view-detail'||viewId==='view-density');
 }
-function goBack(){if(viewHistory.length>0){const prev=viewHistory.pop();allViews.forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById(prev).classList.add('active');globalTopBar.classList.toggle('hidden',prev==='view-chat'||prev==='view-detail'||prev==='view-density');}}
+function goBack(){
+  if(viewHistory.length>0){
+    const prev=viewHistory.pop();
+    allViews.forEach(id=>document.getElementById(id).classList.remove('active'));
+    document.getElementById(prev).classList.add('active');
+    globalTopBar.classList.toggle('hidden',prev==='view-chat'||prev==='view-detail'||prev==='view-density');
+  }
+}
 
 // ========== 主题 ==========
 const themeBtn=document.getElementById('btn-theme');
@@ -422,6 +418,7 @@ const panelRight=document.getElementById('panel-right');
 const detailHeader=document.getElementById('detail-header');
 const pullIndicator=document.getElementById('pull-indicator');
 const detailAvatar=document.getElementById('detail-avatar');
+const detailWrapper=document.getElementById('detail-wrapper');
 
 async function openDetail(charId){
   currentCharId=charId;
@@ -438,67 +435,62 @@ document.getElementById('btn-back-detail').addEventListener('click',goBack);
 panelLeft.addEventListener('click',(e)=>{if(!e.target.closest('.left-menu-item'))detailBody.className='detail-body focus-left';});
 panelRight.addEventListener('click',(e)=>{if(!e.target.closest('.chat-item')&&!e.target.closest('.chat-add-btn'))detailBody.className='detail-body focus-right';});
 
-// ========== 下拉手势进入陪伴密度 ==========
+// ========== 下拉手势 ==========
 let touchStartY=0,touchDeltaY=0,isPulling=false;
-const PULL_THRESHOLD=80; // 触发阈值
+const PULL_THRESHOLD=80;
 
 detailHeader.addEventListener('touchstart',(e)=>{
-  // 如果触摸的是按钮，不拦截
   if(e.target.closest('.top-btn'))return;
   touchStartY=e.touches[0].clientY;
-  isPulling=true;
-  touchDeltaY=0;
-  detailHeader.style.transition='none';
+  isPulling=true;touchDeltaY=0;
+  detailWrapper.style.transition='none';
+  detailAvatar.style.transition='none';
+  pullIndicator.style.transition='none';
 },{passive:true});
 
 detailHeader.addEventListener('touchmove',(e)=>{
   if(!isPulling)return;
   touchDeltaY=e.touches[0].clientY-touchStartY;
-  if(touchDeltaY<=0)return; // 只响应下拉
-
-  // 阻尼：越拉越难拉
-  const dampened=Math.min(touchDeltaY*0.6,120);
-  
-  // 头像向右移动到中间
-  const headerW=detailHeader.offsetWidth;
-  const avLeft=detailAvatar.offsetLeft;
-  const avW=detailAvatar.offsetWidth;
-  const avCenter=headerW/2-avW/2;
+  if(touchDeltaY<=0)return;
+  const dampened=Math.min(touchDeltaY*0.5,150);
   const progress=Math.min(dampened/PULL_THRESHOLD,1);
-  const moveX=avLeft+progress*(avCenter-avLeft);
-  
-  detailAvatar.style.transform=`translateX(${moveX-avLeft}px)`;
-  detailHeader.style.transform=`translateY(${dampened}px)`;
-  
-  // 更新提示
-  pullIndicator.style.opacity=Math.min(progress*1.5,1);
-  pullIndicator.style.transform=`translateY(${dampened}px)`;
-  if(progress>=1){pullIndicator.classList.add('ready');}
-  else{pullIndicator.classList.remove('ready');}
+
+  // 整个内容区往下移
+  detailWrapper.style.transform=`translateY(${dampened}px)`;
+
+  // 头像向中间移动
+  const headerW=detailHeader.offsetWidth;
+  const backBtn=document.getElementById('btn-back-detail');
+  const avLeft=backBtn.offsetWidth+15; // 头像初始 left
+  const avW=45;
+  const avCenter=headerW/2-avW/2;
+  const moveX=progress*(avCenter-avLeft);
+  detailAvatar.style.transform=`translateX(${moveX}px)`;
+
+  // 下拉提示
+  pullIndicator.style.opacity=Math.min(progress*2,1);
+  if(progress>=1)pullIndicator.classList.add('ready');
+  else pullIndicator.classList.remove('ready');
 },{passive:true});
 
 detailHeader.addEventListener('touchend',()=>{
   if(!isPulling)return;
   isPulling=false;
-  
-  detailHeader.style.transition='transform .3s, opacity .3s';
-  detailAvatar.style.transition='transform .3s';
+  const triggered=touchDeltaY*0.5>=PULL_THRESHOLD;
+
+  detailWrapper.style.transition='transform .3s cubic-bezier(.4,0,.2,1)';
+  detailAvatar.style.transition='transform .3s cubic-bezier(.4,0,.2,1)';
   pullIndicator.style.transition='opacity .3s';
-  
-  if(touchDeltaY*0.6>=PULL_THRESHOLD){
-    // 达到阈值 → 进入陪伴密度
-    openDensityView();
-  }
-  
-  // 复位
-  detailHeader.style.transform='';
+
+  detailWrapper.style.transform='';
   detailAvatar.style.transform='';
   pullIndicator.style.opacity='';
-  pullIndicator.style.transform='';
   pullIndicator.classList.remove('ready');
-  
+
+  if(triggered)openDensityView();
+
   setTimeout(()=>{
-    detailHeader.style.transition='';
+    detailWrapper.style.transition='';
     detailAvatar.style.transition='';
     pullIndicator.style.transition='';
   },300);
@@ -508,7 +500,17 @@ detailHeader.addEventListener('touchend',()=>{
 const subpages=document.querySelectorAll('.subpage-overlay');
 document.querySelectorAll('.left-menu-item[data-sub]').forEach(item=>item.addEventListener('click',()=>openSubpage(item.getAttribute('data-sub'))));
 function openSubpage(subId){const t=document.getElementById('sub-'+subId);if(t){t.classList.add('active');if(subId==='items')loadItems();if(subId==='memory')loadMemories();if(subId==='letters')loadLetters();if(subId==='notes')loadNotes();}}
-document.querySelectorAll('.btn-close-sub').forEach(btn=>btn.addEventListener('click',()=>subpages.forEach(s=>s.classList.remove('active'))));
+
+// 关闭子页面 - 如果从聊天页跳来，直接回聊天页
+document.querySelectorAll('.btn-close-sub').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    subpages.forEach(s=>s.classList.remove('active'));
+    if(fromChatJump){
+      fromChatJump=false;
+      goBack(); // 直接返回聊天页
+    }
+  });
+});
 
 // ========== 关于 & 简介 ==========
 function loadAboutData(ch){document.getElementById('input-bio').value=ch.bio||'';document.getElementById('input-avatar-url').value=ch.avatar||'';document.getElementById('input-char-name').value=ch.name||'';document.getElementById('input-sys-prompt').value=ch.systemPrompt||'';}
@@ -518,14 +520,11 @@ document.getElementById('btn-save-about').addEventListener('click',async()=>{con
 // ========== 条目/记忆/信件/便签 ==========
 document.getElementById('btn-add-item').addEventListener('click',async()=>{const t=document.getElementById('input-new-item').value.trim();if(!t)return;await dbPut('items',{id:'item_'+Date.now(),characterId:currentCharId,content:t,createdAt:new Date().toISOString()});document.getElementById('input-new-item').value='';loadItems();});
 async function loadItems(){const l=document.getElementById('items-list');l.innerHTML='';(await dbGetAll('items')).filter(i=>i.characterId===currentCharId).forEach(i=>{l.innerHTML+=`<div class="item-card"><div class="item-card-actions"><i class="fas fa-trash" onclick="window._del('items','${i.id}',loadItems)"></i></div><div class="item-card-content">${i.content}</div><div class="item-card-meta">${new Date(i.createdAt).toLocaleString()}</div></div>`;});}
-
 document.getElementById('btn-add-memory').addEventListener('click',async()=>{const t=document.getElementById('input-new-memory').value.trim();if(!t)return;const d=new Date();await dbPut('memories',{id:'mem_'+Date.now(),characterId:currentCharId,content:t,date:d.toISOString(),month:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`});document.getElementById('input-new-memory').value='';loadMemories();});
 async function loadMemories(){const l=document.getElementById('memory-list');l.innerHTML='';const ms=(await dbGetAll('memories')).filter(m=>m.characterId===currentCharId);const mos={};ms.forEach(m=>{const k=m.month||'?';if(!mos[k])mos[k]=[];mos[k].push(m);});Object.keys(mos).sort().reverse().forEach(mo=>{l.innerHTML+=`<div class="month-divider">${mo}</div>`;mos[mo].forEach(m=>{l.innerHTML+=`<div class="item-card"><div class="item-card-actions"><i class="fas fa-trash" onclick="window._del('memories','${m.id}',loadMemories)"></i></div><div class="item-card-content">${m.content}</div><div class="item-card-meta">${new Date(m.date).toLocaleString()}</div></div>`;});});}
-
 document.getElementById('btn-write-letter').addEventListener('click',()=>{document.getElementById('letter-compose').style.display=document.getElementById('letter-compose').style.display==='none'?'block':'none';});
 document.getElementById('btn-send-letter').addEventListener('click',async()=>{const ti=document.getElementById('input-letter-title').value.trim();const c=document.getElementById('input-letter-content').value.trim();if(!c)return;await dbPut('letters',{id:'let_'+Date.now(),characterId:currentCharId,title:ti||'无题',content:c,fromUser:true,readByAI:false,createdAt:new Date().toISOString()});document.getElementById('input-letter-title').value='';document.getElementById('input-letter-content').value='';document.getElementById('letter-compose').style.display='none';loadLetters();});
 async function loadLetters(){const l=document.getElementById('letters-list');l.innerHTML='';(await dbGetAll('letters')).filter(lt=>lt.characterId===currentCharId).forEach(lt=>{const tag=lt.fromUser?'<span style="color:var(--accent-gold);">From You</span>':'<span style="color:var(--accent-light);">From AI</span>';l.innerHTML+=`<div class="item-card"><div class="item-card-actions"><i class="fas fa-trash" onclick="window._del('letters','${lt.id}',loadLetters)"></i></div><div style="font-weight:600;margin-bottom:5px;">${lt.title} ${tag}</div><div class="item-card-content">${lt.content}</div><div class="item-card-meta">${new Date(lt.createdAt).toLocaleString()}</div></div>`;});}
-
 document.getElementById('btn-add-note').addEventListener('click',async()=>{const t=document.getElementById('input-new-note').value.trim();if(!t)return;await dbPut('notes',{id:'note_'+Date.now(),characterId:currentCharId,content:t,done:false,createdAt:new Date().toISOString()});document.getElementById('input-new-note').value='';loadNotes();});
 async function loadNotes(){const l=document.getElementById('notes-list');l.innerHTML='';(await dbGetAll('notes')).filter(n=>n.characterId===currentCharId).forEach(n=>{l.innerHTML+=`<div class="item-card ${n.done?'done':''}"><div class="item-card-actions"><i class="fas ${n.done?'fa-undo':'fa-check'}" onclick="window._togNote('${n.id}')"></i><i class="fas fa-trash" onclick="window._del('notes','${n.id}',loadNotes)"></i></div><div class="item-card-content">${n.content}</div><div class="item-card-meta">${n.done?'✓ Done':'Pending'} · ${new Date(n.createdAt).toLocaleString()}</div></div>`;});}
 window._togNote=async(id)=>{const ns=await dbGetAll('notes');const n=ns.find(x=>x.id===id);if(n){n.done=!n.done;await dbPut('notes',n);loadNotes();}};
@@ -538,85 +537,18 @@ window._renChat=async(id)=>{const cs=await dbGetAll('chats');const c=cs.find(x=>
 window._enterChat=(id)=>{currentChatId=id;openChatView();};
 
 // ========== 陪伴密度 ==========
-function openDensityView(){
-  const now=new Date();calYear=now.getFullYear();calMonth=now.getMonth()+1;
-  switchView('view-density');loadDensityPage();
-}
-
+function openDensityView(){const now=new Date();calYear=now.getFullYear();calMonth=now.getMonth()+1;switchView('view-density');loadDensityPage();}
 document.getElementById('btn-back-density').addEventListener('click',goBack);
+async function loadDensityPage(){const char=(await dbGetAll('characters')).find(c=>c.id===currentCharId);if(char){const av=document.getElementById('density-avatar');av.style.backgroundImage=`url(${char.avatar||''})`;av.style.backgroundSize='cover';av.style.backgroundPosition='center';}loadAnniversaries();renderCalendar();}
 
-async function loadDensityPage(){
-  const char=(await dbGetAll('characters')).find(c=>c.id===currentCharId);
-  if(char){const av=document.getElementById('density-avatar');av.style.backgroundImage=`url(${char.avatar||''})`;av.style.backgroundSize='cover';av.style.backgroundPosition='center';}
-  loadAnniversaries();renderCalendar();
-}
-
-// 纪念日
 document.getElementById('btn-add-anni').addEventListener('click',async()=>{const name=document.getElementById('input-anni-name').value.trim();const date=document.getElementById('input-anni-date').value;if(!name||!date)return;await dbPut('anniversaries',{id:'anni_'+Date.now(),characterId:currentCharId,name,date});document.getElementById('input-anni-name').value='';document.getElementById('input-anni-date').value='';loadAnniversaries();});
+async function loadAnniversaries(){const list=document.getElementById('anni-list');list.innerHTML='';const annis=(await dbGetAll('anniversaries')).filter(a=>a.characterId===currentCharId);if(!annis.length){list.innerHTML='<div style="font-size:.85rem;color:var(--text-secondary);padding:10px 0;">还没有纪念日，添加一个吧</div>';return;}const today=new Date();annis.forEach(a=>{const ad=new Date(a.date);const diff=Math.floor((today-ad)/(1000*60*60*24));list.innerHTML+=`<div class="anni-card"><div class="anni-info"><div class="anni-name">${a.name}</div><div class="anni-date">${a.date}</div></div><div class="anni-count">${Math.abs(diff)} <span>${diff>=0?'days':'days left'}</span></div><div class="anni-actions"><i class="fas fa-trash" onclick="window._del('anniversaries','${a.id}',loadAnniversaries)"></i></div></div>`;});}
 
-async function loadAnniversaries(){
-  const list=document.getElementById('anni-list');list.innerHTML='';
-  const annis=(await dbGetAll('anniversaries')).filter(a=>a.characterId===currentCharId);
-  if(!annis.length){list.innerHTML='<div style="font-size:.85rem;color:var(--text-secondary);padding:10px 0;">还没有纪念日，添加一个吧</div>';return;}
-  const today=new Date();
-  annis.forEach(a=>{
-    const ad=new Date(a.date);const diff=Math.floor((today-ad)/(1000*60*60*24));
-    const txt=diff>=0?`已经 ${diff} 天`:`还有 ${Math.abs(diff)} 天`;
-    list.innerHTML+=`<div class="anni-card"><div class="anni-info"><div class="anni-name">${a.name}</div><div class="anni-date">${a.date}</div></div><div class="anni-count">${Math.abs(diff)} <span>${diff>=0?'days':'days left'}</span></div><div class="anni-actions"><i class="fas fa-trash" onclick="window._del('anniversaries','${a.id}',loadAnniversaries)"></i></div></div>`;
-  });
-}
-
-// 日历
 document.getElementById('btn-cal-prev').addEventListener('click',()=>{calMonth--;if(calMonth<1){calMonth=12;calYear--;}renderCalendar();});
 document.getElementById('btn-cal-next').addEventListener('click',()=>{calMonth++;if(calMonth>12){calMonth=1;calYear++;}renderCalendar();});
-
-async function renderCalendar(){
-  const grid=document.getElementById('cal-grid');
-  const label=document.getElementById('cal-label');
-  const info=document.getElementById('cal-day-info');
-  const mNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  label.textContent=`${mNames[calMonth-1]} ${calYear}`;
-  info.textContent='';
-
-  calCounts=await getMessageCounts(calYear,calMonth);
-  const firstDay=new Date(calYear,calMonth-1,1).getDay();
-  const daysInMonth=new Date(calYear,calMonth,0).getDate();
-  const today=new Date();
-  const isCurrentMonth=today.getFullYear()===calYear&&today.getMonth()+1===calMonth;
-
-  let html='';
-  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(w=>{html+=`<div class="calendar-weekday">${w}</div>`;});
-  for(let i=0;i<firstDay;i++)html+='<div class="calendar-day empty"></div>';
-
-  for(let d=1;d<=daysInMonth;d++){
-    const key=`${calYear}-${String(calMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const count=calCounts[key]||0;
-    const hl=getHeatLevel(count);
-    const isToday=isCurrentMonth&&today.getDate()===d;
-    const has=count>0;
-    html+=`<div class="calendar-day ${has?'has-data':''} ${isToday?'today':''}" style="background:var(--heat-${hl});" data-key="${key}" data-count="${count}" onclick="window._calDayClick(this)">${d}</div>`;
-  }
-  grid.innerHTML=html;
-}
-
-window._calDayClick=function(el){
-  // 清除其他选中
-  document.querySelectorAll('.calendar-day.selected').forEach(d=>d.classList.remove('selected'));
-  el.classList.add('selected');
-  const key=el.getAttribute('data-key');
-  const count=el.getAttribute('data-count');
-  const info=document.getElementById('cal-day-info');
-  if(count==='0'){info.textContent=`${key} · 无消息`;}
-  else{info.textContent=`${key} · ${count} 条消息`;}
-};
-
-async function getMessageCounts(year,month){
-  const chats=(await dbGetAll('chats')).filter(c=>c.characterId===currentCharId);
-  const counts={};
-  chats.forEach(chat=>{(chat.messages||[]).forEach(msg=>{const d=new Date(msg.timestamp);if(d.getFullYear()===year&&d.getMonth()+1===month){const k=`${year}-${String(month).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;counts[k]=(counts[k]||0)+1;}});});
-  return counts;
-}
-
+async function renderCalendar(){const grid=document.getElementById('cal-grid');const label=document.getElementById('cal-label');const info=document.getElementById('cal-day-info');const mN=['January','February','March','April','May','June','July','August','September','October','November','December'];label.textContent=`${mN[calMonth-1]} ${calYear}`;info.textContent='';calCounts=await getMessageCounts(calYear,calMonth);const fD=new Date(calYear,calMonth-1,1).getDay();const dIM=new Date(calYear,calMonth,0).getDate();const today=new Date();const isCM=today.getFullYear()===calYear&&today.getMonth()+1===calMonth;let h='';['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(w=>{h+=`<div class="calendar-weekday">${w}</div>`;});for(let i=0;i<fD;i++)h+='<div class="calendar-day empty"></div>';for(let d=1;d<=dIM;d++){const k=`${calYear}-${String(calMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const c=calCounts[k]||0;const hl=getHeatLevel(c);const iT=isCM&&today.getDate()===d;const hd=c>0;h+=`<div class="calendar-day ${hd?'has-data':''} ${iT?'today':''}" style="background:var(--heat-${hl});" data-key="${k}" data-count="${c}" onclick="window._cdc(this)">${d}</div>`;}grid.innerHTML=h;}
+window._cdc=function(el){document.querySelectorAll('.calendar-day.selected').forEach(d=>d.classList.remove('selected'));el.classList.add('selected');const k=el.getAttribute('data-key');const c=el.getAttribute('data-count');document.getElementById('cal-day-info').textContent=c==='0'?`${k} · 无消息`:`${k} · ${c} 条消息`;};
+async function getMessageCounts(y,m){const ch=(await dbGetAll('chats')).filter(c=>c.characterId===currentCharId);const ct={};ch.forEach(c=>{(c.messages||[]).forEach(msg=>{const d=new Date(msg.timestamp);if(d.getFullYear()===y&&d.getMonth()+1===m){const k=`${y}-${String(m).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;ct[k]=(ct[k]||0)+1;}});});return ct;}
 function getHeatLevel(c){if(c===0)return 0;if(c<=20)return 1;if(c<=50)return 2;if(c<=100)return 3;if(c<=200)return 4;return 5;}
 
 // ========== 聊天页 ==========
@@ -627,7 +559,17 @@ const expandMenu=document.getElementById('expand-menu');
 async function openChatView(){chatSearchMode=false;chatThinkMode=false;document.getElementById('toggle-search').classList.remove('active-feature');document.getElementById('toggle-think').classList.remove('active-feature');switchView('view-chat');renderMessages();}
 document.getElementById('btn-chat-back').addEventListener('click',goBack);
 
-function jumpToSubpage(subId){pendingSubpage=subId;allViews.forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById('view-detail').classList.add('active');globalTopBar.classList.add('hidden');viewHistory.push('view-chat');openDetail(currentCharId);}
+// 从聊天页快捷键跳转子页面：设置标记，关闭子页面时直接回聊天页
+function jumpToSubpage(subId){
+  fromChatJump=true;
+  pendingSubpage=subId;
+  // 手动切换到详情页，把聊天页压入历史
+  allViews.forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.getElementById('view-detail').classList.add('active');
+  globalTopBar.classList.add('hidden');
+  viewHistory.push('view-chat');
+  openDetail(currentCharId);
+}
 document.getElementById('btn-chat-letter').addEventListener('click',()=>jumpToSubpage('letters'));
 document.getElementById('btn-chat-note').addEventListener('click',()=>jumpToSubpage('notes'));
 document.getElementById('btn-chat-memory').addEventListener('click',()=>jumpToSubpage('memory'));
@@ -640,13 +582,11 @@ document.querySelector('[data-action="image"]').addEventListener('click',()=>doc
 document.querySelector('[data-action="file"]').addEventListener('click',()=>document.getElementById('file-upload-file').click());
 
 async function renderMessages(){chatMessages.innerHTML='';const chat=(await dbGetAll('chats')).find(c=>c.id===currentChatId);if(!chat)return;const char=(await dbGetAll('characters')).find(c=>c.id===currentCharId);chat.messages.forEach(msg=>appendMessageDOM(msg,char,false));chatMessages.scrollTop=chatMessages.scrollHeight;}
-
-function appendMessageDOM(msg,char,animate=true){const row=document.createElement('div');row.className=`msg-row ${msg.role==='user'?'user':'ai'}`;if(animate)row.style.animation='fadeIn .3s ease';const avSrc=msg.role==='user'?'':(char.avatar||'');const avHTML=`<div class="msg-avatar" style="${avSrc?'background-image:url('+avSrc+');background-size:cover;':''}"></div>`;let cHTML='';if(msg.thinking){cHTML+=`<div class="thinking-block"><div class="thinking-header" onclick="this.parentElement.classList.toggle('open')"><span><i class="fas fa-lightbulb"></i> 深度思考</span><i class="fas fa-chevron-down"></i></div>${msg.thinkingSummary?`<div class="thinking-summary">${msg.thinkingSummary}</div>`:''}<div class="thinking-body">${msg.thinking}</div></div>`;}if(msg.toolCalls&&msg.toolCalls.length>0){msg.toolCalls.forEach(tc=>{cHTML+=`<div class="tool-indicator"><i class="fas fa-cog fa-spin"></i>调用工具: ${tc.name} ${tc.status==='done'?'· 已完成':''}</div>`;});}if(msg.content){cHTML+=`<div class="msg-bubble">${msg.content}</div>`;}cHTML+=`<div class="msg-time">${new Date(msg.timestamp).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div>`;row.innerHTML=msg.role==='user'?`${cHTML}${avHTML}`:`${avHTML}<div class="msg-content">${cHTML}</div>`;chatMessages.appendChild(row);chatMessages.scrollTop=chatMessages.scrollHeight;return row;}
+function appendMessageDOM(msg,char,anim=true){const row=document.createElement('div');row.className=`msg-row ${msg.role==='user'?'user':'ai'}`;if(anim)row.style.animation='fadeIn .3s ease';const avS=msg.role==='user'?'':(char.avatar||'');const avH=`<div class="msg-avatar" style="${avS?'background-image:url('+avS+');background-size:cover;':''}"></div>`;let cH='';if(msg.thinking){cH+=`<div class="thinking-block"><div class="thinking-header" onclick="this.parentElement.classList.toggle('open')"><span><i class="fas fa-lightbulb"></i> 深度思考</span><i class="fas fa-chevron-down"></i></div>${msg.thinkingSummary?`<div class="thinking-summary">${msg.thinkingSummary}</div>`:''}<div class="thinking-body">${msg.thinking}</div></div>`;}if(msg.toolCalls&&msg.toolCalls.length>0){msg.toolCalls.forEach(tc=>{cH+=`<div class="tool-indicator"><i class="fas fa-cog fa-spin"></i>调用工具: ${tc.name} ${tc.status==='done'?'· 已完成':''}</div>`;});}if(msg.content){cH+=`<div class="msg-bubble">${msg.content}</div>`;}cH+=`<div class="msg-time">${new Date(msg.timestamp).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div>`;row.innerHTML=msg.role==='user'?`${cH}${avH}`:`${avH}<div class="msg-content">${cH}</div>`;chatMessages.appendChild(row);chatMessages.scrollTop=chatMessages.scrollHeight;return row;}
 
 document.getElementById('btn-send').addEventListener('click',sendMessage);
 chatInput.addEventListener('keydown',(e)=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
-
-async function sendMessage(){const text=chatInput.value.trim();if(!text)return;chatInput.value='';chatInput.style.height='auto';const chat=(await dbGetAll('chats')).find(c=>c.id===currentChatId);const char=(await dbGetAll('characters')).find(c=>c.id===currentCharId);if(!chat||!char)return;const userMsg={role:'user',content:text,timestamp:new Date().toISOString()};chat.messages.push(userMsg);await dbPut('chats',chat);appendMessageDOM(userMsg,char);const aiMsg={role:'assistant',content:'',timestamp:new Date().toISOString(),thinking:'',thinkingSummary:'',toolCalls:[]};if(chatThinkMode){aiMsg.thinkingSummary="分析用户意图与情感...";aiMsg.thinking="用户发送了这条消息，我需要结合之前的记忆和角色设定来回应...";appendMessageDOM(aiMsg,char);await sleep(1000);}if(Math.random()>.6){const tn=['save_memory','add_note','write_letter'][Math.floor(Math.random()*3)];const tr=appendMessageDOM({...aiMsg,toolCalls:[{name:tn,status:'running'}]},char);await sleep(1200);tr.remove();aiMsg.toolCalls=[{name:tn,status:'done'}];appendMessageDOM(aiMsg,char);await sleep(800);}const fullText="这是一条模拟回复。真实API流式接口接入后，这里会逐字显示。当前深度思考："+(chatThinkMode?"是":"否")+"，联网搜索："+(chatSearchMode?"是":"否");const streamRow=appendMessageDOM({...aiMsg,content:''},char);const bubble=streamRow.querySelector('.msg-bubble');for(let i=0;i<fullText.length;i++){bubble.innerHTML=fullText.substring(0,i+1)+'<span class="typing-cursor"></span>';chatMessages.scrollTop=chatMessages.scrollHeight;await sleep(30+Math.random()*30);}bubble.innerHTML=fullText;aiMsg.content=fullText;chat.messages.push(aiMsg);await dbPut('chats',chat);}
+async function sendMessage(){const text=chatInput.value.trim();if(!text)return;chatInput.value='';chatInput.style.height='auto';const chat=(await dbGetAll('chats')).find(c=>c.id===currentChatId);const char=(await dbGetAll('characters')).find(c=>c.id===currentCharId);if(!chat||!char)return;const userMsg={role:'user',content:text,timestamp:new Date().toISOString()};chat.messages.push(userMsg);await dbPut('chats',chat);appendMessageDOM(userMsg,char);const aiMsg={role:'assistant',content:'',timestamp:new Date().toISOString(),thinking:'',thinkingSummary:'',toolCalls:[]};if(chatThinkMode){aiMsg.thinkingSummary="分析用户意图与情感...";aiMsg.thinking="用户发送了这条消息，我需要结合之前的记忆和角色设定来回应...";appendMessageDOM(aiMsg,char);await sleep(1000);}if(Math.random()>.6){const tn=['save_memory','add_note','write_letter'][Math.floor(Math.random()*3)];const tr=appendMessageDOM({...aiMsg,toolCalls:[{name:tn,status:'running'}]},char);await sleep(1200);tr.remove();aiMsg.toolCalls=[{name:tn,status:'done'}];appendMessageDOM(aiMsg,char);await sleep(800);}const ft="这是一条模拟回复。真实API流式接口接入后，这里会逐字显示。当前深度思考："+(chatThinkMode?"是":"否")+"，联网搜索："+(chatSearchMode?"是":"否");const sr=appendMessageDOM({...aiMsg,content:''},char);const b=sr.querySelector('.msg-bubble');for(let i=0;i<ft.length;i++){b.innerHTML=ft.substring(0,i+1)+'<span class="typing-cursor"></span>';chatMessages.scrollTop=chatMessages.scrollHeight;await sleep(30+Math.random()*30);}b.innerHTML=ft;aiMsg.content=ft;chat.messages.push(aiMsg);await dbPut('chats',chat);}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 chatInput.addEventListener('input',()=>{chatInput.style.height='auto';chatInput.style.height=chatInput.scrollHeight+'px';});
 
