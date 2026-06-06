@@ -684,13 +684,38 @@ imgViewer.addEventListener('click',()=>imgViewer.classList.remove('active'));
 function openImageViewer(src){imgViewerImg.src=src;imgViewer.classList.add('active');}
 
 // ========== 附件处理 ==========
-document.getElementById('file-upload-image').addEventListener('change',function(){
-  const files=Array.from(this.files);this.value='';
-  files.forEach(file=>{
+// 图片压缩：最大边长1024px，JPEG质量0.7，返回Promise
+function compressImage(file,maxSize=1024,quality=0.7){
+  return new Promise((resolve)=>{
     const reader=new FileReader();
-    reader.onload=(e)=>{pendingImages.push({base64:e.target.result,name:file.name});renderAttachmentsBar();};
+    reader.onload=(e)=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        // 如果图片很小就不压缩
+        if(w<=maxSize&&h<=maxSize){resolve(e.target.result);return;}
+        // 等比缩放
+        if(w>h){h=Math.round(h*maxSize/w);w=maxSize;}
+        else{w=Math.round(w*maxSize/h);h=maxSize;}
+        const canvas=document.createElement('canvas');
+        canvas.width=w;canvas.height=h;
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,w,h);
+        // PNG转JPEG压缩
+        resolve(canvas.toDataURL('image/jpeg',quality));
+      };
+      img.src=e.target.result;
+    };
     reader.readAsDataURL(file);
   });
+}
+document.getElementById('file-upload-image').addEventListener('change',async function(){
+  const files=Array.from(this.files);this.value='';
+  for(const file of files){
+    const compressed=await compressImage(file);
+    pendingImages.push({base64:compressed,name:file.name});
+    renderAttachmentsBar();
+  }
 });
 document.getElementById('file-upload-file').addEventListener('change',async function(){
   const files=Array.from(this.files);this.value='';
