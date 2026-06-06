@@ -748,12 +748,11 @@ function appendMessageDOM(msg,char,anim=true){
   }
 
   // 消息操作栏
-  let actionsHTML='<div class="msg-actions">';
+    let actionsHTML='<div class="msg-actions">';
   if(msg.role==='assistant'){
     actionsHTML+=`<button class="msg-action-btn" onclick="window._copyMsg('${msg.id}')" title="复制"><i class="fas fa-copy"></i></button>`;
     actionsHTML+=`<button class="msg-action-btn" onclick="window._regenerate('${msg.id}')" title="重新生成"><i class="fas fa-redo"></i></button>`;
     actionsHTML+=`<button class="msg-action-btn" onclick="window._editAIMsg('${msg.id}')" title="编辑"><i class="fas fa-pen"></i></button>`;
-    actionsHTML+=`<button class="msg-action-btn danger" onclick="window._deleteMsg('${msg.id}')" title="删除"><i class="fas fa-trash"></i></button>`;
     actionsHTML+=`<button class="msg-action-btn danger" onclick="window._deleteMsg('${msg.id}')" title="删除"><i class="fas fa-trash"></i></button>`;
   }else{
     actionsHTML+=`<button class="msg-action-btn" onclick="window._copyMsg('${msg.id}')" title="复制"><i class="fas fa-copy"></i></button>`;
