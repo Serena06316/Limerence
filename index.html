@@ -656,11 +656,6 @@ async function loadNotesDrawer(){const body=chatDrawerBody;body.innerHTML='';con
 
 // ========== 聊天页 ==========
 const chatMessages=document.getElementById('chat-messages');const chatInput=document.getElementById('chat-input');const expandMenu=document.getElementById('expand-menu');const attachmentsBar=document.getElementById('attachments-bar');
-const scrollBottomBtn=document.getElementById('scroll-bottom-btn');
-let isUserAtBottom=true;
-function smartScrollToBottom(){if(isUserAtBottom){smartScrollToBottom();}else{scrollBottomBtn.style.display='flex';}}
-chatMessages.addEventListener('scroll',()=>{isUserAtBottom=chatMessages.scrollHeight-chatMessages.scrollTop-chatMessages.clientHeight<80;if(isUserAtBottom)scrollBottomBtn.style.display='none';});
-scrollBottomBtn.addEventListener('click',()=>{chatMessages.scrollTop=chatMessages.scrollHeight;scrollBottomBtn.style.display='none';isUserAtBottom=true;});
 const sendBtn=document.getElementById('btn-send');
 
 // A2: 更新发送按钮状态
@@ -765,7 +760,7 @@ async function renderMessages(){
     </div>`;
     return;
   }
-  chat.messages.forEach(msg=>appendMessageDOM(msg,char,false));smartScrollToBottom();addCodeCopyButtons(chatMessages);
+  chat.messages.forEach(msg=>appendMessageDOM(msg,char,false));chatMessages.scrollTop=chatMessages.scrollHeight;addCodeCopyButtons(chatMessages);
 }
 
 function appendMessageDOM(msg,char,anim=true){
@@ -806,7 +801,7 @@ function appendMessageDOM(msg,char,anim=true){
 
   cH+=`<div class="msg-time">${new Date(msg.timestamp).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div>${actionsHTML}`;
   row.innerHTML=`${avH}<div class="msg-content">${cH}</div>`;
-  chatMessages.appendChild(row);smartScrollToBottom();
+  chatMessages.appendChild(row);chatMessages.scrollTop=chatMessages.scrollHeight;
   // 渲染后添加代码复制按钮
   addCodeCopyButtons(row);
   return row;
@@ -1073,14 +1068,14 @@ async function streamChat(chat,char,mainPreset,charData){
         if(!line.startsWith('data: '))continue;const data=line.slice(6).trim();if(data==='[DONE]')continue;
         try{
           const json=JSON.parse(data);const delta=json.choices&&json.choices[0]&&json.choices[0].delta;if(!delta)continue;
-          if(delta.reasoning_content){reasoningContent+=delta.reasoning_content;if(thinkingEl){thinkingEl.textContent=reasoningContent;smartScrollToBottom();}}
-          if(delta.thinking){aiMsg.thinking=(aiMsg.thinking||'')+delta.thinking;if(thinkingEl){thinkingEl.textContent=aiMsg.thinking;smartScrollToBottom();}}
+          if(delta.reasoning_content){reasoningContent+=delta.reasoning_content;if(thinkingEl){thinkingEl.textContent=reasoningContent;chatMessages.scrollTop=chatMessages.scrollHeight;}}
+          if(delta.thinking){aiMsg.thinking=(aiMsg.thinking||'')+delta.thinking;if(thinkingEl){thinkingEl.textContent=aiMsg.thinking;chatMessages.scrollTop=chatMessages.scrollHeight;}}
           if(delta.content){
             fullContent+=delta.content;
             // A1: 流式 Markdown 渲染（带光标）
             if(bubble){
               bubble.innerHTML=renderMarkdown(fullContent)+'<span class="typing-cursor"></span>';
-              smartScrollToBottom();
+              chatMessages.scrollTop=chatMessages.scrollHeight;
             }
           }
           if(delta.tool_calls){delta.tool_calls.forEach(tc=>{if(!toolCallsMap[tc.index])toolCallsMap[tc.index]={id:tc.id||'',name:'',args:''};if(tc.id)toolCallsMap[tc.index].id=tc.id;if(tc.function){if(tc.function.name)toolCallsMap[tc.index].name=tc.function.name;if(tc.function.arguments)toolCallsMap[tc.index].args+=tc.function.arguments;}});}
@@ -1164,7 +1159,7 @@ async function streamChatContinue(chat,char,mainPreset,charData){
             fullContent+=delta.content;
             if(bubble){
               bubble.innerHTML=renderMarkdown(fullContent)+'<span class="typing-cursor"></span>';
-              smartScrollToBottom();
+              chatMessages.scrollTop=chatMessages.scrollHeight;
             }
           }
           if(delta.tool_calls){delta.tool_calls.forEach(tc=>{if(!toolCallsMap2[tc.index])toolCallsMap2[tc.index]={id:tc.id||'',name:'',args:''};if(tc.id)toolCallsMap2[tc.index].id=tc.id;if(tc.function){if(tc.function.name)toolCallsMap2[tc.index].name=tc.function.name;if(tc.function.arguments)toolCallsMap2[tc.index].args+=tc.function.arguments;}});}
