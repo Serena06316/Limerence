@@ -748,7 +748,7 @@ function appendMessageDOM(msg,char,anim=true){
   actionsHTML+='</div>';
 
   cH+=`<div class="msg-time">${new Date(msg.timestamp).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div>${actionsHTML}`;
-  row.innerHTML=msg.role==='user'?`${cH}${avH}`:`${avH}<div class="msg-content">${cH}</div>`;
+  row.innerHTML=`${avH}<div class="msg-content">${cH}</div>`;
   chatMessages.appendChild(row);chatMessages.scrollTop=chatMessages.scrollHeight;
   // 渲染后添加代码复制按钮
   addCodeCopyButtons(row);
