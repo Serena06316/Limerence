@@ -442,6 +442,19 @@
         <div class="form-row"><label class="form-label">模型</label><div class="form-row-inline"><select class="form-input" id="pf-model"></select><button class="btn-sm btn-primary" id="pf-fetch-models">拉取</button></div><div class="model-status" id="pf-model-status"></div></div>
         <div style="display:flex;gap:10px;margin-top:15px;"><button class="btn-primary" id="btn-save-preset">保存预设</button><button class="btn-primary" id="btn-cancel-preset" style="background:var(--text-secondary);">取消</button></div>
       </div>
+      <!-- 用户头像 -->
+      <div class="settings-section">
+        <h3><i class="fas fa-user-circle"></i> 用户头像</h3>
+        <p style="margin-bottom:12px;">设置你在聊天中显示的头像，输入图片 URL 即可。</p>
+        <div style="display:flex;align-items:center;gap:15px;">
+          <div class="avatar" id="user-avatar-preview" style="width:60px;height:60px;flex-shrink:0;background-color:var(--bg-secondary);"></div>
+          <input class="form-input" id="input-user-avatar" placeholder="输入头像图片 URL..." style="flex:1;">
+        </div>
+        <div style="margin-top:10px;display:flex;gap:10px;">
+          <button class="btn-primary" id="btn-save-user-avatar"><i class="fas fa-check" style="margin-right:4px;"></i>保存</button>
+          <button class="btn-primary" id="btn-clear-user-avatar" style="background:var(--text-secondary);"><i class="fas fa-undo" style="margin-right:4px;"></i>重置</button>
+        </div>
+      </div>
       <div class="settings-section">
         <h3><i class="fas fa-database"></i> 数据管理</h3>
         <p style="margin-bottom:12px;">备份与恢复所有数据（角色、聊天、记忆、信件、便签、纪念日、API预设、自定义CSS）。</p>
@@ -728,7 +741,7 @@ async function renderMessages(){
 function appendMessageDOM(msg,char,anim=true){
   const row=document.createElement('div');row.className=`msg-row ${msg.role==='user'?'user':'ai'}`;row.setAttribute('data-msg-id',msg.id||'');
   if(anim)row.style.animation='fadeIn .3s ease';
-  const avS=msg.role==='user'?'':(char.avatar||'');
+  const avS=msg.role==='user'?(localStorage.getItem('limerence-user-avatar')||''):(char.avatar||'');
   const avH=`<div class="msg-avatar" style="${avS?'background-image:url('+avS+');background-size:cover;':''}"></div>`;
   let cH='';
   if(msg.thinking){cH+=`<div class="thinking-block"><div class="thinking-header" onclick="this.parentElement.classList.toggle('open')"><span><i class="fas fa-lightbulb"></i> 深度思考</span><i class="fas fa-chevron-down"></i></div>${msg.thinkingSummary?`<div class="thinking-summary">${msg.thinkingSummary}</div>`:''}<div class="thinking-body">${msg.thinking}</div></div>`;}
@@ -1221,6 +1234,28 @@ document.getElementById('btn-clear-data').addEventListener('click',async()=>{
   }catch(e){statusEl.textContent=`清空失败: ${e.message}`;statusEl.style.color='var(--danger)';}
 });
 
+// ========== 用户头像 ==========
+const userInputAvatar=document.getElementById('input-user-avatar');
+const userAvatarPreview=document.getElementById('user-avatar-preview');
+function applyUserAvatar(url){
+  if(url){userAvatarPreview.style.backgroundImage=`url(${url})`;userAvatarPreview.style.backgroundSize='cover';userAvatarPreview.style.backgroundPosition='center';}
+  else{userAvatarPreview.style.backgroundImage='';userAvatarPreview.style.backgroundSize='';userAvatarPreview.style.backgroundPosition='';}
+}
+document.getElementById('btn-save-user-avatar').addEventListener('click',()=>{
+  const url=userInputAvatar.value.trim();
+  localStorage.setItem('limerence-user-avatar',url);
+  applyUserAvatar(url);
+  showToast('用户头像已保存');
+});
+document.getElementById('btn-clear-user-avatar').addEventListener('click',()=>{
+  userInputAvatar.value='';
+  localStorage.removeItem('limerence-user-avatar');
+  applyUserAvatar('');
+  showToast('用户头像已重置');
+});
+// 输入框实时预览
+userInputAvatar.addEventListener('input',()=>applyUserAvatar(userInputAvatar.value.trim()));
+
 // ========== 自定义 CSS ==========
 const customCssInput=document.getElementById('custom-css-input');const customCssEl=document.getElementById('custom-css');
 function applyCustomCSS(css){customCssEl.textContent=css;}
@@ -1231,12 +1266,27 @@ document.getElementById('btn-reset-css').addEventListener('click',()=>{customCss
 // ========== 初始化 ==========
 async function init(){
   await openDB();
+
+  // 恢复主题
   applyTheme(localStorage.getItem('limerence-theme')||'light');
-  const ss=localStorage.getItem('limerence-signature');if(ss)signatureInput.value=ss;
+
+  // 恢复签名
+  const ss=localStorage.getItem('limerence-signature');
+  if(ss)signatureInput.value=ss;
+
+  // 恢复自定义CSS
   const savedCSS=localStorage.getItem('limerence-custom-css');
   if(savedCSS){customCssInput.value=savedCSS;applyCustomCSS(savedCSS);}
+
+  // 恢复用户头像
+  const savedUserAvatar=localStorage.getItem('limerence-user-avatar');
+  if(savedUserAvatar){userInputAvatar.value=savedUserAvatar;applyUserAvatar(savedUserAvatar);}
+
+  // 加载数据
   await loadCharacters();
   await loadPresetsList();
+
+  // 设置pdf.js worker
   if(typeof pdfjsLib!=='undefined'){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}
 }
 init();
