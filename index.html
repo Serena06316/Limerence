@@ -185,7 +185,8 @@
   .msg-edit-actions button{padding:4px 12px;border-radius:4px;border:none;font-family:inherit;font-size:.8rem;cursor:pointer;}
 
   /* 消息操作栏 */
-  .msg-actions{display:flex;gap:4px;margin-top:4px;padding:0 4px;opacity:0;transition:opacity .2s;}
+  .msg-actions{display:none;gap:4px;margin-top:4px;padding:0 4px;}
+.msg-actions.visible{display:flex;}
   .msg-row:hover .msg-actions,.msg-row:focus-within .msg-actions{opacity:1;}
   /* 移动端始终显示 */
   @media(hover:none){.msg-actions{opacity:.6;}}
@@ -1164,6 +1165,17 @@ function appendMessageDOM(msg,char,anim=true){
 
   cH+=`<div class="msg-time">${new Date(msg.timestamp).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div>${actionsHTML}`;
   row.innerHTML=`${avH}<div class="msg-content">${cH}</div>`;
+  // 点击消息切换操作栏
+  const bubbleEl=row.querySelector('.msg-bubble');
+  if(bubbleEl){
+    bubbleEl.addEventListener('click',(e)=>{
+      // 编辑模式中不触发
+      if(e.target.closest('.msg-edit-area')||e.target.closest('.msg-edit-actions'))return;
+      // 关闭其他消息的操作栏
+      chatMessages.querySelectorAll('.msg-actions.visible').forEach(a=>{if(a!==row.querySelector('.msg-actions'))a.classList.remove('visible');});
+      row.querySelector('.msg-actions').classList.toggle('visible');
+    });
+  }
   chatMessages.appendChild(row);chatMessages.scrollTop=chatMessages.scrollHeight;
   // 渲染后添加代码复制按钮
   addCodeCopyButtons(row);
@@ -1292,6 +1304,7 @@ function showToast(text,duration=2000){
 
 // ========== 核心：API 聊天与工具调用 ==========
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+chatMessages.addEventListener('click',(e)=>{if(!e.target.closest('.msg-bubble')&&!e.target.closest('.msg-actions')){chatMessages.querySelectorAll('.msg-actions.visible').forEach(a=>a.classList.remove('visible'));}});
 chatInput.addEventListener('input',()=>{chatInput.style.height='auto';chatInput.style.height=chatInput.scrollHeight+'px';});
 
 // 发送按钮：根据状态切换 发送/停止
