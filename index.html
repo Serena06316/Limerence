@@ -678,8 +678,6 @@
         <div style="margin-bottom:15px;"><label class="form-label"><i class="fas fa-globe" style="color:var(--accent);margin-right:4px;"></i>搜索预设（Tavily等）</label><select class="form-input" id="select-preset-search"><option value="">不使用</option></select></div>
         <div style="margin-bottom:15px;"><label class="form-label"><i class="fas fa-eye" style="color:var(--accent);margin-right:4px;"></i>识图预设</label><select class="form-input" id="select-preset-vision"><option value="">不使用（回退到主预设）</option></select></div>
         <button class="btn-primary" id="btn-save-about">保存设置</button>
-        <button class="btn-danger" id="btn-delete-char" style="margin-top:25px;width:100%;"><i class="fas fa-trash" style="margin-right:6px;"></i>删除此角色</button>
-      </div></div>
       </div></div>
       <div class="subpage-overlay" id="sub-items"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Entries</h3></div><div class="subpage-body"><div style="display:flex;gap:10px;margin-bottom:20px;"><input class="form-input" id="input-new-item" placeholder="添加新条目..." style="flex:1;"><button class="btn-primary" id="btn-add-item">添加</button></div><div id="items-list"></div></div></div>
       <div class="subpage-overlay" id="sub-memory"><div class="subpage-header"><button class="top-btn btn-close-sub"><i class="fas fa-arrow-left"></i></button><h3>Memories</h3></div><div class="subpage-body"><p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:15px;">AI在聊天中自动记录的记忆，按月份分类</p><div style="display:flex;gap:10px;margin-bottom:20px;"><input class="form-input" id="input-new-memory" placeholder="手动添加记忆..." style="flex:1;"><button class="btn-primary" id="btn-add-memory">添加</button></div><div id="memory-list"></div></div></div>
@@ -916,30 +914,6 @@ function loadAboutData(ch){document.getElementById('input-bio').value=ch.bio||''
 async function loadPresetSelects(ch){const presets=await dbGetAll('apiPresets');['select-preset-main','select-preset-search','select-preset-vision'].forEach(selId=>{const sel=document.getElementById(selId);const isV=selId==='select-preset-vision';sel.innerHTML=isV?'<option value="">不使用（回退到主预设）</option>':'<option value="">不使用</option>';presets.forEach(p=>{const opt=document.createElement('option');opt.value=p.id;opt.textContent=p.name;sel.appendChild(opt);});});if(ch.presetMain)document.getElementById('select-preset-main').value=ch.presetMain;if(ch.presetSearch)document.getElementById('select-preset-search').value=ch.presetSearch;if(ch.presetVision)document.getElementById('select-preset-vision').value=ch.presetVision;}
 document.getElementById('btn-save-bio').addEventListener('click',async()=>{const ch=(await dbGetAll('characters')).find(c=>c.id===currentCharId);if(ch){ch.bio=document.getElementById('input-bio').value;await dbPut('characters',ch);document.getElementById('sub-bio').classList.remove('active');}});
 document.getElementById('btn-save-about').addEventListener('click',async()=>{const ch=(await dbGetAll('characters')).find(c=>c.id===currentCharId);if(ch){ch.avatar=document.getElementById('input-avatar-url').value;ch.name=document.getElementById('input-char-name').value;ch.systemPrompt=document.getElementById('input-sys-prompt').value;ch.presetMain=document.getElementById('select-preset-main').value;ch.presetSearch=document.getElementById('select-preset-search').value;ch.presetVision=document.getElementById('select-preset-vision').value;await dbPut('characters',ch);detailAvatar.style.backgroundImage=`url(${ch.avatar})`;document.getElementById('detail-name').textContent=ch.name;document.getElementById('sub-about').classList.remove('active');}});
-document.getElementById('btn-delete-char').addEventListener('click',async()=>{
-  if(!currentCharId)return;
-  if(!confirm('确定要删除此角色吗？将同时删除该角色的所有聊天、记忆、信件、便签、条目和纪念日！'))return;
-  const charId=currentCharId;
-  const chats=(await dbGetAll('chats')).filter(c=>c.characterId===charId);
-  for(const c of chats){await dbDelete('chats',c.id);}
-  const mems=(await dbGetAll('memories')).filter(m=>m.characterId===charId);
-  for(const m of mems){await dbDelete('memories',m.id);}
-  const lets=(await dbGetAll('letters')).filter(l=>l.characterId===charId);
-  for(const l of lets){await dbDelete('letters',l.id);}
-  const nts=(await dbGetAll('notes')).filter(n=>n.characterId===charId);
-  for(const n of nts){await dbDelete('notes',n.id);}
-  const its=(await dbGetAll('items')).filter(i=>i.characterId===charId);
-  for(const i of its){await dbDelete('items',i.id);}
-  const anns=(await dbGetAll('anniversaries')).filter(a=>a.characterId===charId);
-  for(const a of anns){await dbDelete('anniversaries',a.id);}
-  await dbDelete('characters',charId);
-  currentCharId=null;
-  document.querySelectorAll('.subpage-overlay').forEach(s=>s.classList.remove('active'));
-  switchView('view-home');
-  loadCharacters();
-  showToast('角色已删除');
-});
-
 
 // 记忆列表渲染（通用）
 async function renderMemoryList(container){container.innerHTML='';const ms=(await dbGetAll('memories')).filter(m=>m.characterId===currentCharId);const mos={};ms.forEach(m=>{const k=m.month||'?';if(!mos[k])mos[k]=[];mos[k].push(m);});if(Object.keys(mos).length===0){container.innerHTML='<p style="font-size:.85rem;color:var(--text-secondary);">暂无记忆</p>';return;}Object.keys(mos).sort().reverse().forEach(mo=>{const divider=document.createElement('div');divider.className='month-divider';divider.textContent=mo;container.appendChild(divider);mos[mo].forEach(m=>{const card=document.createElement('div');card.className='item-card';card.innerHTML=`<div class="item-card-actions"><i class="fas fa-pen" title="编辑" onclick="window._editMem('${m.id}',this)"></i><i class="fas fa-trash" title="删除" onclick="window._delMem('${m.id}')"></i></div><div class="item-card-content" id="mem-content-${m.id}">${m.content}</div><div class="item-card-meta">${new Date(m.date).toLocaleString()}</div>`;container.appendChild(card);});});}
