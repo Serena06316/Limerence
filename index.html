@@ -59,25 +59,24 @@
 .home-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--accent);letter-spacing:4px;}
 .home-subtitle{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--text-secondary);letter-spacing:3px;margin-top:8px;}
   .characters-scroll-area{flex:0 0 auto;display:flex;align-items:center;height:100%;padding:0 30px;gap:25px;position:relative;z-index:1;}
-  .card-base{flex:0 0 210px;height:280px;border-radius:2px;border:1px solid var(--border);background:rgba(255,255,255,.7);position:relative;box-sizing:border-box;transition:all .4s cubic-bezier(.25,.46,.45,.94);cursor:pointer;display:flex;flex-direction:column;align-items:center;backdrop-filter:blur(12px) saturate(.9);-webkit-backdrop-filter:blur(12px) saturate(.9);box-shadow:0 8px 24px var(--shadow);}
-[data-theme="dark"] .card-base{background:rgba(37,30,48,.7);}
-.card-base:hover{transform:translateY(-6px);border-color:var(--accent-light);box-shadow:0 14px 28px var(--shadow);}
-.card-base:active{transform:translateY(2px);box-shadow:0 4px 12px var(--shadow);transition:all .1s;}
-.char-card{justify-content:flex-start;padding:20px 15px;}
-.char-card::before{content:'';position:absolute;top:6px;bottom:6px;left:6px;right:6px;border:1px solid var(--border);opacity:.6;pointer-events:none;transition:border-color .4s ease;}
-.char-card:hover::before{border-color:var(--accent);opacity:.4;}
-.char-card .avatar{width:96px;height:96px;border-radius:50%;border:1px solid var(--border);padding:4px;background-clip:content-box;background-size:cover;background-position:center;margin-top:10px;margin-bottom:16px;filter:sepia(.2) contrast(.9) grayscale(.1);transition:all .5s ease;}
-.char-card:hover .avatar{filter:sepia(0) contrast(1) grayscale(0);border-color:var(--accent-light);}
-.char-name{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--text-primary);margin:0;letter-spacing:1px;}
-.char-name::after{content:'';display:block;width:24px;height:1px;background-color:var(--accent-light);margin:10px auto;opacity:.5;}
-.char-bio{font-size:.8rem;color:var(--text-secondary);text-align:center;margin:0;line-height:1.6;padding:0 10px;font-weight:300;}
-.add-card{justify-content:center;border:1px dashed var(--border);background:rgba(255,255,255,.2);box-shadow:none;}
-[data-theme="dark"] .add-card{background:rgba(37,30,48,.2);}
-.add-card:hover{border-style:solid;background:rgba(255,255,255,.7);box-shadow:0 8px 24px var(--shadow);}
-[data-theme="dark"] .add-card:hover{background:rgba(37,30,48,.7);}
-.add-card i{font-size:1.5rem;margin-bottom:12px;opacity:.8;transition:transform .3s ease;}
-.add-card:hover i{transform:rotate(90deg);}
-.add-card span{color:var(--text-secondary);font-size:.9rem;letter-spacing:2px;}
+  .char-card{width:210px;height:280px;background:linear-gradient(170deg,var(--card-bg) 0%,var(--bg-secondary) 100%);border:1px solid var(--accent-light);border-radius:4px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 20px var(--shadow),inset 0 0 0 4px var(--card-bg),inset 0 0 0 5px var(--accent-gold);cursor:pointer;position:relative;transition:transform .3s,box-shadow .3s;}
+.char-card:hover{transform:translateY(-6px) rotate(-1deg);box-shadow:0 12px 30px var(--shadow),0 0 20px rgba(92,61,122,.15),inset 0 0 0 4px var(--card-bg),inset 0 0 0 5px var(--accent-gold);}
+  .char-card:active{transform:scale(.97);}
+  .avatar{width:80px;height:80px;border-radius:50%;background:var(--bg-secondary);border:2px solid var(--accent-light);margin-bottom:15px;object-fit:cover;}
+  .char-name{font-weight:600;color:var(--accent);margin-bottom:5px;}
+  .char-bio{font-size:.85rem;color:var(--text-secondary);text-align:center;line-height:1.4;max-height:50px;overflow:hidden;}
+  .add-card{background:transparent;box-shadow:inset 0 0 0 2px dashed var(--border);color:var(--text-secondary);}
+.add-card:hover{box-shadow:inset 0 0 0 2px dashed var(--accent-light);transform:translateY(-4px);}
+.char-card .avatar{width:72px;height:72px;margin-bottom:12px;position:relative;}
+.char-card .avatar::after{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--accent-gold),transparent);}
+.char-name{font-weight:600;color:var(--accent);margin-bottom:4px;font-family:'Cormorant Garamond',serif;font-size:1.05rem;letter-spacing:1px;}
+.char-bio{font-size:.78rem;color:var(--text-secondary);text-align:center;line-height:1.4;max-height:48px;overflow:hidden;padding:0 8px;}
+.char-card-ornament{width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:10px 0;}
+.char-card-corner{position:absolute;width:12px;height:12px;border-color:var(--accent-gold);border-style:solid;}
+.char-card-corner.tl{top:6px;left:6px;border-width:1px 0 0 1px;}
+.char-card-corner.tr{top:6px;right:6px;border-width:1px 1px 0 0;}
+.char-card-corner.bl{bottom:6px;left:6px;border-width:0 0 1px 1px;}
+.char-card-corner.br{bottom:6px;right:6px;border-width:0 1px 1px 0;}
   #home-footer{flex-shrink:0;height:60px;display:flex;align-items:center;justify-content:center;background:var(--bg-secondary);border-top:1px solid var(--border);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--text-secondary);padding-bottom:var(--safe-bottom);}
   #signature-input{background:none;border:none;border-bottom:1px solid var(--border);color:var(--text-primary);text-align:center;font-family:inherit;font-style:inherit;font-size:inherit;width:80%;outline:none;}
 
@@ -331,7 +330,7 @@
         <div class="home-title">Limerence</div>
       </div>
       <div class="characters-scroll-area" id="char-container">
-        <div class="card-base add-card" id="btn-add-char"><i class="fas fa-plus" style="color:var(--accent-light)"></i><span>新建角色</span></div><i class="fas fa-plus" style="color:var(--accent-light)"></i><div style="font-size:0.9rem;margin-top:10px;color:var(--text-secondary)">新建角色</div></div>
+        <div class="char-card add-card" id="btn-add-char"><i class="fas fa-plus" style="color:var(--accent-light)"></i><div style="font-size:0.9rem;margin-top:10px;color:var(--text-secondary)">新建角色</div></div>
       </div>
 <div class="home-ascii-wrap">
     <pre class="home-ascii-bg" aria-hidden="true">
@@ -901,7 +900,7 @@ if(homeSlider&&asciiWrap){
     asciiWrap.style.transform=`translateX(${-offset}px)`;
   });
 }
-async function loadCharacters(){const c=document.getElementById('char-container'),a=document.getElementById('btn-add-char');c.querySelectorAll('.char-card:not(.add-card)').forEach(e=>e.remove());(await dbGetAll('characters')).forEach(ch=>{const card=document.createElement('div');card.className='card-base char-card';card.setAttribute('data-id',ch.id);card.innerHTML=`<div class="avatar" style="background-image:url(${ch.avatar||''});background-size:cover;background-position:center;"></div><h3 class="char-name">${ch.name}</h3><p class="char-bio">${ch.bio}</p>`;card.addEventListener('click',()=>openDetail(ch.id));c.insertBefore(card,a);});}
+async function loadCharacters(){const c=document.getElementById('char-container'),a=document.getElementById('btn-add-char');c.querySelectorAll('.char-card:not(.add-card)').forEach(e=>e.remove());(await dbGetAll('characters')).forEach(ch=>{const card=document.createElement('div');card.className='char-card';card.setAttribute('data-id',ch.id);card.innerHTML=`<div class="char-card-corner tl"></div><div class="char-card-corner tr"></div><div class="char-card-corner bl"></div><div class="char-card-corner br"></div><div style="font-family:'Cormorant Garamond',serif;font-size:.65rem;color:var(--accent-gold);letter-spacing:3px;margin-top:18px;">CHARACTER</div><div class="avatar" style="background-image:url(${ch.avatar||''});background-size:cover;background-position:center;"></div><div class="char-name">${ch.name}</div><div class="char-card-ornament"></div><div class="char-bio">${ch.bio}</div>`;card.addEventListener('click',()=>openDetail(ch.id));c.insertBefore(card,a);});}
 
 // ========== 详情页 ==========
 const detailBody=document.getElementById('detail-body');const panelLeft=document.getElementById('panel-left');const panelRight=document.getElementById('panel-right');const detailHeader=document.getElementById('detail-header');const pullIndicator=document.getElementById('pull-indicator');const detailAvatar=document.getElementById('detail-avatar');const detailWrapper=document.getElementById('detail-wrapper');
