@@ -760,7 +760,19 @@ async function renderMessages(){
     </div>`;
     return;
   }
-  chat.messages.forEach(msg=>appendMessageDOM(msg,char,false));chatMessages.scrollTop=chatMessages.scrollHeight;addCodeCopyButtons(chatMessages);
+  let lastDate='';
+  chat.messages.forEach(msg=>{
+    const msgDate=new Date(msg.timestamp).toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
+    if(msgDate!==lastDate){
+      lastDate=msgDate;
+      const divider=document.createElement('div');
+      divider.style.cssText='display:flex;align-items:center;gap:12px;margin:10px 0;color:var(--text-secondary);font-size:.75rem;user-select:none;';
+      divider.innerHTML=`<div style="flex:1;height:1px;background:var(--border);"></div><span style="white-space:nowrap;font-family:'Cormorant Garamond',serif;letter-spacing:1px;">${msgDate}</span><div style="flex:1;height:1px;background:var(--border);"></div>`;
+      chatMessages.appendChild(divider);
+    }
+    appendMessageDOM(msg,char,false);
+  });
+  smartScrollToBottom();addCodeCopyButtons(chatMessages);
 }
 
 function appendMessageDOM(msg,char,anim=true){
