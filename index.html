@@ -885,7 +885,7 @@ const asciiWrap=document.querySelector('.home-ascii-wrap');
 if(homeSlider&&asciiWrap){
   homeSlider.addEventListener('scroll',()=>{
     const offset=homeSlider.scrollLeft*0.15;
-    asciiWrap.style.transform=`translateX(${offset}px)`;
+    asciiWrap.style.transform=`translateX(${-offset}px)`;
   });
 }
 async function loadCharacters(){const c=document.getElementById('char-container'),a=document.getElementById('btn-add-char');c.querySelectorAll('.char-card:not(.add-card)').forEach(e=>e.remove());(await dbGetAll('characters')).forEach(ch=>{const card=document.createElement('div');card.className='char-card';card.setAttribute('data-id',ch.id);card.innerHTML=`<div class="avatar" style="background-image:url(${ch.avatar||''});background-size:cover;background-position:center;"></div><div class="char-name">${ch.name}</div><div class="char-bio">${ch.bio}</div>`;card.addEventListener('click',()=>openDetail(ch.id));c.insertBefore(card,a);});}
