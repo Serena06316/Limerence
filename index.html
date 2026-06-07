@@ -51,10 +51,10 @@
 @keyframes viewFadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 
   /* ========== 主页 ========== */
-  #home-slider{flex:1;display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;min-height:0;}
+  #home-slider{flex:1;display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;min-height:0;position:relative;}
   #home-slider::-webkit-scrollbar{display:none;}
   .violet-screen{flex:0 0 100vw;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;}
-  .home-ascii-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant Garamond',monospace;color:var(--accent);opacity:.08;font-size:.95rem;line-height:1.15;white-space:pre;user-select:none;pointer-events:none;z-index:0;}
+  .home-ascii-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant Garamond',monospace;color:var(--accent);opacity:.07;font-size:.55rem;line-height:1.1;white-space:pre;user-select:none;pointer-events:none;z-index:0;}
 .home-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--accent);letter-spacing:4px;}
 .home-subtitle{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--text-secondary);letter-spacing:3px;margin-top:8px;}
   .characters-scroll-area{flex:0 0 auto;display:flex;align-items:center;height:100%;padding:0 30px;gap:25px;position:relative;z-index:1;}
@@ -319,7 +319,6 @@
       <div class="characters-scroll-area" id="char-container">
         <div class="char-card add-card" id="btn-add-char"><i class="fas fa-plus" style="color:var(--accent-light)"></i><div style="font-size:0.9rem;margin-top:10px;color:var(--text-secondary)">新建角色</div></div>
       </div>
-    </div>
     <pre class="home-ascii-bg" aria-hidden="true">
                                                                                                                                                                                                                                                                                                                                   
                                                                                                                                                                                                                                                                                                       
@@ -599,6 +598,7 @@
                                                                                                                                              --                                                                                                                                                       
                                                                                                                                                                                                                                                                                                       
     </pre>
+    </div>
     <div id="home-footer"><input type="text" id="signature-input" value="I am because you are." /></div>
   </div>
 
