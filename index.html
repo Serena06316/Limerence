@@ -1092,7 +1092,7 @@ async function renderMessages(){
     }
     appendMessageDOM(msg,char,false);
   });
-  smartScrollToBottom();addCodeCopyButtons(chatMessages);
+  chatMessages.scrollTop=chatMessages.scrollHeight;addCodeCopyButtons(chatMessages);
 }
 
 function appendMessageDOM(msg,char,anim=true){
