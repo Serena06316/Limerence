@@ -1384,10 +1384,23 @@ function buildUserApiContent(msg){
 // 构建系统指令（带记忆和条目注入）
 async function buildSystemPrompt(charData){
   let systemPrompt=charData.systemPrompt||'You are a helpful assistant.';
+  // 设定条目
   const entries=(await dbGetAll('items')).filter(i=>i.characterId===currentCharId);
   if(entries.length>0){systemPrompt+='\n\n[角色设定条目 / Character Entries]\n';entries.forEach(e=>{systemPrompt+=`- ${e.content}\n`;});}
+  // 近期记忆
   const memories=(await dbGetAll('memories')).filter(m=>m.characterId===currentCharId).sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,20);
   if(memories.length>0){systemPrompt+='\n\n[近期记忆 / Recent Memories]\n';memories.forEach(m=>{systemPrompt+=`- ${m.content}\n`;});}
+  // 便签（全部注入）
+  const notes=(await dbGetAll('notes')).filter(n=>n.characterId===currentCharId);
+  if(notes.length>0){systemPrompt+='\n\n[便签 / Notes]\n';notes.forEach(n=>{systemPrompt+=`- [${n.done?'已完成':'待办'}] ${n.content}\n`;});}
+  // 纪念日
+  const annis=(await dbGetAll('anniversaries')).filter(a=>a.characterId===currentCharId);
+  if(annis.length>0){systemPrompt+='\n\n[纪念日 / Anniversaries]\n';annis.forEach(a=>{const d=new Date(a.date);const diff=Math.floor((new Date()-d)/(1000*60*60*24));systemPrompt+=`- ${a.name}（${a.date}，已${diff>=0?diff:0}天）\n`;});}
+  // 近5天消息密度
+  const chats=(await dbGetAll('chats')).filter(c=>c.characterId===currentCharId);
+  const densityLines=[];
+  for(let i=0;i<5;i++){const d=new Date();d.setDate(d.getDate()-i);const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;let count=0;chats.forEach(c=>{(c.messages||[]).forEach(msg=>{const md=new Date(msg.timestamp);const mk=`${md.getFullYear()}-${String(md.getMonth()+1).padStart(2,'0')}-${String(md.getDate()).padStart(2,'0')}`;if(mk===key)count++;});});const label=i===0?'今天':i===1?'昨天':`${i}天前`;densityLines.push(`${key}（${label}）: ${count}条消息`);}
+  systemPrompt+='\n\n[近期互动密度 / Recent Density]\n'+densityLines.join('\n');
   return systemPrompt;
 }
 
@@ -1486,7 +1499,7 @@ async function streamChat(chat,char,mainPreset,charData){
     const searchPreset=await getPresetById(charData.presetSearch);
     for(const tc of aiMsg.toolCalls){
       let toolResult='';
-      try{const args=JSON.parse(tc.args||'{}');if(tc.name==='web_search')toolResult=await executeWebSearch(args,searchPreset);else if(tc.name==='save_memory')toolResult=await executeSaveMemory(args);else if(tc.name==='add_note')toolResult=await executeAddNote(args);else if(tc.name==='write_letter')toolResult=await executeWriteLetter(args);else toolResult=`Unknown tool: ${tc.name}`;}
+      try{const args=JSON.parse(tc.args||'{}');if(tc.name==='web_search')toolResult=await executeWebSearch(args,searchPreset);else if(tc.name==='save_memory')toolResult=await executeSaveMemory(args);else if(tc.name==='add_note')toolResult=await executeAddNote(args);else if(tc.name==='write_letter')toolResult=await executeWriteLetter(args);else if(tc.name==='read_letters')toolResult=await executeReadLetters(args);else if(tc.name==='query_density')toolResult=await executeQueryDensity(args);else toolResult=`Unknown tool: ${tc.name}`;
       catch(e){toolResult=`Error: ${e.message}`;}
       tc.status='done';tc.result=toolResult;
       const currentRows=chatMessages.querySelectorAll(`.msg-row[data-msg-id="${aiMsg.id}"]`);currentRows.forEach(r=>r.remove());appendMessageDOM(aiMsg,char);
@@ -1557,7 +1570,7 @@ async function streamChatContinue(chat,char,mainPreset,charData){
     const searchPreset=await getPresetById(charData.presetSearch);
     for(const tc of aiMsg.toolCalls){
       let toolResult='';
-      try{const args=JSON.parse(tc.args||'{}');if(tc.name==='web_search')toolResult=await executeWebSearch(args,searchPreset);else if(tc.name==='save_memory')toolResult=await executeSaveMemory(args);else if(tc.name==='add_note')toolResult=await executeAddNote(args);else if(tc.name==='write_letter')toolResult=await executeWriteLetter(args);else toolResult=`Unknown tool: ${tc.name}`;}
+      try{const args=JSON.parse(tc.args||'{}');if(tc.name==='web_search')toolResult=await executeWebSearch(args,searchPreset);else if(tc.name==='save_memory')toolResult=await executeSaveMemory(args);else if(tc.name==='add_note')toolResult=await executeAddNote(args);else if(tc.name==='write_letter')toolResult=await executeWriteLetter(args);else if(tc.name==='read_letters')toolResult=await executeReadLetters(args);else if(tc.name==='query_density')toolResult=await executeQueryDensity(args);else toolResult=`Unknown tool: ${tc.name}`;
       catch(e){toolResult=`Error: ${e.message}`;}
       tc.status='done';tc.result=toolResult;
       const currentRows=chatMessages.querySelectorAll(`.msg-row[data-msg-id="${aiMsg.id}"]`);currentRows.forEach(r=>r.remove());appendMessageDOM(aiMsg,char);
@@ -1572,12 +1585,14 @@ async function streamChatContinue(chat,char,mainPreset,charData){
 }
 
 // 工具定义
-function getToolDefinitions(){return[{type:'function',function:{name:'save_memory',description:'保存一条记忆到记忆库',parameters:{type:'object',properties:{content:{type:'string',description:'要保存的记忆内容'}},required:['content']}}},{type:'function',function:{name:'add_note',description:'添加一条便签/待办事项',parameters:{type:'object',properties:{content:{type:'string',description:'便签内容'}},required:['content']}}},{type:'function',function:{name:'write_letter',description:'写一封信件给用户',parameters:{type:'object',properties:{title:{type:'string',description:'信件标题'},content:{type:'string',description:'信件内容'}},required:['title','content']}}},{type:'function',function:{name:'web_search',description:'搜索互联网获取实时信息',parameters:{type:'object',properties:{query:{type:'string',description:'搜索关键词'}},required:['query']}}}];}
+function getToolDefinitions(){return[{type:'function',function:{name:'save_memory',description:'保存一条记忆到记忆库',parameters:{type:'object',properties:{content:{type:'string',description:'要保存的记忆内容'}},required:['content']}}},{type:'function',function:{name:'add_note',description:'添加一条便签/待办事项',parameters:{type:'object',properties:{content:{type:'string',description:'便签内容'}},required:['content']}}},{type:'function',function:{name:'write_letter',description:'写一封信件给用户',parameters:{type:'object',properties:{title:{type:'string',description:'信件标题'},content:{type:'string',description:'信件内容'}},required:['title','content']}}},{type:'function',function:{name:'web_search',description:'搜索互联网获取实时信息',parameters:{type:'object',properties:{query:{type:'string',description:'搜索关键词'}},required:['query']}}},{type:'function',function:{name:'read_letters',description:'读取与用户之间的书信往来',parameters:{type:'object',properties:{},required:[]}}},{type:'function',function:{name:'query_density',description:'查询指定日期范围内的消息互动密度（每天的消息数量）',parameters:{type:'object',properties:{start_date:{type:'string',description:'起始日期，格式YYYY-MM-DD'},end_date:{type:'string',description:'结束日期，格式YYYY-MM-DD'}},required:['start_date','end_date']}}}];}
 
 // 工具执行
 async function executeWebSearch(args,searchPreset){if(!searchPreset)return'未配置搜索预设';const url=(searchPreset.url||'').replace(/\/$/,'');const key=searchPreset.key;if(!url||!key)return'搜索预设的 API 地址或 Key 未配置';try{const resp=await fetch(`${url}/search`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:args.query,api_key:key,search_depth:'basic',max_results:3})});if(!resp.ok)return`搜索请求失败: ${resp.status}`;const data=await resp.json();if(data.results&&data.results.length>0)return data.results.map(r=>`[${r.title}] ${r.url}\n${r.content}`).join('\n\n');return'未找到相关结果';}catch(e){return`搜索出错: ${e.message}`;}}
 async function executeSaveMemory(args){const content=args.content;if(!content)return'缺少记忆内容';const d=new Date();await dbPut('memories',{id:'mem_'+Date.now(),characterId:currentCharId,content,date:d.toISOString(),month:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`});const subMemList=document.getElementById('memory-list');if(subMemList)renderMemoryList(subMemList);refreshDrawerIfOpen('memory');return'记忆已保存';}
 async function executeAddNote(args){const content=args.content;if(!content)return'缺少便签内容';await dbPut('notes',{id:'note_'+Date.now(),characterId:currentCharId,content,done:false,createdAt:new Date().toISOString()});refreshDrawerIfOpen('notes');return'便签已添加';}
+async function executeReadLetters(args){const letters=(await dbGetAll('letters')).filter(l=>l.characterId===currentCharId).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));if(letters.length===0)return'暂无信件';return letters.map(l=>`[${l.fromUser?'用户写给AI':'AI写给用户'}] ${l.title}\n${l.content}\n— ${new Date(l.createdAt).toLocaleString()}`).join('\n\n');}
+async function executeQueryDensity(args){const start=args.start_date;const end=args.end_date;if(!start||!end)return'请提供start_date和end_date（格式YYYY-MM-DD）';const startDate=new Date(start);const endDate=new Date(end);if(isNaN(startDate)||isNaN(endDate))return'日期格式无效，请使用YYYY-MM-DD';const chats=(await dbGetAll('chats')).filter(c=>c.characterId===currentCharId);const results=[];for(let d=new Date(startDate);d<=endDate;d.setDate(d.getDate()+1)){const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;let count=0;chats.forEach(c=>{(c.messages||[]).forEach(msg=>{const md=new Date(msg.timestamp);const mk=`${md.getFullYear()}-${String(md.getMonth()+1).padStart(2,'0')}-${String(md.getDate()).padStart(2,'0')}`;if(mk===key)count++;});});results.push(`${key}: ${count}条消息`);}return results.join('\n');}
 async function executeWriteLetter(args){const title=args.title||'无题';const content=args.content;if(!content)return'缺少信件内容';await dbPut('letters',{id:'let_'+Date.now(),characterId:currentCharId,title,content,fromUser:false,readByAI:false,createdAt:new Date().toISOString()});refreshDrawerIfOpen('letters');return'信件已寄出';}
 
 // ========== 设置页 - API预设管理 ==========
