@@ -1388,10 +1388,6 @@ async function buildSystemPrompt(charData){
   if(entries.length>0){systemPrompt+='\n\n[角色设定条目 / Character Entries]\n';entries.forEach(e=>{systemPrompt+=`- ${e.content}\n`;});}
   const memories=(await dbGetAll('memories')).filter(m=>m.characterId===currentCharId).sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,20);
   if(memories.length>0){systemPrompt+='\n\n[近期记忆 / Recent Memories]\n';memories.forEach(m=>{systemPrompt+=`- ${m.content}\n`;});}
-  const notes=(await dbGetAll('notes')).filter(n=>n.characterId===currentCharId);
-  if(notes.length>0){systemPrompt+='\n\n[便签与待办 / Notes & Todos]\n';notes.forEach(n=>{systemPrompt+=`- [${n.done?'已完成':'待办'}] ${n.content}\n`;});}
-  const annis=(await dbGetAll('anniversaries')).filter(a=>a.characterId===currentCharId);
-  if(annis.length>0){systemPrompt+='\n\n[纪念日 / Anniversaries]\n';annis.forEach(a=>{const d=new Date(a.date);const diff=Math.floor((Date.now()-d)/(1000*60*60*24));systemPrompt+=`- ${a.name} (${a.date}, ${diff>=0?diff+'天前':'Math.abs(diff)+'天后'})\n`;});}
   return systemPrompt;
 }
 
@@ -1490,7 +1486,7 @@ async function streamChat(chat,char,mainPreset,charData){
     const searchPreset=await getPresetById(charData.presetSearch);
     for(const tc of aiMsg.toolCalls){
       let toolResult='';
-      try{const args=JSON.parse(tc.args||'{}');if(tc.name==='web_search')toolResult=await executeWebSearch(args,searchPreset);else if(tc.name==='save_memory')toolResult=await executeSaveMemory(args);else if(tc.name==='add_note')toolResult=await executeAddNote(args);else if(tc.name==='write_letter')toolResult=await executeWriteLetter(args);else if(tc.name==='read_letters')toolResult=await executeReadLetters(args);else toolResult=`Unknown tool: ${tc.name}`;}
+      try{const args=JSON.parse(tc.args||'{}');if(tc.name==='web_search')toolResult=await executeWebSearch(args,searchPreset);else if(tc.name==='save_memory')toolResult=await executeSaveMemory(args);else if(tc.name==='add_note')toolResult=await executeAddNote(args);else if(tc.name==='write_letter')toolResult=await executeWriteLetter(args);else toolResult=`Unknown tool: ${tc.name}`;}
       catch(e){toolResult=`Error: ${e.message}`;}
       tc.status='done';tc.result=toolResult;
       const currentRows=chatMessages.querySelectorAll(`.msg-row[data-msg-id="${aiMsg.id}"]`);currentRows.forEach(r=>r.remove());appendMessageDOM(aiMsg,char);
@@ -1561,7 +1557,7 @@ async function streamChatContinue(chat,char,mainPreset,charData){
     const searchPreset=await getPresetById(charData.presetSearch);
     for(const tc of aiMsg.toolCalls){
       let toolResult='';
-      try{const args=JSON.parse(tc.args||'{}');if(tc.name==='web_search')toolResult=await executeWebSearch(args,searchPreset);else if(tc.name==='save_memory')toolResult=await executeSaveMemory(args);else if(tc.name==='add_note')toolResult=await executeAddNote(args);else if(tc.name==='write_letter')toolResult=await executeWriteLetter(args);else if(tc.name==='read_letters')toolResult=await executeReadLetters(args);else toolResult=`Unknown tool: ${tc.name}`;}
+      try{const args=JSON.parse(tc.args||'{}');if(tc.name==='web_search')toolResult=await executeWebSearch(args,searchPreset);else if(tc.name==='save_memory')toolResult=await executeSaveMemory(args);else if(tc.name==='add_note')toolResult=await executeAddNote(args);else if(tc.name==='write_letter')toolResult=await executeWriteLetter(args);else toolResult=`Unknown tool: ${tc.name}`;}
       catch(e){toolResult=`Error: ${e.message}`;}
       tc.status='done';tc.result=toolResult;
       const currentRows=chatMessages.querySelectorAll(`.msg-row[data-msg-id="${aiMsg.id}"]`);currentRows.forEach(r=>r.remove());appendMessageDOM(aiMsg,char);
@@ -1576,11 +1572,9 @@ async function streamChatContinue(chat,char,mainPreset,charData){
 }
 
 // 工具定义
-function getToolDefinitions(){return[{type:'function',function:{name:'save_memory',description:'保存一条记忆到记忆库',parameters:{type:'object',properties:{content:{type:'string',description:'要保存的记忆内容'}},required:['content']}}},{type:'function',function:{name:'add_note',description:'添加一条便签/待办事项',parameters:{type:'object',properties:{content:{type:'string',description:'便签内容'}},required:['content']}}},{type:'function',function:{name:'write_letter',description:'写一封信件给用户',parameters:{type:'object',properties:{title:{type:'string',description:'信件标题'},content:{type:'string',description:'信件内容'}},required:['title','content']}}},{type:'function',function:{name:'read_letters',description:'读取与用户之间的书信往来，可获取历史信件内容',parameters:{type:'object',properties:{limit:{type:'number',description:'获取最近N封信，默认5'}},required:[]}}
-,{type:'function',function:{name:'web_search',description:'搜索互联网获取实时信息',parameters:{type:'object',properties:{query:{type:'string',description:'搜索关键词'}},required:['query']}}}];}
+function getToolDefinitions(){return[{type:'function',function:{name:'save_memory',description:'保存一条记忆到记忆库',parameters:{type:'object',properties:{content:{type:'string',description:'要保存的记忆内容'}},required:['content']}}},{type:'function',function:{name:'add_note',description:'添加一条便签/待办事项',parameters:{type:'object',properties:{content:{type:'string',description:'便签内容'}},required:['content']}}},{type:'function',function:{name:'write_letter',description:'写一封信件给用户',parameters:{type:'object',properties:{title:{type:'string',description:'信件标题'},content:{type:'string',description:'信件内容'}},required:['title','content']}}},{type:'function',function:{name:'web_search',description:'搜索互联网获取实时信息',parameters:{type:'object',properties:{query:{type:'string',description:'搜索关键词'}},required:['query']}}}];}
 
 // 工具执行
-async function executeReadLetters(args){const limit=args.limit||5;const letters=(await dbGetAll('letters')).filter(l=>l.characterId===currentCharId).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,limit);if(letters.length===0)return'暂无信件';return letters.map(l=>`[${l.fromUser?'用户寄出':'AI寄出'}] ${l.title} (${new Date(l.createdAt).toLocaleDateString('zh-CN')})\n${l.content}`).join('\n\n');}
 async function executeWebSearch(args,searchPreset){if(!searchPreset)return'未配置搜索预设';const url=(searchPreset.url||'').replace(/\/$/,'');const key=searchPreset.key;if(!url||!key)return'搜索预设的 API 地址或 Key 未配置';try{const resp=await fetch(`${url}/search`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:args.query,api_key:key,search_depth:'basic',max_results:3})});if(!resp.ok)return`搜索请求失败: ${resp.status}`;const data=await resp.json();if(data.results&&data.results.length>0)return data.results.map(r=>`[${r.title}] ${r.url}\n${r.content}`).join('\n\n');return'未找到相关结果';}catch(e){return`搜索出错: ${e.message}`;}}
 async function executeSaveMemory(args){const content=args.content;if(!content)return'缺少记忆内容';const d=new Date();await dbPut('memories',{id:'mem_'+Date.now(),characterId:currentCharId,content,date:d.toISOString(),month:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`});const subMemList=document.getElementById('memory-list');if(subMemList)renderMemoryList(subMemList);refreshDrawerIfOpen('memory');return'记忆已保存';}
 async function executeAddNote(args){const content=args.content;if(!content)return'缺少便签内容';await dbPut('notes',{id:'note_'+Date.now(),characterId:currentCharId,content,done:false,createdAt:new Date().toISOString()});refreshDrawerIfOpen('notes');return'便签已添加';}
